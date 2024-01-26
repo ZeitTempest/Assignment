@@ -1,7 +1,6 @@
 const express = require("express")
 
 const app = express()
-const port = 3000
 //const cors = require("cors")
 
 const dotenv = require("dotenv")
@@ -68,5 +67,5 @@ app.post("/login", (req, res) => {
 const PORT = process.env.PORT
 
 app.listen(PORT, () => {
-  console.log(`TMS App listening at http://localhost:${port}`)
+  console.log(`TMS App listening at http://localhost:${PORT}`)
 })

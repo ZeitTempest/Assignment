@@ -16,6 +16,7 @@ const executeQuery = (query) => {
   connection.connect()
   return new Promise((resolve, reject) => {
     //confirm what promise does
+    //should this entire connection portion be in here or in the method using it?
     connection.query(query, function (error, results, fields) {
       connection.end()
       if (error) {
