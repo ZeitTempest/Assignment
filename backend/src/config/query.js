@@ -5,7 +5,7 @@ function getConnection() {
     host: "localhost",
     user: "root",
     password: "password",
-    database: "nodelogin",
+    database: "nodelogin", //rename db
   })
 
   return connection
@@ -15,6 +15,7 @@ const executeQuery = (query) => {
   var connection = getConnection()
   connection.connect()
   return new Promise((resolve, reject) => {
+    //confirm what promise does
     connection.query(query, function (error, results, fields) {
       connection.end()
       if (error) {
