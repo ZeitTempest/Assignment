@@ -10,7 +10,15 @@ const router = express.Router()
 
 //importing interceptors
 // const {
-//   isAutheticatedUser,
+//   isAuthenticatedUser,
 //   authorizedAdmin
 //  } = require("../middlewares/auth")
 //repeat for each js file
+
+router.get("/", (req, res) => {
+  res.send("Hello world!")
+})
+
+router.post("/", (req, res) => {
+  res.send("Request received, this is a response")
+})

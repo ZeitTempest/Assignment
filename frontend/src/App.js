@@ -5,21 +5,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 //My Components
 import Header from "./components/Header"
-import Footer from "./components/Footer"
-import HomeGuest from "./components/HomeGuest"
-import About from "./components/About"
-import Terms from "./components/Terms"
+import LoginPage from "./components/LoginPage"
 
 function App() {
   return (
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path="/" element={<HomeGuest />} />
-        <Route path="/about-us" element={<About />} />
-        <Route path="/terms" element={<Terms />} />
+        <Route path="/" element={<LoginPage />} />
       </Routes>
-      <Footer />
     </BrowserRouter>
   )
 }

@@ -13,9 +13,7 @@ function Header() {
         </h4>
         <form className="mb-0 pt-2 pt-md-0">
           <div className="row align-items-center">
-            <div className="col-md-auto">
-              <button className="btn btn-success btn-sm">Sign Out</button>
-            </div>
+            <div className="col-md-auto">{/* <button className="btn btn-success btn-sm">Sign Out</button> */}</div>
           </div>
         </form>
       </div>
