@@ -1,7 +1,11 @@
 import React from "react"
 import Page from "./Page"
 
-function HomeGuest() {
+function LoginPage() {
+  function handleSubmit(e) {
+    e.preventDefault() //prevent default behavior, which is ??
+  }
+
   return (
     <Page title="Home" wide={true}>
       <div className="row align-items-center justify-content-center">
@@ -29,4 +33,4 @@ function HomeGuest() {
   )
 }
 
-export default HomeGuest
+export default LoginPage
