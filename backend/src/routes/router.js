@@ -14,11 +14,25 @@ const router = express.Router()
 //   authorizedAdmin
 //  } = require("../middlewares/auth")
 //repeat for each js file
+const { loginUser } = require("../controllers/userController")
 
-router.get("/", (req, res) => {
-  res.send("Hello world!")
-})
+router.route("/auth/login").post(loginUser)
+// router.post("/", (req, res) => {
+//   if (req.name) {
+//     res.body.testProp = `Request with name ${req.name} received.`
+//   }
+// })
 
-router.post("/", (req, res) => {
-  res.send("Request received, this is a response")
-})
+//example requests
+// router.get("/", (req, res) => {
+//   if (req.name) {
+//     res.send(`~Hi, ${req.name}. Request received!`)
+//   }
+//   res.send("This is your response!")
+// })
+
+// router.post("/", (req, res) => {
+//   res.send("Request received, this is a response")
+// })
+
+module.exports = router

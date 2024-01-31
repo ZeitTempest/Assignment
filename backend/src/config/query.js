@@ -1,17 +1,19 @@
 const mysql2 = require("mysql2")
 
+const { MYHOST, MYUSER, MYPASSWORD, MYDB } = process.env
+
 function getConnection() {
   var connection = mysql2.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "password",
-    database: "nodelogin", //rename db
+    host: MYHOST,
+    user: MYUSER,
+    password: MYPASSWORD,
+    database: MYDB
   })
 
   return connection
 }
 
-const executeQuery = (query) => {
+const executeQuery = query => {
   var connection = getConnection()
   connection.connect()
   return new Promise((resolve, reject) => {
@@ -28,5 +30,5 @@ const executeQuery = (query) => {
 }
 
 module.exports = {
-  executeQuery,
+  executeQuery
 }
