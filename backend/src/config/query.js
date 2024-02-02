@@ -1,25 +1,28 @@
-const mysql2 = require("mysql2")
+import mysql2 from "mysql2"
 
-const { MYHOST, MYUSER, MYPASSWORD, MYDB } = process.env
+const { CONNECTIONLIMIT, MYHOST, MYUSER, MYPASSWORD, MYDB } = process.env
+
+const mysqlCredentials = {
+  connectionLimit: CONNECTIONLIMIT,
+  host: MYHOST,
+  user: MYUSER,
+  password: MYPASSWORD,
+  database: MYDB
+}
 
 function getConnection() {
-  var connection = mysql2.createConnection({
-    host: MYHOST,
-    user: MYUSER,
-    password: MYPASSWORD,
-    database: MYDB
-  })
-
+  var connection = mysql2.createPool(mysqlCredentials)
   return connection
 }
 
-const executeQuery = query => {
+export const executeQuery = query => {
   var connection = getConnection()
-  connection.connect()
+  connection.connect
+  console.log("query working")
   return new Promise((resolve, reject) => {
     //confirm what promise does
     //should this entire connection portion be in here or in the method using it?
-    connection.query(query, function (error, results, fields) {
+    connection.execute(query, function (error, results, fields) {
       connection.end()
       if (error) {
         reject(error)
@@ -29,6 +32,6 @@ const executeQuery = query => {
   })
 }
 
-module.exports = {
-  executeQuery
-}
+// module.exports = {
+//   executeQuery
+// }

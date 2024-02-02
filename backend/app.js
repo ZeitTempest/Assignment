@@ -1,10 +1,12 @@
-const express = require("express")
-
+import express from "express"
 const app = express()
-const cors = require("cors")
 
-const dotenv = require("dotenv")
-const bodyParser = require("body-parser")
+import cors from "cors"
+
+import dotenv from "dotenv"
+dotenv.config({ path: "./src/config/.env" })
+
+import bodyParser from "body-parser"
 
 // Inititalize the app and add middleware
 // app.set("view engine", "pug") // Setup the pug
@@ -12,7 +14,6 @@ const bodyParser = require("body-parser")
 //app.use(session({ secret: "super-secret" })) // Session setup
 
 // Setting up config.env file variables
-dotenv.config({ path: "./src/config/.env" })
 
 app.use(express.json()) //middleware for parsing json
 
@@ -34,12 +35,12 @@ app.use(cors())
 // })
 
 //Importing all routes
-const routes = require("./src/routes/router")
+import router from "./src/routes/router.js"
 
 /** App listening on port */
-app.use("/", routes)
+app.use("/", router)
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 4000
 app.listen(PORT, () => {
   console.log(`TMS App listening at http://localhost:${PORT}`)
 })

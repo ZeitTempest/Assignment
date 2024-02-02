@@ -1,5 +1,6 @@
-const express = require("express")
+import express from "express"
 const router = express.Router()
+import { loginUser } from "../controllers/userController.js"
 
 //imported methods from controllers go here
 // const {
@@ -14,7 +15,6 @@ const router = express.Router()
 //   authorizedAdmin
 //  } = require("../middlewares/auth")
 //repeat for each js file
-const { loginUser } = require("../controllers/userController")
 
 router.route("/auth/login").post(loginUser)
 // router.post("/", (req, res) => {
@@ -35,4 +35,4 @@ router.route("/auth/login").post(loginUser)
 //   res.send("Request received, this is a response")
 // })
 
-module.exports = router
+export default router

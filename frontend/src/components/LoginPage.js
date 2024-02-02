@@ -5,9 +5,6 @@ import Axios from "axios"
 import { useNavigate } from "react-router-dom"
 //import DispatchContext from "../DispatchContext"
 
-// Configuring Axios
-Axios.defaults.baseURL = "http://localhost:8000"
-
 function LoginPage() {
   const navigate = useNavigate()
   // const unacceptable = [undefined, ""]
