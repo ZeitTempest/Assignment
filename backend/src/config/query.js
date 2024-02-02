@@ -1,6 +1,8 @@
 import mysql2 from "mysql2"
+import dotenv from "dotenv"
+dotenv.config({ path: "./src/config/.env" })
 
-const { CONNECTIONLIMIT, MYHOST, MYUSER, MYPASSWORD, MYDB } = process.env
+const { CONNECTIONLIMIT, MYHOST, MYUSER, MYPASSWORD, MYDB, MYDBPORT } = process.env
 
 const mysqlCredentials = {
   connectionLimit: CONNECTIONLIMIT,
@@ -8,6 +10,7 @@ const mysqlCredentials = {
   user: MYUSER,
   password: MYPASSWORD,
   database: MYDB
+  //port: MYDBPORT
 }
 
 function getConnection() {
@@ -17,7 +20,7 @@ function getConnection() {
 
 export const executeQuery = query => {
   var connection = getConnection()
-  connection.connect
+  //connection.connect - may be redundant with pooling
   console.log("query working")
   return new Promise((resolve, reject) => {
     //confirm what promise does
