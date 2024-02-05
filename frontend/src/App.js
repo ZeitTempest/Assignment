@@ -5,8 +5,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Axios from "axios"
 
 //My Components
-import Header from "./components/Header"
-import LoginPage from "./components/LoginPage"
+import Header from "./pages/Header"
+import LoginPage from "./pages/LoginPage"
 
 // Configuring Axios
 Axios.defaults.baseURL = "http://localhost:8000"
