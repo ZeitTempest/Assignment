@@ -1,6 +1,6 @@
 import express from "express"
 const router = express.Router()
-import { loginUser } from "../controllers/userController.js"
+import { userLoginResult } from "../controllers/authController.js"
 
 //imported methods from controllers go here
 // const {
@@ -16,7 +16,7 @@ import { loginUser } from "../controllers/userController.js"
 //  } = require("../middlewares/auth")
 //repeat for each js file
 
-router.route("/auth/login").post(loginUser)
+router.route("/auth/login").post(userLoginResult)
 // router.post("/", (req, res) => {
 //   if (req.name) {
 //     res.body.testProp = `Request with name ${req.name} received.`

@@ -21,12 +21,10 @@ function getConnection() {
 export const executeQuery = query => {
   var connection = getConnection()
   //connection.connect - may be redundant with pooling
-  console.log("query working")
   return new Promise((resolve, reject) => {
-    //confirm what promise does
     //should this entire connection portion be in here or in the method using it?
     connection.execute(query, function (error, results, fields) {
-      connection.end()
+      //connection.end() - may be redundant with pooling
       if (error) {
         reject(error)
       } //if we get an error from db

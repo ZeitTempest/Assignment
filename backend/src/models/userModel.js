@@ -12,6 +12,6 @@ export const userLoginResult = async ({ username, password }) => {
   }
 }
 
-// export default {
-//   userLoginResult
-// }
+export default {
+  userLoginResult
+}
