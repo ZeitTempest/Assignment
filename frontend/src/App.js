@@ -7,7 +7,7 @@ import Axios from "axios"
 //My Components
 import Router from "./router/router"
 
-// Configuring Axios
+//Configuring Axios
 Axios.defaults.baseURL = "http://localhost:8000"
 
 function App() {

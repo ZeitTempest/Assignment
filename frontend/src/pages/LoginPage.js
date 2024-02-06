@@ -21,7 +21,6 @@ function LoginPage() {
 
     try {
       const response = await Axios.post("/auth/login", { username, password })
-      console.log(`response: ${response.data.replyMsg}`)
 
       if (response.data.result === true) {
         //handle login token logic here

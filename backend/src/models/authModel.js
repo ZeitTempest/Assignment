@@ -1,5 +1,5 @@
 import { executeQuery } from "../config/query.js"
-import { isAlphanumeric } from "../utils.js"
+import { isAlphanumeric } from "../utils/utils.js"
 
 export const getAllUsers = async () => {
   //returns list of every user

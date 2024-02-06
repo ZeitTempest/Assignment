@@ -27,7 +27,7 @@ export default function Router() {
         <Header />
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="/" element={isLoggedIn ? <Navigate to="/tms" /> : <Navigate to="/login" />} /> {/* redirect */}
+            <Route path="/" element={isLoggedIn ? <Navigate to="/tms" /> : <Navigate to="/login" />} /> {/* root redirect to login or tms */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/tms" element={<TMSPage />} />
           </Route>

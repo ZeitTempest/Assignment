@@ -1,5 +1,5 @@
 import { findByUsername } from "../models/authModel.js"
-import { isAlphanumeric } from "../utils.js"
+import { isAlphanumeric } from "../utils/utils.js"
 import jwt from "jsonwebtoken"
 
 const secret = process.env.JWTSECRET
@@ -18,13 +18,13 @@ export const userLoginResult = async (req, res) => {
   try {
     const usersList = await findByUsername(username)
 
-    if (usersList.length != 1) return res.status(401).json({ success: false, err: "no users found" })
+    if (usersList.length != 1) return res.status(401).json({ success: false, err: "users list length not equal to 1" })
 
     //const isPwdCorrect =  bcrypt.compareSync(password, users[0].password)
     const pwdCheck = password === usersList[0].password
 
     if (!pwdCheck) {
-      return res.status(401).json({ success: false, err: "wrong password" })
+      return res.status(401).json({ success: false, err: "pwdCheck failed" })
     }
 
     //jwt token here
