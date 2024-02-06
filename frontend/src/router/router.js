@@ -1,7 +1,7 @@
 import "../App.css"
 import React from "react"
 import ReactDOM from "react-dom"
-import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 import Axios from "axios"
 
 //My Components
@@ -19,13 +19,16 @@ export default function Router() {
     )
   }
 
+  const isLoggedIn = false
+
   const BrowserRoutes = () => {
     return (
       <BrowserRouter>
         <Header />
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="/" element={<LoginPage />} />
+            <Route path="/" element={isLoggedIn ? <Navigate to="/tms" /> : <Navigate to="/login" />} /> {/* asdf */}
+            <Route path="/login" element={<LoginPage />} />
             <Route path="/tms" element={<TMSPage />} />
           </Route>
         </Routes>
