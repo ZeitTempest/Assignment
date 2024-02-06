@@ -19,7 +19,7 @@ export default function Router() {
     )
   }
 
-  const isLoggedIn = false
+  const isLoggedIn = true
 
   const BrowserRoutes = () => {
     return (
@@ -27,7 +27,7 @@ export default function Router() {
         <Header />
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="/" element={isLoggedIn ? <Navigate to="/tms" /> : <Navigate to="/login" />} /> {/* asdf */}
+            <Route path="/" element={isLoggedIn ? <Navigate to="/tms" /> : <Navigate to="/login" />} /> {/* redirect */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/tms" element={<TMSPage />} />
           </Route>

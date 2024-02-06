@@ -35,8 +35,7 @@ export const userLoginResult = async (req, res) => {
       maxAge: 3600000 // expiration milliseconds
       // sameSite: "strict", // Restricts the cookie to be sent only with requests originating from the same site
     })
-
-    res.status(200).json({ success: true })
+    res.status(200).json({ success: true, result: true })
   } catch (e) {
     console.log(e)
     res.status(500).json(e)

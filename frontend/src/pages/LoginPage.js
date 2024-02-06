@@ -21,11 +21,11 @@ function LoginPage() {
 
     try {
       const response = await Axios.post("/auth/login", { username, password })
-      console.log(response.data.replyMsg)
+      console.log(`response: ${response.data.replyMsg}`)
 
       if (response.data.result === true) {
         //handle login token logic here
-        navigate("/")
+        navigate("/tms")
       } else {
         //popup/etc for u/pw error
       }
