@@ -1,25 +1,20 @@
 import "./App.css"
 import React from "react"
 import ReactDOM from "react-dom"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom"
 import Axios from "axios"
 
 //My Components
-import Header from "./pages/Header"
-import LoginPage from "./pages/LoginPage"
-import TMSPage from "./pages/TMSPage"
+import Router from "./router/router"
 
 // Configuring Axios
 Axios.defaults.baseURL = "http://localhost:8000"
 
 function App() {
   return (
-    <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path="/" element={<TMSPage />} />
-      </Routes>
-    </BrowserRouter>
+    <>
+      <Router />
+    </>
   )
 }
 

@@ -30,7 +30,7 @@ function LoginPage() {
         //popup/etc for u/pw error
       }
     } catch (e) {
-      console.log(e)
+      //console.log(e)
       //popup/etc for unexpected error
     }
   }
