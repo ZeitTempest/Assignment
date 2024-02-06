@@ -23,12 +23,12 @@ function LoginPage() {
       const response = await Axios.post("/auth/login", { username, password })
       console.log(response.data.replyMsg)
 
-      // if (response.data.result === true) {
-      //   //handle login token logic here
-      //   navigate("/")
-      // } else {
-      //   //popup/etc for u/pw error
-      // }
+      if (response.data.result === true) {
+        //handle login token logic here
+        navigate("/")
+      } else {
+        //popup/etc for u/pw error
+      }
     } catch (e) {
       console.log(e)
       //popup/etc for unexpected error

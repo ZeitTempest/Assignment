@@ -17,7 +17,7 @@ export const findByUsername = async username => {
     // prepared statement!
     // const sql = "SELECT * FROM `accounts` WHERE `username` = ?"
     // const [results, fields] = await executeQuery(sql, username)
-    // console.log(results)
+    // console.log("asdf")
     // return { success: true, data: results }
 
     const findByUsernameQuery = `SELECT * FROM accounts WHERE username='${username}';`
@@ -31,6 +31,7 @@ export const findByUsername = async username => {
     // }
     return res
   } catch (e) {
+    console.log(e)
     throw new Error(e)
   }
 }

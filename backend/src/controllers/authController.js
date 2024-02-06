@@ -9,7 +9,7 @@ export const userLoginResult = async (req, res) => {
   const usernameCompliant = isAlphanumeric(username) //simple check for username compliance to reduce server load
 
   if (!usernameCompliant) {
-    return res.stats(401).json({
+    return res.status(401).json({
       success: false,
       err: "username non compliant"
     })
