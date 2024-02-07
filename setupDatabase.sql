@@ -5,11 +5,15 @@ USE `TMSDatabase`;
 
 DROP TABLE IF EXISTS accounts; -- remove this line after development, dangerous to mess with db
 
+CREATE TABLE IF NOT EXISTS `groups` (
+`groupname` varchar(20) PRIMARY KEY 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE IF NOT EXISTS accounts (
- id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE, -- DOUBLE CHECK MIRO BOARD FOR REQUIREMENTS
- username varchar(50) NOT NULL UNIQUE,
- password varchar(255) NOT NULL,
- email varchar(100) NOT NULL
+ `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE, -- DOUBLE CHECK MIRO BOARD FOR REQUIREMENTS
+ `username` varchar(20) NOT NULL UNIQUE,
+ `password` varchar(10) NOT NULL,
+ `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO accounts (username, password, email) VALUES 

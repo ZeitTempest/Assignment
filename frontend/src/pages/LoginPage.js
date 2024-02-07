@@ -2,6 +2,7 @@ import React, { useState /*, useContext*/ } from "react"
 import Page from "../components/Page"
 
 import Axios from "axios"
+import Cookies from "js-cookie"
 import { useNavigate } from "react-router-dom"
 //import DispatchContext from "../DispatchContext"
 
@@ -16,15 +17,13 @@ function LoginPage() {
     e.preventDefault() //prevent default behavior for the event, i.e. a checkbox checking when clicked
 
     // if (unacceptable username i.e. blank field){
-    //   //give error popup/alert
+    //give error popup/alert
     // }
 
     try {
       const response = await Axios.post("/auth/login", { username, password })
-
       if (response.data.result === true) {
-        //handle login token logic here
-        navigate("/tms")
+        navigate("/")
       } else {
         //popup/etc for u/pw error
       }
@@ -42,15 +41,11 @@ function LoginPage() {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">Sign in to your account</h1>
             <form className="space-y-4 md:space-y-6" action="#" onSubmit={handleSubmit}>
               <div>
-                <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Username
-                </label>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
                 <input onChange={e => setUsername(e.target.value)} type="username" name="username" id="username" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required="" />
               </div>
               <div>
-                <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                  Password
-                </label>
+                <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                 <input onChange={e => setPassword(e.target.value)} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
               </div>
               <div className="flex items-center justify-between"></div>
