@@ -1,7 +1,7 @@
 import "../App.css"
 import { React, useState, useEffect } from "react"
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
-import Cookies from "js-cookie"
+import { isLoggedIn, logoutUser } from "../utils/auth"
 import Header from "../pages/Header"
 
 //My Components
@@ -19,7 +19,8 @@ export default function BrowserRoutes() {
         </Route>
 
         {/**non auth route: redirect to login */}
-        <Route path="/login" element={Cookies.get("jwt") ? <Navigate to="/" /> : <LoginPage />} />
+        <Route path="/login" element={isLoggedIn() ? <Navigate to="" /> : <LoginPage />} />
+        {/* <Route path="/logout" element={(logoutUser(), (<Navigate to="/login" />))} /> */}
       </Routes>
     </BrowserRouter>
   )
@@ -35,5 +36,5 @@ const PrivateRoute = () => {
   //   //setLoggedIn(Cookies.get("jwt") !== null)
   // })
 
-  return Cookies.get("jwt") ? <Outlet /> : <Navigate to="/login" />
+  return isLoggedIn() ? <Outlet /> : <Navigate to="/login" />
 }

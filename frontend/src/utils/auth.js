@@ -5,6 +5,7 @@ export const isLoggedIn = () => {
 }
 
 export const logoutUser = () => {
+  console.log("logoutUser")
   const res = Cookie.remove("jwt")
   return res
 }
