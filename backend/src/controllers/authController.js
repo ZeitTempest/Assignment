@@ -45,6 +45,22 @@ export const userLoginResult = async (req, res) => {
   }
 }
 
+export const CheckGroup = async (username, groupname) => {
+  try {
+    const users = await findByUsername(username)
+    if (users.length !== 1) {
+      //user not found
+      return false
+    }
+    const groupsData = users[0].groups
+    // console.log(groupsData) //print full contents of groups
+
+    return true
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
 // export default {
 //   userLoginResult
 // }

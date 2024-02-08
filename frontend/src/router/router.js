@@ -17,8 +17,9 @@ export default function Router() {
     useEffect(() => {
       //gets called on first render and state change/re-render
       //however does not get called on
-      if (!Cookies.get("jwt")) {
-        navigate("/login") //check for no cookie, redirect to login if none
+      console.log("useEffect")
+      if (Cookies.get("jwt") === null) {
+        navigate("/login") //check for no jwt cookie, redirect to login if none
       }
       //setLoggedIn(Cookies.get("jwt") !== null)
     })
@@ -32,12 +33,13 @@ export default function Router() {
   }
 
   const BrowserRoutes = () => {
+    const hasJWT = Cookies.get("jwt")
     return (
       <BrowserRouter>
         <Header />
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route path="/" element={<Navigate to="/tms" />} /> {/* root redirect to login or tms */}
+            <Route path="/" element={hasJWT ? <TMSPage /> : <LoginPage />} /> {/* root redirect to login or tms */}
             <Route path="/login" element={<LoginPage />} />
             <Route path="/tms" element={<TMSPage />} />
           </Route>

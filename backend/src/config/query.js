@@ -18,6 +18,7 @@ function getConnection() {
   return connection
 }
 
+//alternate query method
 export const executeQuery = query => {
   var connection = getConnection()
   //connection.connect - may be redundant with pooling
@@ -31,6 +32,17 @@ export const executeQuery = query => {
       else resolve(results)
     })
   })
+}
+
+export const executeQuery2 = async (query, data) => {
+  var connection = getConnection()
+  const [results, fields] = await connection.execute(query, data)
+  console.log(results)
+  console.log(fields)
+  if (error) {
+    reject(error)
+  } //if we get an error from db
+  else resolve(results)
 }
 
 // module.exports = {
