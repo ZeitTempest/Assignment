@@ -7,6 +7,7 @@ import Header from "../pages/Header"
 //My Components
 import LoginPage from "../pages/LoginPage"
 import TMSPage from "../pages/TMSPage"
+import MyDetails from "../pages/MyDetails"
 
 export default function BrowserRoutes() {
   return (
@@ -21,6 +22,7 @@ export default function BrowserRoutes() {
         {/**non auth route: redirect to login */}
         <Route path="/login" element={isLoggedIn() ? <Navigate to="" /> : <LoginPage />} />
         <Route path="/logout" element={(logoutUser(), (<Navigate to="/login" />))} />
+        <Route path="/details" element={ <MyDetails />} />
       </Routes>
     </BrowserRouter>
   )

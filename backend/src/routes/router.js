@@ -1,13 +1,12 @@
 import express from "express"
 const router = express.Router()
-import { userLoginResult } from "../controllers/authController.js"
-
+import { adminRegister, userLogin, verifyAccessGroup } from "../controllers/authController.js"
+import { checkJWT } from "../middleware/auth.js"
 //imported methods from controllers go here
 // const {
 //   loginUser,
 //   verifyUser,
 // } = require("../controllers/userController")
-//in that file, each of these must be an exported property
 
 //importing interceptors
 // const {
@@ -16,23 +15,14 @@ import { userLoginResult } from "../controllers/authController.js"
 //  } = require("../middlewares/auth")
 //repeat for each js file
 
-router.route("/auth/login").post(userLoginResult)
-// router.post("/", (req, res) => {
-//   if (req.name) {
-//     res.body.testProp = `Request with name ${req.name} received.`
-//   }
-// })
+//auth routes
+router.route("/register").post(checkJWT, adminRegister)
+router.route("/auth/login").post(userLogin)
+router.route("/verifyAccessGroup").post(checkJWT, verifyAccessGroup)
 
-//example requests
-// router.get("/", (req, res) => {
-//   if (req.name) {
-//     res.send(`~Hi, ${req.name}. Request received!`)
-//   }
-//   res.send("This is your response!")
-// })
-
-// router.post("/", (req, res) => {
-//   res.send("Request received, this is a response")
-// })
+//update user details
+router.route("/allUsers").get(checkJWT, isAdmin, getAllUsers);
+router.route("/admin/updateUser").post(checkJWT, isAdmin, adminUpdateUser);
+router.route("/updateUser").post(checkJWT, updateUser);
 
 export default router
