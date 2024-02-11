@@ -1,7 +1,7 @@
 import { findByUsername } from "../models/authModel.js"
 import { isAlphanumeric } from "../utils/utils.js"
 import jwt from "jsonwebtoken"
-import brypt from "bcryptjs"
+import bcrypt from "bcryptjs"
 
 const secret = process.env.JWTSECRET
 const expiresIn = "1h"
@@ -54,8 +54,7 @@ export const CheckGroup = async (username, groupname) => {
     }
     const groupsData = users[0].groups
     // console.log(groupsData) //print full contents of groups
-
-    return true
+    return groupsData.split(",").includes(groupname)
   } catch (e) {
     throw new Error(e)
   }

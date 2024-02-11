@@ -20,7 +20,7 @@ export default function BrowserRoutes() {
 
         {/**non auth route: redirect to login */}
         <Route path="/login" element={isLoggedIn() ? <Navigate to="" /> : <LoginPage />} />
-        {/* <Route path="/logout" element={(logoutUser(), (<Navigate to="/login" />))} /> */}
+        <Route path="/logout" element={(logoutUser(), (<Navigate to="/login" />))} />
       </Routes>
     </BrowserRouter>
   )
