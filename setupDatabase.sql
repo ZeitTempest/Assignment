@@ -15,8 +15,8 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `accounts` (`username`, `password`, `email`, `groups`) VALUES 
-('admin', 'password', 'admin@company.com', 'admin'),
-('dev1', 'password', 'dev1@company.com', 'developer');
+('admin', '$2a$10$B6loTC0ZV1WElgNuvMHboO2snALcz673lUHl8b8z.I19OfIlyuuEW', 'admin@company.com', 'admin'),
+('dev1', '$2a$10$1ttoaikVjTiyvXgTb5NAN.WMhM/BVGykBAYGi/PAhCMtbbJSDqV72', 'dev1@company.com', 'developer');
 
 SELECT * FROM `accounts`;
 
