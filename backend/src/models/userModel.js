@@ -72,13 +72,13 @@ export const editUser = async ({
   password,
   email,
   isActive,
-  group,
+  groups,
 }) => {
   try {
     
     const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password}', \`email\`='${email}', \`isActive\`='${
       isActive ? 1 : 0
-    }', \`groups\`=${group ? `'${group}'` : null} WHERE \`username\`='${username}';`;
+    }', \`groups\`=${groups ? `'${groups}'` : null} WHERE \`username\`='${username}';`;
 
     console.log("query is", updateUserQry);
     const updatedUser = await sql.query(updateUserQry);

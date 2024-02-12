@@ -40,7 +40,7 @@ export const adminUpdateUser = async (req, res) => {
       ? bcrypt.hashSync(password, bcrypt.genSaltSync(10))
       : users[0].password;
 
-      group = group ? group.join(",") : group; //if any change to groups, update groups
+    group = group ? group.join(",") : group; //if any change to groups, update groups
 
     // update user
     await editUser({
