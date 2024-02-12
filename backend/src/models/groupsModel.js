@@ -1,31 +1,30 @@
-import { executeQuery } from "../config/query.js"
+import sql from "../config/query.js"
 
 export const findAll = async () => {
   const findAllQry = `SELECT * FROM groups;`;
-  console.log("i am still run");
   try {
-    const [groups] = await executeQuery(findAllQry);
+    const [groups] = await sql.query(findAllQry);
     return groups;
   } catch (err) {
     throw new Error(err);
   }
 };
 
-export const createSecGroup = async (groupname) => {
+export const createGroupQuery = async (groupname) => {
   const createGrpQry = `INSERT INTO \`groups\` (groupname) values ('${groupname}')`;
 
   try {
-    const res = await executeQuery(createGrpQry);
+    const res = await sql.query(createGrpQry);
     return res;
   } catch (err) {
     throw new Error(err);
   }
 };
 
-export const findGroup = async (groupname) => {
+export const findGroupQuery = async (groupname) => {
   const findAllQry = `SELECT * FROM \`groups\` where groupname=${groupname};`;
   try {
-    const [groups] = await executeQuery(findAllQry);
+    const [groups] = await sql.query(findAllQry);
     if (groups.length > 1) {
       const error = new Error("multiple rows found");
       error.code = 500;
@@ -39,6 +38,6 @@ export const findGroup = async (groupname) => {
 
 export default {
   findAll,
-  findGroup,
-  createSecGroup,
+  findGroupQuery,
+  createGroupQuery,
 };

@@ -33,12 +33,12 @@ export const checkJWT = (req, res, next) => {
   });
 };
 
-
 export const checkAdmin = async (req, res, next) => {
   try {
     const username = req.byUser;
+
     const isAdmin = await CheckGroup(username, "admin");
-    //console.log("is admin: " + isAdmin);
+    console.log("is admin: " + isAdmin);
     if (!isAdmin) {
       return res.status(403).send("not admin");
     } else {

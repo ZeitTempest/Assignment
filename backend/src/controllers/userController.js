@@ -1,9 +1,9 @@
-import { findAll, findByUsername, editUser } from "../models/userModel.js";
+import { findAllUsers, findByUsername, editUser } from "../models/userModel.js";
 import bcrypt from "bcryptjs"
 
 export const getAllUsers = async (req, res) => {
   try {
-    const [users] = await findAll();
+    const [users] = await findAllUsers();
 
     res.status(200).json([users]);
   } catch (err) {
@@ -15,12 +15,12 @@ export const getAllUsers = async (req, res) => {
 export const adminUpdateUser = async (req, res) => {
   try {
     // console.log("req.body", req.body);
-    let { username, password, email, isActive, secGrp } = req.body;
+    let { username, password, email, isActive, group } = req.body;
 
     // admin cannot be deleted, check if admin
     if (
       req.username === "admin" &&
-      (isActive === false || !secGrp.includes("admin"))
+      (isActive === false || !group.includes("admin"))
     ) {
       return res
         .status(403)
@@ -40,7 +40,7 @@ export const adminUpdateUser = async (req, res) => {
       ? bcrypt.hashSync(password, bcrypt.genSaltSync(10))
       : users[0].password;
 
-    secGrp = secGrp ? secGrp.join(",") : secGrp; //if any change to groups, update groups
+      group = group ? group.join(",") : group; //if any change to groups, update groups
 
     // update user
     await editUser({
@@ -48,7 +48,7 @@ export const adminUpdateUser = async (req, res) => {
       password,
       email,
       isActive,
-      secGrp,
+      group,
     });
 
     res.status(200).json();

@@ -1,8 +1,8 @@
 // import { isAlphanumeric } from "../utils/utils.js"
-import { executeQuery } from "../config/query.js"
+import sql from "../config/query.js"
 
-export const findAll = async (onlyCols = [], excludeCols = []) => {
-  // const allCols = ["username", "password", "email", "isActive", "secGrp"];
+export const findAllUsers = async (onlyCols = [], excludeCols = []) => {
+  // const allCols = ["username", "password", "email", "isActive", "group"];
   // const excludeColsSet = new Set(excludeCols);
   // const getCols = (onlyCols?.length ? onlyCols : allCols).filter(
   //   (colName) => !excludeColsSet.has(colName)
@@ -13,15 +13,14 @@ export const findAll = async (onlyCols = [], excludeCols = []) => {
   const findAllQry = `SELECT \`username\`, \`email\`, \`isActive\`, \`groups\` FROM \`accounts\`;`;
 
   try {
-    const [users] = await executeQuery(findAllQry).then(results => {
+    const [users] = await sql.query(findAllQry).then(results => {
       // Handle results here
       //console.log(results); // Make sure it logs the array of 2 users
-      return [results]
+      return results
     })
     .catch(error => {
       console.error("Error:", error);
     });
-    console.log("users: " + users)
     return [users]
   } catch (err) {
     throw new Error(err)
@@ -33,7 +32,7 @@ export const findByUsername = async (username) => {
 
   try {
     
-    const [res] = await executeQuery(getUserByIdQry);
+    const [res] = await sql.query(getUserByIdQry);
 
     // multiple results found,
     // should not happen in db as id is unique
@@ -56,7 +55,7 @@ export const createUser = async ({ username, password, email, groups }) => {
     const createUserQry = `
       INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${password}', '${email}', '${groups}');
     `;
-    const createdUser = await executeQuery(createUserQry);
+    const createdUser = await sql.query(createUserQry);
 
     if (createdUser[0].affectedRows !== 1) {
       throw new Error("more than one row affected");
@@ -73,17 +72,17 @@ export const editUser = async ({
   password,
   email,
   isActive,
-  secGrp,
+  group,
 }) => {
   try {
     
     const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password}', \`email\`='${email}', \`isActive\`='${
       isActive ? 1 : 0
-    }', \`groups\`=${secGrp ? `'${secGrp}'` : null} WHERE \`username\`='${username}';`;
+    }', \`groups\`=${group ? `'${group}'` : null} WHERE \`username\`='${username}';`;
 
     console.log("query is", updateUserQry);
-    const updatedUser = await executeQuery(updateUserQry);
-    if (updatedUser.affectedRows !== 1) {
+    const updatedUser = await sql.query(updateUserQry);
+    if (updatedUser[0].affectedRows !== 1) {
       throw new Error("more than one row affected");
     }
     return updatedUser;
@@ -98,7 +97,7 @@ export const editUser = async ({
 //   //returns list of every user
 //   const getAllUsersQuery = `SELECT * FROM accounts;`
 //   try {
-//     const [users] = await executeQuery.query(getAllUsersQuery)
+//     const [users] = await sql.query.query(getAllUsersQuery)
 //     return users
 //   } catch (e) {
 //     throw new Error(e)
@@ -109,12 +108,12 @@ export const editUser = async ({
 //   try {
 //     // prepared statement!
 //     // const sql = "SELECT * FROM `accounts` WHERE `username` = ?"
-//     // const [results, fields] = await executeQuery(sql, username)
+//     // const [results, fields] = await sql.query(sql, username)
 //     // console.log("asdf")
 //     // return { success: true, data: results }
 
 //     const findByUsernameQuery = `SELECT * FROM accounts WHERE username='${username}';`
-//     const res = await executeQuery(findByUsernameQuery, username)
+//     const res = await sql.query(findByUsernameQuery, username)
 
 //     //if more than 1 result (unexpected)
 //     // if (res.length > 1) {
@@ -132,7 +131,7 @@ export const editUser = async ({
 
 export default {
   createUser,
-  findAll,
+  findAllUsers,
   findByUsername,
   editUser,
 };

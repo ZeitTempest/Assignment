@@ -18,11 +18,11 @@ export const userLogin = async (req, res) => {
   }
 
   try {
-    const foundUser = await findByUsername(username)
+    const foundUsers = await findByUsername(username)
     // if (foundUser.length != 1) 
     //   return res.status(401).json({ success: false, err: "users list length not equal to 1" })
 
-    const pwdCheck =  bcrypt.compareSync(password, foundUser.password)
+    const pwdCheck =  bcrypt.compareSync(password, foundUsers[0].password)
     //const pwdCheck = password === foundUser.password
 
     if (!pwdCheck) {
@@ -38,7 +38,7 @@ export const userLogin = async (req, res) => {
       maxAge: 3600000 // expiration milliseconds
       // sameSite: "strict", // Restricts the cookie to be sent only with requests originating from the same site
     })
-    res.status(200).json({ success: true, result: true, data: foundUser.username })
+    res.status(200).json({ success: true, result: true, data: foundUsers.username })
   } catch (e) {
     console.log(e)
     res.status(500).json(e)
@@ -48,13 +48,13 @@ export const userLogin = async (req, res) => {
 export const CheckGroup = async (username, groupname) => {
   try {
     const foundUser = await findByUsername(username)
-    // if (users.length !== 1) {
-    //   //user not found
-    //   return false
-    // }
-    const groupsData = foundUser.groups
-    // console.log(groupsData) //print full contents of groups
-    return groupsData.split(",").includes(groupname)
+    if (foundUser.length !== 1) {
+      //user not found
+      return false
+    }
+    //console.log("checkgroup")
+    //console.log(foundUser[0].groups)
+    return foundUser[0].groups.split(",").includes(groupname)
   } catch (e) {
     throw new Error(e)
   }
@@ -80,12 +80,12 @@ export const adminRegister = async (req, res) => {
     }
 
     // verify groups are valid
-    const allSecGroups = await secGroups.findAll();
-    const secGroupsSet = new Set(allSecGroups.map((row) => row.groupname));
+    const allGroups = await Groups.findAll();
+    const GroupsSet = new Set(allGroups.map((row) => row.groupname));
 
     let invalidGrps = "";
     for (const grp of groups) {
-      if (!secGroupsSet.has(grp)) {
+      if (!GroupsSet.has(grp)) {
         invalidGrps += grp;
       }
     }
