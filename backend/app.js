@@ -22,6 +22,10 @@ app.use(
 /** App listening on port */
 app.use("/", router)
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 const PORT = process.env.PORT || 8001
 app.listen(PORT, () => {
   console.log(`TMS App listening at http://localhost:${PORT}`)

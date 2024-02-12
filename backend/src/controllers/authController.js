@@ -1,4 +1,4 @@
-import { findByUsername } from "../models/authModel.js"
+import { createUser, findByUsername } from "../models/userModel.js"
 import { isAlphanumeric } from "../utils/utils.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
