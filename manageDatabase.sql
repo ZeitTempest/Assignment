@@ -15,6 +15,8 @@ ALTER TABLE accounts AUTO_INCREMENT = 1; -- reset auto increment value
 SET @i=0;
 UPDATE accounts SET `id`=(@i:=@i+1); -- regenerate id column for all entries starting with '1' (USE WITH CAUTION!)
 
+SELECT username, email, isActive, `groups` FROM accounts;
+
 SELECT * FROM `accounts`;
 
 SELECT * FROM `groups`;

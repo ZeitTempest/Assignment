@@ -21,12 +21,12 @@ import { checkJWT, checkAdmin } from "../middleware/auth.js"
 
 //auth routes
 router.route("/register").post(checkJWT, adminRegister)
-router.route("/auth/login").post(userLogin)
+router.route("/auth/login").post(userLogin) //w
 router.route("/verifyAccessGroup").post(checkJWT, verifyAccessGroup)
 
 //update user details
-router.route("/allUsers").get(checkJWT, checkAdmin, getAllUsers);
-router.route("/admin/updateUser").post(checkJWT, checkAdmin, adminUpdateUser);
+router.route("/allUsers").get(checkJWT, checkAdmin, getAllUsers); //w
+router.route("/admin/updateUser").post(checkJWT, checkAdmin, adminUpdateUser); //w
 router.route("/updateUser").post(checkJWT, updateUser);
 
 //modify groups

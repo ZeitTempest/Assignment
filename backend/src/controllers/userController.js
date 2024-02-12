@@ -3,9 +3,9 @@ import bcrypt from "bcryptjs"
 
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await findAll();
+    const [users] = await findAll();
 
-    res.status(200).json(users);
+    res.status(200).json([users]);
   } catch (err) {
     console.log(err);
     res.status(500).json(err);
@@ -31,7 +31,7 @@ export const adminUpdateUser = async (req, res) => {
 
     const users = await findByUsername(username);
 
-    if (users.length !== 1) {
+    if (!users) {
       return res.status(404).send("User not found");
     }
 

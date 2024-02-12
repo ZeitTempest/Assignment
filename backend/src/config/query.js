@@ -18,6 +18,10 @@ function getConnection() {
   return connection
 }
 
+
+// const doSql = mysql2.createPool({ ...mysqlCredentials })
+// export default doSql;
+
 //alternate query method
 export const executeQuery = query => {
   var connection = getConnection()
@@ -29,7 +33,10 @@ export const executeQuery = query => {
       if (error) {
         reject(error)
       } //if we get an error from db
-      else resolve(results)
+      else {
+        console.log(results)
+        resolve(results)
+      }
     })
   })
 }

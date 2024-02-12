@@ -1,7 +1,7 @@
 import { executeQuery } from "../config/query.js"
 
 export const findAll = async () => {
-  const findAllQry = `SELECT * FROM secGroups;`;
+  const findAllQry = `SELECT * FROM groups;`;
   console.log("i am still run");
   try {
     const [groups] = await executeQuery(findAllQry);
@@ -12,7 +12,7 @@ export const findAll = async () => {
 };
 
 export const createSecGroup = async (groupname) => {
-  const createGrpQry = `INSERT INTO secGroups (groupname) values ('${groupname}')`;
+  const createGrpQry = `INSERT INTO \`groups\` (groupname) values ('${groupname}')`;
 
   try {
     const res = await executeQuery(createGrpQry);
@@ -23,7 +23,7 @@ export const createSecGroup = async (groupname) => {
 };
 
 export const findGroup = async (groupname) => {
-  const findAllQry = `SELECT * FROM secGroups where groupname=${groupname};`;
+  const findAllQry = `SELECT * FROM \`groups\` where groupname=${groupname};`;
   try {
     const [groups] = await executeQuery(findAllQry);
     if (groups.length > 1) {

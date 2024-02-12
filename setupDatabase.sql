@@ -8,10 +8,10 @@ DROP TABLE IF EXISTS `accounts`; -- remove this line after development, dangerou
 CREATE TABLE IF NOT EXISTS `accounts` (
  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE, -- DOUBLE CHECK MIRO BOARD FOR REQUIREMENTS
  `username` varchar(20) NOT NULL UNIQUE,
- `password` varchar(10) NOT NULL,
+ `password` varchar(64) NOT NULL,
  `email` varchar(255) NOT NULL,
  `isActive` bool NOT NULL DEFAULT true,
- `groups` varchar(20)
+ `groups` varchar(255)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `accounts` (`username`, `password`, `email`, `groups`) VALUES 
@@ -23,7 +23,7 @@ SELECT * FROM `accounts`;
 DROP TABLE IF EXISTS `groups`; -- remove this line after development, dangerous to mess with db
 
 CREATE TABLE IF NOT EXISTS `groups` (
-`groupname` varchar(20) PRIMARY KEY 
+`groupname` varchar(255) PRIMARY KEY 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `groups` (groupname) VALUES 

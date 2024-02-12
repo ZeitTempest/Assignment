@@ -1,4 +1,4 @@
-import { isAlphanumeric } from "../utils/utils.js"
+// import { isAlphanumeric } from "../utils/utils.js"
 import { executeQuery } from "../config/query.js"
 
 export const findAll = async (onlyCols = [], excludeCols = []) => {
@@ -10,20 +10,29 @@ export const findAll = async (onlyCols = [], excludeCols = []) => {
   // console.log(getCols.join(", "));
   // const getUserByIdQry = `SELECT ${allCols.join(", ")} FROM accounts;`;
 
-  const findAllQry = `SELECT username, email, isActive, secGrp FROM accounts;`;
+  const findAllQry = `SELECT \`username\`, \`email\`, \`isActive\`, \`groups\` FROM \`accounts\`;`;
 
   try {
-    const [users] = await executeQuery(findAllQry);
-    return users;
+    const [users] = await executeQuery(findAllQry).then(results => {
+      // Handle results here
+      //console.log(results); // Make sure it logs the array of 2 users
+      return [results]
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
+    console.log("users: " + users)
+    return [users]
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err)
   }
 };
 
 export const findByUsername = async (username) => {
-  const getUserByIdQry = `SELECT * FROM accounts WHERE username='${username}';`;
+  const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${username}';`;
 
   try {
+    
     const [res] = await executeQuery(getUserByIdQry);
 
     // multiple results found,
@@ -45,7 +54,7 @@ export const findByUsername = async (username) => {
 export const createUser = async ({ username, password, email, groups }) => {
   try {
     const createUserQry = `
-      INSERT INTO accounts (username, password, email, secGrp) values ('${username}', '${password}', '${email}', '${groups}');
+      INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${password}', '${email}', '${groups}');
     `;
     const createdUser = await executeQuery(createUserQry);
 
@@ -67,13 +76,14 @@ export const editUser = async ({
   secGrp,
 }) => {
   try {
-    const updateUserQry = `UPDATE accounts SET password='${password}', email='${email}', isActive='${
+    
+    const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password}', \`email\`='${email}', \`isActive\`='${
       isActive ? 1 : 0
-    }', secGrp=${secGrp ? `'${secGrp}'` : null} WHERE username='${username}';`;
+    }', \`groups\`=${secGrp ? `'${secGrp}'` : null} WHERE \`username\`='${username}';`;
 
     console.log("query is", updateUserQry);
     const updatedUser = await executeQuery(updateUserQry);
-    if (updatedUser[0].affectedRows !== 1) {
+    if (updatedUser.affectedRows !== 1) {
       throw new Error("more than one row affected");
     }
     return updatedUser;
