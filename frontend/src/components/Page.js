@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import Container from "./Container"
-import Header from "../pages/Header"
+import Header from "../components/Header"
 
 function Page(props) {
   useEffect(() => {

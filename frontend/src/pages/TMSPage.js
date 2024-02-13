@@ -9,7 +9,7 @@ function TMSPage() {
   return (
     <Page title="Home">
       <section className="bg-gray-50 bg-gray-600 min-h-screen">
-        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:min-h-screen lg:py-0">
+        <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
           <div
             className="w-full rounded-lg shadow border md:mt-24 sm:max-w-screen-lg
          xl:p-0 bg-gray-800 border-gray-700"

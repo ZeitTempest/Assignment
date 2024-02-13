@@ -30,6 +30,7 @@ function LoginPage() {
     } catch (e) {
       //console.log(e)
       //popup/etc for unexpected error
+      //IF JWT NO AUTH, DO LOGOUT
     }
   }
 
