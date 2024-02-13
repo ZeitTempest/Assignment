@@ -1,4 +1,5 @@
 import axios from "axios"
+import { Autocomplete, Chip, TextField } from "@mui/material"
 
 const CreateUserForm = () => {
   return (
@@ -19,7 +20,8 @@ const CreateUserForm = () => {
           </div>
           <div className="flex-col space-y">
             {/*Add Groups Field*/}
-            <input type="addgroups" name="addgroups" id="addgroups" className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 bg-blue-gray-700 border-blue-gray-100 placeholder-blue-gray-200 text-white focus:ring-blue-500 focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg block w-full p-2.5 bg-gray-700" placeholder="Add Groups" required="" />
+            {/* <input type="addGroups" name="addGroups" id="addGroups" className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 bg-blue-gray-700 border-blue-gray-100 placeholder-blue-gray-200focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg block w-full p-2.5 bg-gray-700" placeholder="Add Groups" required="" /> */}
+            <Autocomplete clearIcon={false} options={["a", "b", "c"]} multiple renderTags={(value, props) => value.map((option, index) => <Chip label={option} {...props({ index })} />)} renderInput={params => <TextField label="Add Tags" {...params} />} />
           </div>
           <div>
             {/* Submit Button */}
