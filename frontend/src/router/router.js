@@ -2,12 +2,13 @@ import "../App.css"
 import { React, useState, useEffect } from "react"
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 import { isLoggedIn, logoutUser } from "../utils/auth"
-import Header from "../pages/Header"
+import Header from "../components/Header"
 
 //My Components
 import LoginPage from "../pages/LoginPage"
 import TMSPage from "../pages/TMSPage"
 import MyDetails from "../pages/MyDetails"
+import UserManagementPage from "../pages/UserManagementPage"
 
 export default function BrowserRoutes() {
   return (
@@ -21,8 +22,9 @@ export default function BrowserRoutes() {
 
         {/**non auth route: redirect to login */}
         <Route path="/login" element={isLoggedIn() ? <Navigate to="" /> : <LoginPage />} />
-        <Route path="/logout" element={(logoutUser(), (<Navigate to="/login" />))} />
-        <Route path="/details" element={ <MyDetails />} />
+        <Route path="/logout" element={<Navigate to="/login" />} />
+        <Route path="/details" element={<MyDetails />} />
+        <Route path="/management" element={<UserManagementPage />} />
       </Routes>
     </BrowserRouter>
   )

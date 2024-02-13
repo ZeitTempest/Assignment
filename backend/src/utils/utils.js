@@ -1,5 +1,5 @@
 //prettier-ignore
-export const isAlphanumeric = val => 
+export const isAlphaNumeric = val => 
 new RegExp("^[a-zA-Z0-9]+$").test(val) //test if string is compliant with our regex
 
 export const charLengthCompliant = (val, min, max) => {

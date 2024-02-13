@@ -10,88 +10,81 @@ export const findAllUsers = async (onlyCols = [], excludeCols = []) => {
   // console.log(getCols.join(", "));
   // const getUserByIdQry = `SELECT ${allCols.join(", ")} FROM accounts;`;
 
-  const findAllQry = `SELECT \`username\`, \`email\`, \`isActive\`, \`groups\` FROM \`accounts\`;`;
+  const findAllQry = `SELECT \`username\`, \`email\`, \`isActive\`, \`groups\` FROM \`accounts\`;`
 
   try {
-    const [users] = await sql.query(findAllQry).then(results => {
-      // Handle results here
-      //console.log(results); // Make sure it logs the array of 2 users
-      return results
-    })
-    .catch(error => {
-      console.error("Error:", error);
-    });
+    const [users] = await sql
+      .query(findAllQry)
+      .then(results => {
+        // Handle results here
+        //console.log(results); // Make sure it logs the array of 2 users
+        return results
+      })
+      .catch(error => {
+        console.error("Error:", error)
+      })
     return [users]
   } catch (err) {
     throw new Error(err)
   }
-};
+}
 
-export const findByUsername = async (username) => {
-  const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${username}';`;
+export const findByUsername = async username => {
+  const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${username}';`
 
   try {
-    
-    const [res] = await sql.query(getUserByIdQry);
+    const [res] = await sql.query(getUserByIdQry)
 
     // multiple results found,
     // should not happen in db as id is unique
     // fix data problem if so
     if (res.length > 1) {
-      const error = new Error("multiple rows found");
-      error.code = 500;
-      throw error;
+      const error = new Error("multiple rows found")
+      error.code = 500
+      throw error
     }
 
     // one or no rows should be returned
-    return res;
+    return res
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err)
   }
-};
+}
 
 export const createUser = async ({ username, password, email, groups }) => {
   try {
     const createUserQry = `
       INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${password}', '${email}', '${groups}');
-    `;
-    const createdUser = await sql.query(createUserQry);
+    `
+    console.log(createUserQry)
+    const createdUser = await sql.query(createUserQry)
 
     if (createdUser[0].affectedRows !== 1) {
-      throw new Error("more than one row affected");
+      throw new Error("more than one row affected")
     }
 
-    return createdUser;
+    return createdUser
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err)
   }
-};
+}
 
-export const editUser = async ({
-  username,
-  password,
-  email,
-  isActive,
-  groups,
-}) => {
+export const editUser = async ({ username, password, email, isActive, groups }) => {
   try {
-    
-    const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password}', \`email\`='${email}', \`isActive\`='${
-      isActive ? 1 : 0
-    }', \`groups\`=${groups ? `'${groups}'` : null} WHERE \`username\`='${username}';`;
+    const foundUsers = await findByUsername(username)
 
-    console.log("query is", updateUserQry);
-    const updatedUser = await sql.query(updateUserQry);
+    const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? isActive : foundUsers[0].isActive}', \`groups\`='${groups ? `'${groups}'` : foundUsers[0].groups}' WHERE \`username\`='${username}';`
+
+    console.log("query is", updateUserQry)
+    const updatedUser = await sql.query(updateUserQry)
     if (updatedUser[0].affectedRows !== 1) {
-      throw new Error("more than one row affected");
+      throw new Error("more than one row affected")
     }
-    return updatedUser;
+    return updatedUser
   } catch (err) {
-    throw new Error(err);
+    throw new Error(err)
   }
-};
-
-
+}
 
 // export const getAllUsers = async () => {
 //   //returns list of every user
@@ -128,10 +121,9 @@ export const editUser = async ({
 //   }
 // }
 
-
 export default {
   createUser,
   findAllUsers,
   findByUsername,
-  editUser,
-};
+  editUser
+}
