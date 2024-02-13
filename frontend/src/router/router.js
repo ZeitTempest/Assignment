@@ -1,7 +1,7 @@
 import "../App.css"
 import { React, useState, useEffect } from "react"
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
-import { isLoggedIn, logoutUser } from "../utils/auth"
+import { isLoggedIn } from "../utils/auth"
 import Header from "../components/Header"
 
 //My Components
