@@ -20,8 +20,8 @@ const CreateUserForm = () => {
           </div>
           <div className="flex-col space-y">
             {/*Add Groups Field*/}
-            {/* <input type="addGroups" name="addGroups" id="addGroups" className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 bg-blue-gray-700 border-blue-gray-100 placeholder-blue-gray-200focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg block w-full p-2.5 bg-gray-700" placeholder="Add Groups" required="" /> */}
-            <Autocomplete clearIcon={false} options={["a", "b", "c"]} multiple renderTags={(value, props) => value.map((option, index) => <Chip label={option} {...props({ index })} />)} renderInput={params => <TextField label="Add Tags" {...params} />} />
+            {/* <input type="addGroups" name="addGroups" id="addGroups" className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 bg-blue-gray-700 border-blue-gray-100 placeholder-blue-gray-200 focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg block w-full p-2.5 bg-gray-700" placeholder="Add Groups" required="" /> */}
+            <Autocomplete clearIcon={false} options={["a", "b"]} multiple className="bg-blue-gray-50 border border-blue-gray-300 text-white block w-full p-2.5 bg-blue-gray-700 border-blue-gray-100 text-xs rounded-lg block w-full p-2.5 bg-gray-700" renderTags={(value, props) => value.map((option, index) => <Chip label={option} {...props({ index })} />)} renderInput={params => <TextField label="Select Groups.." {...params} />} />
           </div>
           <div>
             {/* Submit Button */}
