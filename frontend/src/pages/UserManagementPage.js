@@ -79,5 +79,5 @@ function UserManagementPage() {
     </Page>
   )
 }
-
+}
 export default UserManagementPage

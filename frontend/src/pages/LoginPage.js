@@ -37,7 +37,6 @@ function LoginPage() {
       console.log(e)
       }
       //popup/etc for unexpected error
-    }
   }
 
   return (
@@ -66,5 +65,4 @@ function LoginPage() {
     </section>
   )
 }
-
 export default LoginPage

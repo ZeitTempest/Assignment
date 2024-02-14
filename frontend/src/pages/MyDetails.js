@@ -99,5 +99,5 @@ function MyDetails() {
     </Page>
   )
 }
-
+}
 export default MyDetails
