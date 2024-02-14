@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken"
-import { CheckGroup} from "../controllers/authController.js";
+import { CheckGroup } from "../controllers/authController.js"
 const secret = process.env.JWTSECRET
 
 // export const checkJWT = async (req, res, next) => {
@@ -20,32 +20,34 @@ const secret = process.env.JWTSECRET
 // }
 
 export const checkJWT = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
+  const authHeader = req.headers["authorization"]
+  const token = authHeader && authHeader.split(" ")[1]
+  //const token = authHeader.split(" ")[1]
+  console.log(token)
   jwt.verify(token, secret, async (err, decoded) => {
     // console.log(decoded); // { username: 'admin', iat: 1707118235, exp: 1707121835 }
     if (err) {
-      return res.status(403).send("Invalid token");
+      console.log(err)
+      return res.status(403).send("Invalid token")
     }
-
-    req.byUser = decoded.username;
-    next();
-  });
-};
+    req.byUser = decoded.username
+    next()
+  })
+}
 
 export const checkAdmin = async (req, res, next) => {
   try {
-    const username = req.byUser;
+    const username = req.byUser
 
-    const isAdmin = await CheckGroup(username, "admin");
-    console.log("is admin: " + isAdmin);
+    const isAdmin = await CheckGroup(username, "admin")
+    console.log("is admin: " + isAdmin)
     if (!isAdmin) {
-      return res.status(403).send("not admin");
+      return res.status(403).send("not admin")
     } else {
-      next();
+      next()
     }
   } catch (err) {
-    console.log(err);
-    return res.status(500).send(err);
+    console.log(err)
+    return res.status(500).send(err)
   }
-};
+}

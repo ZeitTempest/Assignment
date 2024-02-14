@@ -12,6 +12,19 @@ export const getAllUsers = async (req, res) => {
   }
 }
 
+export const getUser = async (req, res) => {
+  //const getUserByIdQry = `SELECT * FROM accounts WHERE username='${req.byUser}';`
+
+  try {
+    const foundUser = await findByUsername(req.byUser)
+
+    res.status(200).json(foundUser[0])
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
+  }
+}
+
 export const adminUpdateUser = async (req, res) => {
   try {
     // console.log("req.body", req.body);
@@ -32,6 +45,7 @@ export const adminUpdateUser = async (req, res) => {
     password = password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10)) : users[0].password
 
     groups = Array.isArray(groups) && groups.length !== 0 ? groups.join(",") : groups //if any change to groups, update groups
+
     // update user
     await editUser({
       username,
@@ -57,7 +71,7 @@ export const updateUser = async (req, res) => {
     // get which user is requesting
     const username = req.byUser
 
-    const user = await findByUsername(username)
+    const users = await findByUsername(username)
 
     //hash pw
     password = password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10)) : users[0].password
@@ -67,7 +81,7 @@ export const updateUser = async (req, res) => {
 
     // const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
     // res.cookie("jwt", token, { maxAge: 3600000 })
-    res.status(200).json()
+    res.status(200).json({ result: true })
   } catch (err) {
     console.log(err)
     res.status(500).json(err)

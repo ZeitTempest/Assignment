@@ -33,13 +33,7 @@ export const userLogin = async (req, res) => {
     //jwt token here
     const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
     //console.log(`token: ${token}`)
-    res.cookie("jwt", token, {
-      // httpOnly: true, // cannot access cookie via js in client
-      // secure: true, // Only sent over HTTPS
-      maxAge: 3600000 // expiration milliseconds
-      // sameSite: "strict", // Restricts the cookie to be sent only with requests originating from the same site
-    })
-    res.status(200).json({ success: true, result: true, data: foundUsers.username })
+    res.status(200).json({ success: true, result: true, data: foundUsers.username, jwt: token })
   } catch (e) {
     console.log(e)
     res.status(500).json(e)

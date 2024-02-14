@@ -1,5 +1,6 @@
-import React, { useState /*, useContext*/ } from "react"
+import React, { useState, useContext } from "react"
 import Page from "../components/Page"
+import DispatchContext from "../DispatchContext"
 
 import Axios from "axios"
 import Cookies from "js-cookie"
@@ -7,6 +8,8 @@ import { useNavigate } from "react-router-dom"
 //import DispatchContext from "../DispatchContext"
 
 function LoginPage() {
+  const appDispatch = useContext(DispatchContext)
+
   const navigate = useNavigate()
   // const unacceptable = [undefined, ""]
   // const appDispatch = useContext(DispatchContext)
@@ -23,6 +26,8 @@ function LoginPage() {
     try {
       const response = await Axios.post("/auth/login", { username, password })
       if (response.data.result === true) {
+        appDispatch({ type: "login", data: response.data })
+        Cookies.set("jwt", response.data.jwt)
         navigate("/")
       } else {
         //popup/etc for u/pw error

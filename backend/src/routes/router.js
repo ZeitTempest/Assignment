@@ -1,7 +1,7 @@
 import express from "express"
 const router = express.Router()
 import { adminRegister, userLogin, verifyAccessGroup } from "../controllers/authController.js"
-import { getAllUsers, adminUpdateUser, updateUser } from "../controllers/userController.js"
+import { getUser, getAllUsers, adminUpdateUser, updateUser } from "../controllers/userController.js"
 import { getAllGroups, createGroup } from "../controllers/groupController.js"
 
 import { checkJWT, checkAdmin } from "../middleware/auth.js"
@@ -28,6 +28,7 @@ router.route("/verifyAccessGroup").post(checkJWT, verifyAccessGroup) //w
 router.route("/allUsers").get(checkJWT, checkAdmin, getAllUsers) //w
 router.route("/admin/updateUser").post(checkJWT, checkAdmin, adminUpdateUser) //w
 router.route("/updateUser").post(checkJWT, updateUser) //w
+router.route("/getUser").get(checkJWT, getUser)
 
 //modify groups
 router.route("/allGroups").get(checkJWT, checkAdmin, getAllGroups) //w
