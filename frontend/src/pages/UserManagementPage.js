@@ -17,7 +17,12 @@ function UserManagementPage() {
       const response = await Axios.get("/allUsers")
       console.log(response.data[0])
       setUsers(response.data[0])
-    } catch (e) {}
+    } 
+    catch (e) { 
+      console.log(e)     
+      if(e.code >= 400){
+      logoutUser()
+      navigate("logout")}
   }
 
   useEffect(() => {
@@ -38,8 +43,8 @@ function UserManagementPage() {
               <div className="flex-col w-full justify-center items-center space-y">
                 {/* column 1 */}
                 <div class="relative overflow-x-auto">
-                  <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <table class="w-full text-sm text-left rtl:text-right text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-700 text-gray-200 text-center">
                       <tr>
                         <th scope="col" class="px-6 py-3">
                           Username

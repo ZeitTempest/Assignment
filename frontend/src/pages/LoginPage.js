@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react"
 import Page from "../components/Page"
 import DispatchContext from "../DispatchContext"
 
+import { logoutUser } from "../utils/auth"
 import Axios from "axios"
 import Cookies from "js-cookie"
 import { useNavigate } from "react-router-dom"
@@ -33,9 +34,9 @@ function LoginPage() {
         //popup/etc for u/pw error
       }
     } catch (e) {
-      //console.log(e)
+      console.log(e)
+      }
       //popup/etc for unexpected error
-      //IF JWT NO AUTH, DO LOGOUT
     }
   }
 

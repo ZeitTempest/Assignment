@@ -51,8 +51,9 @@ function MyDetails() {
       // }
     } catch (e) {
       console.log(e)
-      //popup/etc for unexpected error
-      //IF JWT NO AUTH, DO LOGOUT
+      if(e.code >= 400){
+        logoutUser()
+        navigate("logout")
     }
   }
 
