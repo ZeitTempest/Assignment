@@ -3,9 +3,9 @@ import bcrypt from "bcryptjs"
 
 export const getAllUsers = async (req, res) => {
   try {
-    const [users] = await findAllUsers()
+    const users = await findAllUsers()
 
-    res.status(200).json([users])
+    res.status(200).json(users)
   } catch (err) {
     console.log(err)
     res.status(500).json(err)
