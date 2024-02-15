@@ -2,10 +2,14 @@
 export const isAlphaNumeric = val => 
 new RegExp("^[a-zA-Z0-9]+$").test(val) //test if string is compliant with our regex
 
-export const charLengthCompliant = (val, min, max) => {
-  const length = val.length
-  return length >= min && length <= max
-} //test if string is compliant with our length requirements
+export const passwordCompliant = val => new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(val)
+
+export const emailCompliant = val => new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(val)
+
+// export const charLengthCompliant = (val, min, max) => {
+//   const length = val.length
+//   return length >= min && length <= max
+// } //test if string is compliant with our length requirements
 
 //function for converting to lowercase - used for username, group names tec
 

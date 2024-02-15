@@ -8,12 +8,27 @@ npm Intellisense
 Maybe needed:
 ESLint
 
+admincheck not running on createuser
+
+import { isAlphaNumeric, charLengthCompliant etc } from "../utils/utils.js"
+const { username, password } = req.body
+  const meetsContraints = isAlphaNumeric(username) && charLengthCompliant(username, 3, 20) //check for username compliance
+
+  if (!meetsContraints{
+    return res.status(401).json({
+      success: false,
+      err: "username non compliant"
+    })
+  }
+
+
+e.target.reset not working in createuserform
 
 frontend
 - state for login 
-- Conditional rendering for admin priviledges (manage users button in header), remove buttons before login
+- Conditional rendering for admin priviledges (manage users button in header), remove buttons before login (OK)
 - protect routes
-- USER MANAGEMENT  TABLE
+- USER MANAGEMENT  TABLE (OK)
 
 - Implement check on state chage(or re-render?) for jwt, do logout if no valid jwt //done?
 - Implement groups/permissions check on state change in case permissions are revoked

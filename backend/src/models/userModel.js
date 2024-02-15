@@ -56,7 +56,7 @@ export const createUser = async ({ username, password, email, groups }) => {
     const createUserQry = `
       INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${password}', '${email}', '${groups}');
     `
-    console.log(createUserQry)
+    //console.log(createUserQry)
     const createdUser = await sql.query(createUserQry)
 
     if (createdUser[0].affectedRows !== 1) {
@@ -65,15 +65,16 @@ export const createUser = async ({ username, password, email, groups }) => {
 
     return createdUser
   } catch (err) {
+    console.log(err)
     throw new Error(err)
   }
 }
 
-export const editUser = async ({ username, password, email, isActive, groups }) => {
+export const adminEditUser = async ({ username, password, email, isActive, groups }) => {
   try {
     const foundUsers = await findByUsername(username)
 
-    const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? isActive : foundUsers[0].isActive}', \`groups\`='${groups ? `'${groups}'` : foundUsers[0].groups}' WHERE \`username\`='${username}';`
+    const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
 
     console.log("query is", updateUserQry)
     const updatedUser = await sql.query(updateUserQry)
@@ -82,7 +83,25 @@ export const editUser = async ({ username, password, email, isActive, groups }) 
     }
     return updatedUser
   } catch (err) {
-    throw new Error(err)
+    console.log(err)
+    throw new Error("admin update user query failed")
+  }
+}
+export const editUserSelf = async ({ username, password, email }) => {
+  try {
+    const foundUsers = await findByUsername(username)
+
+    const updateUserQry = `UPDATE tmsdatabase.accounts SET password = ? , email = ? WHERE username = ?`
+
+    console.log("query is", updateUserQry)
+    const updatedUser = await sql.query(updateUserQry, [password, email, username])
+    if (updatedUser[0].affectedRows !== 1) {
+      throw new Error("more than one row affected")
+    }
+    return updatedUser
+  } catch (err) {
+    console.log(err)
+    throw new Error("user update self query failed")
   }
 }
 
@@ -125,5 +144,6 @@ export default {
   createUser,
   findAllUsers,
   findByUsername,
-  editUser
+  adminEditUser,
+  editUserSelf
 }

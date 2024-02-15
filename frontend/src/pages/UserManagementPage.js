@@ -1,6 +1,6 @@
 import React, { useEffect, useState /*, useContext*/ } from "react"
 import Page from "../components/Page"
-
+import { logoutUser } from "../utils/auth"
 import Axios from "axios"
 import { useNavigate } from "react-router-dom"
 import CreateGroupForm from "../components/CreateGroupForm"
@@ -10,30 +10,69 @@ import ViewRow from "../components/ViewRow"
 //import DispatchContext from "../DispatchContext"
 
 function UserManagementPage() {
+  const navigate = useNavigate()
   const [users, setUsers] = useState([])
+  const [groups, setGroups] = useState([])
+  const [groupList, setGroupList] = useState([])
 
   async function getUsersTable() {
     try {
       const response = await Axios.get("/allUsers")
-      console.log(response.data[0])
       setUsers(response.data[0])
-    } 
-    catch (e) { 
-      console.log(e)     
-      if(e.code >= 400){
-      logoutUser()
-      navigate("logout")}
+
+      console.log(response.data[0])
+      const allGroups = []
+      response.data[0].forEach(user => {
+        const thisUserGroups = user.groups?.split(",")
+        allGroups.push({ user: user.username, groups: thisUserGroups })
+      })
+
+      console.log(allGroups)
+
+      setGroups(allGroups)
+    } catch (e) {
+      console.log(e)
+      if (e.code >= 400) {
+        logoutUser()
+        navigate("/logout")
+      }
+    }
+  }
+
+  function findUserGroups(username) {
+    const group = groups.find(group => group.user === username)
+    if (group) {
+      return group.groups
+    }
+  }
+
+  async function getGroupsList() {
+    //returns array of all groups
+    try {
+      const response = await Axios.get("/allGroups")
+
+      if (response.data) {
+        const options = []
+        response.data.forEach(group => {
+          options.push(group.groupname)
+        })
+        setGroupList(options)
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   useEffect(() => {
     getUsersTable()
+    getGroupsList()
   }, [])
 
   return (
     <Page title="User Management">
       <section className="bg-gray-300 min-h-screen">
         <CreateGroupForm />
-        <CreateUserForm />
+        <CreateUserForm groupList={groupList} />
         <div className="flex flex-col items-center justify-center px-6 mx-auto lg:py-0">
           <div className="w-full rounded-lg shadow border md:my-2 sm:max-w-screen-mx xl:p-0 bg-blue-gray-800 border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -44,7 +83,7 @@ function UserManagementPage() {
                 {/* column 1 */}
                 <div class="relative overflow-x-auto">
                   <table class="w-full text-sm text-left rtl:text-right text-gray-400">
-                    <thead class="text-xs text-gray-700 uppercase bg-gray-700 text-gray-200 text-center">
+                    <thead class="text-xs text-gray-100 uppercase bg-gray-700 text-gray-200 text-center">
                       <tr>
                         <th scope="col" class="px-6 py-3">
                           Username
@@ -66,7 +105,7 @@ function UserManagementPage() {
                     </thead>
                     <tbody>
                       {users.map(user => {
-                        return <ViewRow username={user.username} email={user.email} isActive={user.isActive} />
+                        return <ViewRow username={user.username} email={user.email} isActive={user.isActive} groupList={groupList} userGroups={findUserGroups(user.username)} />
                       })}
                     </tbody>
                   </table>
@@ -79,5 +118,5 @@ function UserManagementPage() {
     </Page>
   )
 }
-}
+
 export default UserManagementPage

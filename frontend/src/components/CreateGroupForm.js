@@ -9,7 +9,7 @@ const CreateGroupForm = () => {
     //IF JWT NO AUTH, DO LOGOUT
   }
 
-  const [groupname, setnewGroup] = useState()
+  const [groupname, setnewGroup] = useState("")
 
   async function handleSubmit(e) {
     e.preventDefault() //prevent default behavior for the event, i.e. a checkbox checking when clicked
@@ -21,23 +21,23 @@ const CreateGroupForm = () => {
     try {
       if (groupname) {
         const response = await Axios.post("/createGroup", { groupname })
-        if (response.data.result === true) {
-          e.target.reset()
+        if (response.status === 200) {
+          //e.target.reset() //just set back to blank val
+          setnewGroup("")
+          alert("Group successfully created")
         }
+      } else {
+        alert("field is blank")
       }
-
-      // else {
-      //popup/etc for u/pw error
-      // }
     } catch (e) {
       console.log(e)
-      //popup/etc for unexpected error
+      alert("Error creating group")
       //IF JWT NO AUTH, DO LOGOUT
     }
   }
   return (
     <div className="flex items-center justify-center px-6 mx-auto lg:py-0">
-      <div className="w-full rounded-lg shadow border md:mt-24 mb-2 sm:max-w-screen-lg xl:p-0 bg-blue-gray-800 border-gray-700">
+      <div className="min-w-full rounded-lg shadow border md:mt-24 mb-2 sm:max-w-screen-lg xl:p-0 bg-blue-gray-800 border-gray-700">
         <form action="#" onSubmit={handleSubmit}>
           <div className="flex space-x-6 sm:p-8 items-center justify-end">
             <div className="flex-col space-y">

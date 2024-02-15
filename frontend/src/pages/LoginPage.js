@@ -35,8 +35,10 @@ function LoginPage() {
       }
     } catch (e) {
       console.log(e)
-      }
-      //popup/etc for unexpected error
+      alert("invalid login credentials")
+      return
+    }
+    //popup/etc for unexpected error
   }
 
   return (

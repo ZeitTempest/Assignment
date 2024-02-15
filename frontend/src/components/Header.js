@@ -1,9 +1,28 @@
-import React from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedInAdmin from "./HeaderLoggedInAdmin"
-
+import StateContext from "../StateContext"
+import axios from "axios"
 function Header() {
+  const appState = useContext(StateContext)
+
+  const [isAdmin, setisAdmin] = useState(false)
+  async function checkAdmin() {
+    try {
+      console.log("chkadmin")
+      const groupname = "admin"
+      const res = await axios.post("/verifyAccessGroup", { groupname })
+      setisAdmin(res.data.userIsInGroup)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  useEffect(() => {
+    checkAdmin()
+  }, [appState.loggedIn])
+
   return (
     // <header className="header-bar bg-primary mb-3">
     //   <div className="container d-flex flex-column flex-md-row align-items-center p-3">
@@ -28,9 +47,7 @@ function Header() {
             <img src={require("../assets/TMS_Logo2.png")} className="mr-3 h-6 lg:h-12" alt="TMS Logo" />
             <span className="self-center text-xl font-semibold whitespace-nowrap text-white">TMS</span>
           </Link>
-          <div className="flex items-right lg:order-2">
-            <HeaderLoggedInAdmin />
-          </div>
+          <div className="flex items-right lg:order-2">{!appState.loggedIn ? "" : isAdmin ? <HeaderLoggedInAdmin /> : <HeaderLoggedIn />}</div>
         </div>
       </nav>
     </header>

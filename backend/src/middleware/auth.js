@@ -23,7 +23,7 @@ export const checkJWT = (req, res, next) => {
   const authHeader = req.headers["authorization"]
   const token = authHeader && authHeader.split(" ")[1]
   //const token = authHeader.split(" ")[1]
-  console.log(token)
+
   jwt.verify(token, secret, async (err, decoded) => {
     // console.log(decoded); // { username: 'admin', iat: 1707118235, exp: 1707121835 }
     if (err) {
@@ -40,9 +40,10 @@ export const checkAdmin = async (req, res, next) => {
     const username = req.byUser
 
     const isAdmin = await CheckGroup(username, "admin")
-    console.log("is admin: " + isAdmin)
+    //console.log("is admin: " + isAdmin)
     if (!isAdmin) {
       return res.status(403).send("not admin")
+      //kick out/logout
     } else {
       next()
     }

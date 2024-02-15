@@ -1,6 +1,6 @@
 import React, { useState, useEffect /*, useContext*/ } from "react"
 import Page from "../components/Page"
-
+import { logoutUser } from "../utils/auth"
 import Axios from "axios"
 import { useNavigate } from "react-router-dom"
 //import DispatchContext from "../DispatchContext"
@@ -22,8 +22,8 @@ function MyDetails() {
     init()
   }, [])
 
-  const [email, setnewEmail] = useState()
-  const [password, setnewPassword] = useState()
+  const [email, setnewEmail] = useState("")
+  const [password, setnewPassword] = useState("")
 
   async function handleSubmit(e) {
     e.preventDefault() //prevent default behavior for the event, i.e. a checkbox checking when clicked
@@ -35,15 +35,10 @@ function MyDetails() {
     var response
 
     try {
-      if (email && password) {
-        response = await Axios.post("/updateUser", { email, password })
-      } else if (email) {
-        response = await Axios.post("/updateUser", { email })
-      } else if (password) {
-        response = await Axios.post("/updateUser", { password })
-      }
+      response = await Axios.post("/updateUser", { email, password })
 
       if (response.data.result === true) {
+        if (email || password) alert("Successfully updated your details.")
         e.target.reset()
       }
       // else {
@@ -51,9 +46,11 @@ function MyDetails() {
       // }
     } catch (e) {
       console.log(e)
-      if(e.code >= 400){
+      alert("invalid email or password field")
+      if (e.code >= 400) {
         logoutUser()
         navigate("logout")
+      }
     }
   }
 
@@ -98,6 +95,5 @@ function MyDetails() {
       </section>
     </Page>
   )
-}
 }
 export default MyDetails

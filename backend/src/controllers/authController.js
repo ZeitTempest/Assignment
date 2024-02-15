@@ -1,5 +1,5 @@
 import { createUser, findByUsername } from "../models/userModel.js"
-import { isAlphaNumeric } from "../utils/utils.js"
+import { isAlphaNumeric, passwordCompliant, emailCompliant } from "../utils/utils.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
 
@@ -7,27 +7,17 @@ const secret = process.env.JWTSECRET
 const expiresIn = "1h"
 
 export const userLogin = async (req, res) => {
-  //console.log("userlogin")
-  const { username, password } = req.body
-  const usernameCompliant = isAlphaNumeric(username) //simple check for username compliance to reduce server load
-
-  if (!usernameCompliant) {
-    return res.status(401).json({
-      success: false,
-      err: "username non compliant"
-    })
-  }
-
   try {
+    const username = req.body.username
+    const password = req.body.password
     const foundUsers = await findByUsername(username)
-    // if (foundUser.length != 1)
-    //   return res.status(401).json({ success: false, err: "users list length not equal to 1" })
+    if (foundUsers.length != 1) return res.status(401).json({ success: false, err: "users list length not equal to 1" })
 
     const pwdCheck = bcrypt.compareSync(password, foundUsers[0].password)
     //const pwdCheck = password === foundUser.password
 
     if (!pwdCheck) {
-      return res.status(401).json({ success: false, err: "pwdCheck failed" })
+      return res.status(401).json({ success: false, err: "pwd check failed" })
     }
 
     //jwt token here
@@ -67,12 +57,23 @@ export const adminRegister = async (req, res) => {
     }
 
     // verify fits constraints
-    const meetsContraints = isAlphaNumeric(username) && username.length >= 3 && username.length <= 20
+    const usernameMeetsContraints = isAlphaNumeric(username) && username.length >= 3 && username.length <= 20
 
-    if (!meetsContraints) {
-      return res.status(401).json("Invalid user details.")
+    if (!usernameMeetsContraints) {
+      return res.status(401).json("Invalid username.")
     }
 
+    const passwordMeetsContraints = passwordCompliant(password) && password.length >= 8 && password.length <= 10
+
+    if (!passwordMeetsContraints) {
+      return res.status(401).json("Invalid password.")
+    }
+
+    const emailMeetsContraints = emailCompliant(email)
+
+    if (!emailMeetsContraints) {
+      return res.status(401).json("Invalid email.")
+    }
     // verify groups are valid
     // const allGroups = await groups.findAll()
     // const GroupsSet = new Set(allGroups.map(row => row.groupname))
@@ -93,9 +94,7 @@ export const adminRegister = async (req, res) => {
 
     // reject if user already exists
     if (user.length >= 1) {
-      const error = new Error("User already exists")
-      error.code = 400
-      throw error
+      return res.status(401).json("User already exists")
     }
 
     // create hash
@@ -125,11 +124,12 @@ export const adminRegister = async (req, res) => {
 
 export const verifyAccessGroup = async (req, res) => {
   try {
-    const { username, groupname } = req.body
+    const { groupname } = req.body
+    const username = req.byUser
     const userIsInGroup = await CheckGroup(username, groupname)
     return res.status(200).json({ success: true, userIsInGroup })
   } catch (err) {
     console.log(err)
-    res.status(500).json(err)
+    res.status(500).json("failed to verify access")
   }
 }

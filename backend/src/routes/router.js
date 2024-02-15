@@ -1,7 +1,7 @@
 import express from "express"
 const router = express.Router()
 import { adminRegister, userLogin, verifyAccessGroup } from "../controllers/authController.js"
-import { getUser, getAllUsers, adminUpdateUser, updateUser } from "../controllers/userController.js"
+import { getUser, getAllUsers, adminUpdateUser, updateUser, adminCreateUser } from "../controllers/userController.js"
 import { getAllGroups, createGroup } from "../controllers/groupController.js"
 
 import { checkJWT, checkAdmin } from "../middleware/auth.js"
@@ -20,17 +20,18 @@ import { checkJWT, checkAdmin } from "../middleware/auth.js"
 //repeat for each js file
 
 //auth routes
-router.route("/register").post(checkJWT, adminRegister) //w
-router.route("/auth/login").post(userLogin) //w
+router.route("/register").post(checkJWT, adminRegister) //v
+router.route("/auth/login").post(userLogin) //v
 router.route("/verifyAccessGroup").post(checkJWT, verifyAccessGroup) //w
 
 //update user details
 router.route("/allUsers").get(checkJWT, checkAdmin, getAllUsers) //w
 router.route("/admin/updateUser").post(checkJWT, checkAdmin, adminUpdateUser) //w
-router.route("/updateUser").post(checkJWT, updateUser) //w
-router.route("/getUser").get(checkJWT, getUser)
+router.route("/updateUser").post(checkJWT, updateUser) //v
+router.route("/getUser").get(checkJWT, getUser) //w
+router.route("/createUser").post(checkJWT, checkAdmin, adminCreateUser) //v
 
 //modify groups
 router.route("/allGroups").get(checkJWT, checkAdmin, getAllGroups) //w
-router.route("/createGroup").post(checkJWT, checkAdmin, createGroup) //w
+router.route("/createGroup").post(checkJWT, checkAdmin, createGroup) //xx
 export default router
