@@ -14,7 +14,7 @@ const CreateUserForm = props => {
       if (username && password) {
         const res = await axios.post("/createUser", { username, password, email, groups })
         if (res.data) {
-          //e.target.reset()
+          //reset fields
           setUsername("")
           setPassword("")
           setEmail("")

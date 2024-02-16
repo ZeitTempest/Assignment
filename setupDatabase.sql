@@ -6,8 +6,7 @@ USE `TMSDatabase`;
 DROP TABLE IF EXISTS `accounts`; -- remove this line after development, dangerous to mess with db
 
 CREATE TABLE IF NOT EXISTS `accounts` (
- `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT UNIQUE, -- DOUBLE CHECK MIRO BOARD FOR REQUIREMENTS
- `username` varchar(20) NOT NULL UNIQUE,
+ `username` varchar(20) NOT NULL PRIMARY KEY UNIQUE,
  `password` varchar(64) NOT NULL,
  `email` varchar(255) NOT NULL,
  `isActive` bool NOT NULL DEFAULT true,

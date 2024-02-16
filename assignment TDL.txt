@@ -10,6 +10,11 @@ ESLint
 
 admincheck not running on createuser
 
+
+Cleared:
+- USER MANAGEMENT  TABLE (OK)
+- Conditional rendering for admin priviledges (manage users button in header), remove buttons before login (OK)
+
 import { isAlphaNumeric, charLengthCompliant etc } from "../utils/utils.js"
 const { username, password } = req.body
   const meetsContraints = isAlphaNumeric(username) && charLengthCompliant(username, 3, 20) //check for username compliance
@@ -21,14 +26,11 @@ const { username, password } = req.body
     })
   }
 
-
 e.target.reset not working in createuserform
 
 frontend
 - state for login 
-- Conditional rendering for admin priviledges (manage users button in header), remove buttons before login (OK)
 - protect routes
-- USER MANAGEMENT  TABLE (OK)
 
 - Implement check on state chage(or re-render?) for jwt, do logout if no valid jwt //done?
 - Implement groups/permissions check on state change in case permissions are revoked

@@ -39,7 +39,9 @@ function MyDetails() {
 
       if (response.data.result === true) {
         if (email || password) alert("Successfully updated your details.")
-        e.target.reset()
+        setnewEmail("")
+        setnewPassword("")
+        //e.target.reset()
       }
       // else {
       //popup/etc for u/pw error

@@ -22,7 +22,6 @@ const CreateGroupForm = () => {
       if (groupname) {
         const response = await Axios.post("/createGroup", { groupname })
         if (response.status === 200) {
-          //e.target.reset() //just set back to blank val
           setnewGroup("")
           alert("Group successfully created")
         }
