@@ -5,6 +5,9 @@ import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom"
 import Axios from "axios"
 import Cookies from "js-cookie"
 
+import {ToastContainer, toast} from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
+
 import { useImmerReducer } from "use-immer"
 import StateContext from "./StateContext"
 import DispatchContext from "./DispatchContext"
@@ -33,6 +36,14 @@ function App() {
       case "logout":
         draft.loggedIn = false
         break
+      case "toast-success":
+        toast.success(action.data)
+        break
+      case "toast-failed":
+        toast.error(action.data)
+        break
+      default:
+        break
     }
   }
 
@@ -52,6 +63,7 @@ function App() {
       <StateContext.Provider value={state}>
         <DispatchContext.Provider value={dispatch}>
           <Router />
+          <ToastContainer position="bottom-right" autoClose={2000}/>
         </DispatchContext.Provider>
       </StateContext.Provider>
     </>

@@ -6,7 +6,7 @@ function HeaderLoggedInAdmin() {
 
   function handleLogout() {
     logoutUser()
-    navigate("/logout")
+    navigate("/login")
   }
 
   function goToDetails() {

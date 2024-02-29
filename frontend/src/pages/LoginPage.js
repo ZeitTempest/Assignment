@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import Page from "../components/Page"
 import DispatchContext from "../DispatchContext"
 
@@ -10,6 +10,10 @@ import { useNavigate } from "react-router-dom"
 
 function LoginPage() {
   const appDispatch = useContext(DispatchContext)
+
+  useEffect(() => {
+    console.log(Cookies.get('jwt')) //jwt check
+  }, [])
 
   const navigate = useNavigate()
   // const unacceptable = [undefined, ""]
@@ -28,14 +32,14 @@ function LoginPage() {
       const response = await Axios.post("/auth/login", { username, password })
       if (response.data.result === true) {
         appDispatch({ type: "login", data: response.data })
+        appDispatch({type:"toast-success", data: "Successful login."})
         Cookies.set("jwt", response.data.jwt)
         navigate("/")
       } else {
-        //popup/etc for u/pw error
+        appDispatch({type:"toast-failed", data: "Unsuccessful login."})
       }
     } catch (e) {
-      console.log(e)
-      alert("invalid login credentials")
+      appDispatch({type:"toast-failed", data: "Unsuccessful login."})
       return
     }
     //popup/etc for unexpected error
