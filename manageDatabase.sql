@@ -18,5 +18,7 @@ UPDATE accounts SET `id`=(@i:=@i+1); -- regenerate id column for all entries sta
 SELECT username, email, isActive, `groups` FROM accounts;
 
 SELECT * FROM `accounts`;
-
 SELECT * FROM `groups`;
+SELECT * FROM `application`;
+SELECT * FROM `plan`;
+SELECT * FROM `task`;
