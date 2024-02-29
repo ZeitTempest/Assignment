@@ -17,9 +17,9 @@ Cleared:
 
 import { isAlphaNumeric, charLengthCompliant etc } from "../utils/utils.js"
 const { username, password } = req.body
-  const meetsContraints = isAlphaNumeric(username) && charLengthCompliant(username, 3, 20) //check for username compliance
+  const meetsConstraints = isAlphaNumeric(username) && charLengthCompliant(username, 3, 20) //check for username compliance
 
-  if (!meetsContraints{
+  if (!meetsConstraints{
     return res.status(401).json({
       success: false,
       err: "username non compliant"

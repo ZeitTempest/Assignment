@@ -47,16 +47,17 @@ function App() {
     }
   }
 
+
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 
-  // useEffect(() => {
-  //   if (state.loggedIn) {
-  //     Cookies.set("jwt", state.jwt)
-  //   } else {
-  //     Cookies.remove("jwt")
-  //     Axios.defaults.headers.common["Authorization"] = null
-  //   }
-  // },[state.loggedIn, state.jwt])
+  useEffect(() => {
+    if (state.loggedIn) {
+      Cookies.set("jwt", state.jwt)
+    } else {
+      Cookies.remove("jwt")
+      Axios.defaults.headers.common["Authorization"] = null
+    }
+  },[state.loggedIn, state.jwt])
 
   return (
     <>

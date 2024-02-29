@@ -1,14 +1,17 @@
 import React, { useState, useEffect /*, useContext*/ } from "react"
 import Page from "../components/Page"
-import { logoutUser } from "../utils/auth"
+//import { logoutUser } from "../utils/auth"
 import Axios from "axios"
 import { useNavigate } from "react-router-dom"
-//import DispatchContext from "../DispatchContext"
+
+import { useContext } from "react"
+import DispatchContext from "../DispatchContext"
 
 function MyDetails() {
+  const appDispatch = useContext(DispatchContext)
+
   const navigate = useNavigate()
   // const unacceptable = [undefined, ""]
-  // const appDispatch = useContext(DispatchContext)
   const [currUsername, setcurrUsername] = useState("")
   const [currEmail, setcurrEmail] = useState("")
 
@@ -38,7 +41,9 @@ function MyDetails() {
       response = await Axios.post("/updateUser", { email, password })
 
       if (response.data.result === true) {
-        if (email || password) alert("Successfully updated your details.")
+        if(email) appDispatch({type:"toast-success", data:"Successfully updated email."})
+        if(password) appDispatch({type:"toast-success", data:"Successfully updated password."})
+        
         setnewEmail("")
         setnewPassword("")
         //e.target.reset()
@@ -48,9 +53,9 @@ function MyDetails() {
       // }
     } catch (e) {
       console.log(e)
-      alert("invalid email or password field")
+      appDispatch({type:"toast-failed", data:"invalid email or password field"}) //have custom toast alert for either email wrong or pw wrong
       if (e.code >= 400) {
-        logoutUser()
+        appDispatch({type:"logout"})
         navigate("logout")
       }
     }

@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom"
-import { logoutUser } from "../utils/auth"
+import DispatchContext from "../DispatchContext"
+import { useContext } from "react"
 
 function HeaderLoggedInAdmin() {
   const navigate = useNavigate()
 
+  const appDispatch = useContext(DispatchContext)
+
   function handleLogout() {
-    logoutUser()
+    appDispatch({type:"logout"})
     navigate("/login")
   }
 

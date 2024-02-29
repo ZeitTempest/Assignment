@@ -2,7 +2,12 @@ import axios from "axios"
 import { Autocomplete, Chip, TextField } from "@mui/material"
 import React, { useState } from "react"
 
+import { useContext } from "react"
+import DispatchContext from "../DispatchContext"
+
 const CreateUserForm = props => {
+  const appDispatch = useContext(DispatchContext) 
+
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
@@ -13,21 +18,35 @@ const CreateUserForm = props => {
     try {
       if (username && password) {
         const res = await axios.post("/createUser", { username, password, email, groups })
-        if (res.data) {
+        if (res.data.result === true) {
+          e.target.reset()
           //reset fields
-          setUsername("")
-          setPassword("")
-          setEmail("")
-          setGroups([])
-          alert("User successfully created")
+          // setUsername("")
+          // setPassword("")
+          // setEmail("")
+          // setGroups([])
+          appDispatch({type:"toast-success", data:"User successfully created."})
         }
       } else {
-        alert("Username and password are mandatory!")
+        appDispatch({type:"toast-failed", data:"Username and password are mandatory!"})
         //error Username and password mandatory!
       }
     } catch (err) {
-      console.log(err)
-      alert("1 or more fields is invalid")
+      if(err.response.data === "User already exists"){
+        appDispatch({type:"toast-failed", data:"User already exists."})
+      }
+
+      if(err.response.data === "Invalid username"){
+        appDispatch({type:"toast-failed", data:"Invalid username."})
+      }
+
+      if(err.response.data === "Invalid password"){
+        appDispatch({type:"toast-failed", data:"Invalid password."})
+      }
+
+      if(err.response.data === "Invalid email"){
+        appDispatch({type:"toast-failed", data:"Invalid email."})
+      }
     }
   }
 

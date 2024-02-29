@@ -1,7 +1,7 @@
 // import { isAlphanumeric } from "../utils/utils.js"
 import sql from "../config/query.js"
 
-export const findAllUsers = async (onlyCols = [], excludeCols = []) => {
+export const findAllUsers = async () => {
   // const allCols = ["username", "password", "email", "isActive", "group"];
   // const excludeColsSet = new Set(excludeCols);
   // const getCols = (onlyCols?.length ? onlyCols : allCols).filter(
@@ -29,28 +29,6 @@ export const findAllUsers = async (onlyCols = [], excludeCols = []) => {
   }
 }
 
-export const findByUsername = async username => {
-  const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${username}';`
-
-  try {
-    const [res] = await sql.query(getUserByIdQry)
-
-    // multiple results found,
-    // should not happen in db as id is unique
-    // fix data problem if so
-    if (res.length > 1) {
-      const error = new Error("multiple rows found")
-      error.code = 500
-      throw error
-    }
-
-    // one or no rows should be returned
-    return res
-  } catch (err) {
-    throw new Error(err)
-  }
-}
-
 export const createUser = async ({ username, password, email, groups }) => {
   try {
     const createUserQry = `
@@ -70,23 +48,23 @@ export const createUser = async ({ username, password, email, groups }) => {
   }
 }
 
-export const adminEditUser = async ({ username, password, email, isActive, groups }) => {
-  try {
-    const foundUsers = await findByUsername(username)
+// export const adminEditUser = async ({ username, password, email, isActive, groups }) => {
+//   try {
+//     const foundUsers = await findByUsername(username)
+    
+//     const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
 
-    const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
-
-    console.log("query is", updateUserQry)
-    const updatedUser = await sql.query(updateUserQry)
-    if (updatedUser[0].affectedRows !== 1) {
-      throw new Error("more than one row affected")
-    }
-    return updatedUser
-  } catch (err) {
-    console.log(err)
-    throw new Error("admin update user query failed")
-  }
-}
+//     console.log("query is", updateUserQry)
+//     const updatedUser = await sql.query(updateUserQry)
+//     if (updatedUser[0].affectedRows !== 1) {
+//       throw new Error("more than one row affected")
+//     }
+//     return updatedUser
+//   } catch (err) {
+//     console.log(err)
+//     throw new Error("admin update user query failed")
+//   }
+// }
 export const editUserSelf = async ({ username, password, email }) => {
   try {
     const foundUsers = await findByUsername(username)
@@ -142,8 +120,5 @@ export const editUserSelf = async ({ username, password, email }) => {
 
 export default {
   createUser,
-  findAllUsers,
-  findByUsername,
-  adminEditUser,
   editUserSelf
 }

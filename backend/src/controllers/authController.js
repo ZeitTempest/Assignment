@@ -1,7 +1,8 @@
-import { createUser, findByUsername } from "../models/userModel.js"
-import { isAlphaNumeric, passwordCompliant, emailCompliant } from "../utils/utils.js"
+//import { createUser } from "../models/userModel.js"
+import { emailCompliant } from "../utils/utils.js"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
+import sql from "../config/query.js"
 
 const secret = process.env.JWTSECRET
 const expiresIn = "1h"
@@ -10,10 +11,31 @@ export const userLogin = async (req, res) => {
   try {
     const username = req.body.username
     const password = req.body.password
-    const foundUsers = await findByUsername(username)
-    if (foundUsers.length != 1) return res.status(401).json({ success: false, err: "users list length not equal to 1" })
 
-    const pwdCheck = bcrypt.compareSync(password, foundUsers[0].password)
+    var foundUser = null
+    try {    
+      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${username}';`)
+  
+      // multiple results found,
+      // should not happen in db as id is unique
+      // fix data problem if so
+
+      if (users.length < 1) {
+        return res.status(401).json({ success: false, err: "no users found" })
+      }
+      if (users.length > 1) {
+        return res.status(401).json({ success: false, err: "db found more than one user" })
+      }
+  
+      // one or no rows should be returned
+      foundUser= users[0]
+    
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json("Failed to get user by ID")
+  }
+
+    const pwdCheck = bcrypt.compareSync(password, foundUser.password)
     //const pwdCheck = password === foundUser.password
 
     if (!pwdCheck) {
@@ -23,7 +45,7 @@ export const userLogin = async (req, res) => {
     //jwt token here
     const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
     //console.log(`token: ${token}`)
-    res.status(200).json({ success: true, result: true, data: foundUsers.username, jwt: token })
+    res.status(200).json({ success: true, result: true, data: foundUser.username, jwt: token })
   } catch (e) {
     console.log(e)
     res.status(500).json(e)
@@ -31,17 +53,27 @@ export const userLogin = async (req, res) => {
 }
 
 export const CheckGroup = async (username, groupname) => {
-  try {
-    const foundUser = await findByUsername(username)
-    if (foundUser.length !== 1) {
-      //user not found
-      return false
-    }
+    try {    
+      var foundUser = null
+      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${username}';`)
+  
+      // multiple results found,
+      // should not happen in db as id is unique
+      // fix data problem if so
+      if (users.length < 1) {
+        return false
+      }
+      if (users.length > 1) {
+        return false
+      }
+  
+      // one or no rows should be returned
+      foundUser = users[0]
+    
     //console.log("checkgroup")
-    //console.log(foundUser[0].groups)
-    return foundUser[0].groups.split(",").includes(groupname)
+    return foundUser.groups.split(",").includes(groupname)
   } catch (e) {
-    throw new Error(e)
+    console.log(e)
   }
 }
 
@@ -57,21 +89,22 @@ export const adminRegister = async (req, res) => {
     }
 
     // verify fits constraints
-    const usernameMeetsContraints = isAlphaNumeric(username) && username.length >= 3 && username.length <= 20
+    const usernameMeetsConstraints = () => 
+    new RegExp("^[a-zA-Z0-9]+$").test(username) && username.length >= 3 && username.length <= 20
 
-    if (!usernameMeetsContraints) {
+    if (!usernameMeetsConstraints) {
       return res.status(401).json("Invalid username.")
     }
 
-    const passwordMeetsContraints = passwordCompliant(password) && password.length >= 8 && password.length <= 10
+    const passwordMeetsConstraints = () => new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
 
-    if (!passwordMeetsContraints) {
+    if (!passwordMeetsConstraints) {
       return res.status(401).json("Invalid password.")
     }
 
-    const emailMeetsContraints = emailCompliant(email)
+    const emailMeetsConstraints = new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(email)
 
-    if (!emailMeetsContraints) {
+    if (!emailMeetsConstraints) {
       return res.status(401).json("Invalid email.")
     }
     // verify groups are valid
@@ -90,7 +123,28 @@ export const adminRegister = async (req, res) => {
     // }
 
     // find if user already exists
-    let user = await findByUsername(username)
+
+    var user = null
+    try { //adminedituser
+      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${req.username}';`)
+  
+      // multiple results found,
+      // should not happen in db as id is unique
+      // fix data problem if so
+      if (users.length < 1) {
+        res.status(401).json({ success: false, err: "no users found" })
+      }
+      if (users.length > 1) {
+        res.status(401).json({ success: false, err: "db found more than one user" })
+      }
+  
+      // one or no rows should be returned
+      user = users[0]
+    
+  } catch (err) {
+    console.log(err)
+    res.status(500).json("Failed to get user by ID")
+  }
 
     // reject if user already exists
     if (user.length >= 1) {
@@ -102,12 +156,28 @@ export const adminRegister = async (req, res) => {
     const salt = bcrypt.genSaltSync(saltRounds)
     const hash = bcrypt.hashSync(password, salt)
 
-    user = await createUser({
-      ...req.body,
-      password: hash,
-      groups: groups.join(",")
-    })
+    // user = await createUser({
+    //   ...req.body,
+    //   password: hash,
+    //   groups: groups.join(",")
+    // })
 
+    async () => {
+     try {
+      const createdUser = await sql.query(`
+      INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${hash}', '${email}', '${groups.join(",")}');
+    `)
+  
+      if (createdUser[0].affectedRows !== 1) {
+        throw new Error("more than one row affected")
+      }
+  
+      return createdUser
+    } catch (err) {
+      console.log(err)
+      throw new Error(err)
+    }
+  }
     //what is the purpose of this sign?
     const token = jwt.sign({ username }, secret, { expiresIn })
 
@@ -118,7 +188,7 @@ export const adminRegister = async (req, res) => {
     res.status(200).json({ data: { token, user } })
   } catch (err) {
     console.log(err)
-    res.status(500).json(err) //wtf is error.code???
+    res.status(500).json(err)
   }
 }
 

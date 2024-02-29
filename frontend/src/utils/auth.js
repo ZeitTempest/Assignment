@@ -13,8 +13,8 @@ export const isLoggedIn = () => {
 //   console.log("logout", res);
 // };
 
-export const logoutUser = () => {
-  console.log("logoutUser")
-  const res = Cookie.remove("jwt")
-  return res
-}
+// export const logoutUser = () => {
+//   console.log("logoutUser")
+//   const res = Cookie.remove("jwt")
+//   return res
+// }

@@ -1,15 +1,18 @@
 import React, { useEffect, useState /*, useContext*/ } from "react"
 import Page from "../components/Page"
-import { logoutUser } from "../utils/auth"
+//import { logoutUser } from "../utils/auth"
 import Axios from "axios"
 import { useNavigate } from "react-router-dom"
 import CreateGroupForm from "../components/CreateGroupForm"
 import CreateUserForm from "../components/CreateUserForm"
 import ViewRow from "../components/ViewRow"
 
-//import DispatchContext from "../DispatchContext"
+import { useContext } from "react"
+import DispatchContext from "../DispatchContext"
 
 function UserManagementPage() {
+  const appDispatch = useContext(DispatchContext)
+
   const navigate = useNavigate()
   const [users, setUsers] = useState([])
   const [groups, setGroups] = useState([])
@@ -20,20 +23,20 @@ function UserManagementPage() {
       const response = await Axios.get("/allUsers")
       setUsers(response.data[0])
 
-      console.log(response.data[0])
+      //console.log(response.data[0])
       const allGroups = []
       response.data[0].forEach(user => {
         const thisUserGroups = user.groups?.split(",")
         allGroups.push({ user: user.username, groups: thisUserGroups })
       })
 
-      console.log(allGroups)
+      //console.log(allGroups)
 
       setGroups(allGroups)
     } catch (e) {
       console.log(e)
       if (e.code >= 400) {
-        logoutUser()
+        appDispatch({type:"logout"})
         navigate("/logout")
       }
     }

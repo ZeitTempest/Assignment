@@ -16,7 +16,8 @@ export const createGroup = async (req, res) => {
     const { groupname } = req.body
 
     // verify fits constraints
-    const groupnameMeetsConstraints = isAlphaNumeric(groupname) && groupname.length >= 3 && groupname.length <= 20
+    const groupnameMeetsConstraints = 
+    new RegExp("^[a-zA-Z0-9]+$").test(groupname) && groupname.length >= 3 && groupname.length <= 20
 
     if (!groupnameMeetsConstraints) {
       return res.status(401).json("Invalid username.")

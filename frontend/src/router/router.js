@@ -12,7 +12,6 @@ import MyDetails from "../pages/MyDetails"
 import UserManagementPage from "../pages/UserManagementPage"
 
 export default function BrowserRoutes() {
-  console.log('am i being called?')
   return (
     <BrowserRouter>
       <Header />
@@ -23,7 +22,7 @@ export default function BrowserRoutes() {
         </Route>
 
         {/**non auth route: redirect to login */}
-        <Route path="/login" element={Cookie.get('jwt') ? <Navigate to="/home" /> : <LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/details" element={<MyDetails />} />
         <Route path="/management" element={<UserManagementPage />} />
       </Routes>
@@ -36,7 +35,6 @@ const PrivateRoute = () => {
   const [loginState, setisLoggedIn] = useState(Cookie.get("jwt"))
   useEffect(() => {
     console.log(<Outlet />)
-    console.log('in PR, this is my login state: ', loginState, window.location.href)
     // setisLoggedIn(Cookie.get("jwt"))
     //gets called on first render and state change/re-render
     //however does not get called on
@@ -47,6 +45,6 @@ const PrivateRoute = () => {
     //setLoggedIn(Cookies.get("jwt") !== null)
   }, [])
 
-  console.log('private route')
+  //console.log('private route')
   return loginState ? <Outlet /> : <Navigate to="/login" />
 }

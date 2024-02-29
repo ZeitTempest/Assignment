@@ -10,7 +10,7 @@ function Header() {
   const [isAdmin, setisAdmin] = useState(false)
   async function checkAdmin() {
     try {
-      console.log("chkadmin")
+      //console.log("chkadmin")
       const groupname = "admin"
       const res = await axios.post("/verifyAccessGroup", { groupname })
       setisAdmin(res.data.userIsInGroup)
