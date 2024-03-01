@@ -19,7 +19,7 @@ const CreateUserForm = props => {
       if (username && password) {
         await axios.post("/createUser", { username, password, email, groups })
         
-        e.target.reset()
+        //e.target.reset()
         //reset fields
         // setUsername("")
         // setPassword("")
@@ -32,12 +32,13 @@ const CreateUserForm = props => {
         //error Username and password mandatory!
       }
     } catch (err) {
-        appDispatch({type:"toast-failed", data:err.response.data})
+      appDispatch({type:"toast-failed", data:err.response.data})
     }
   }
 
   function handleGroupChange(event, values) {
     setGroups(values)
+    console.log(groups)
   }
 
   return (

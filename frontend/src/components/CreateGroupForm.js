@@ -21,9 +21,9 @@ const CreateGroupForm = () => {
 
     try {
       if (groupname) {
-        const response = await Axios.post("/createGroup", { groupname })
+        await Axios.post("/createGroup", { groupname })
         setnewGroup("")
-        appDispatch({type:"toast-success", data:"User successfully created."})
+        appDispatch({type:"toast-success", data:"Group successfully created."})
       } else {
         appDispatch({type:"toast-failed", data:"Field cannot be blank."})
       }

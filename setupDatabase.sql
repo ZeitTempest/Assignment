@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS `accounts`; -- remove this line after development, dangerou
 CREATE TABLE IF NOT EXISTS `accounts` (
  `username` varchar(20) NOT NULL PRIMARY KEY UNIQUE,
  `password` varchar(64) NOT NULL,
- `email` varchar(255) NOT NULL,
+ `email` varchar(255),
  `isActive` bool NOT NULL DEFAULT true,
  `groups` varchar(255)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

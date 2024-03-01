@@ -30,10 +30,10 @@ export const getUser = async (req, res) => {
       res.status(200).json(users[0])
 
       if (users.length < 1) {
-        res.error("No users found")
+        res.status(500).json("No users found")
       }
       if (users.length > 1) {
-        res.error("More than one row found")
+        res.status(500).json("More than one row found")
       }
   
 
@@ -46,158 +46,155 @@ export const getUser = async (req, res) => {
 }
 
 export const adminUpdateUser = async (req, res) => {
-    // console.log("req.body", req.body);
-    let { username, password, email, isActive, groups } = req.body
+  let { username, password, email, isActive, groups } = req.body
 
-    // verify fits constraints
-    const usernameMeetsConstraints = new RegExp("^[a-zA-Z0-9]+$").test(val) && username.length >= 3 && username.length <= 20
+  // verify fits constraints
+  const usernameMeetsConstraints = new RegExp("^[a-zA-Z0-9]+$").test(username) && username.length >= 3 && username.length <= 20
 
-    if (!usernameMeetsConstraints) {
-      return res.status(401).json("Invalid username.")
-    }
+  if (!usernameMeetsConstraints) {
+    return res.status(401).json("Invalid username.")
+  }
 
-    //proper constraint check refer to this
-    const passwordMeetsConstraints = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
+  //proper constraint check refer to this
+  const passwordMeetsConstraints = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
 
-    if (password && password != "" && !passwordMeetsConstraints) {
-      return res.status(401).json("Invalid password.")
-    }
+  if (password && password != "" && !passwordMeetsConstraints) {
+    return res.status(401).json("Invalid password.")
+  }
 
-    var emailMeetsConstraints = true
+  var emailMeetsConstraints = true
 
-    if (email !== "") {
-      emailMeetsConstraints = new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(email)
-    }
+  if (email !== "") {
+    emailMeetsConstraints = new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(email)
+  }
 
-    if (!emailMeetsConstraints) {
-      return res.status(401).json("Invalid email.")
-    }
+  if (!emailMeetsConstraints) {
+    return res.status(401).json("Invalid email.")
+  }
 
-    // admin cannot be deleted, check if admin
-    if (req.username === "admin" && (isActive === false || !groups.includes("admin"))) {
-      return res.json("Admin cannot be disabled or removed from the admin group")
-    }
+  // admin cannot be deleted, check if admin
+  if (req.username === "admin" && (isActive === false || !groups.includes("admin"))) {
+    return res.status(401).json("Admin cannot be disabled or removed from the admin group")
+  }
+  
+  var foundUser = null
+  
+  const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${req.byUser}';`
+  try {    
+      const [foundUsers] = await sql.query(getUserByIdQry)
 
-    const foundUsers = await findByUsername(username) ///
-
-    if (!foundUsers) {
-      return res.status(404).send("User not found")
-    }
-
-    // password will not be updated if not provided
-    password = password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10)) : foundUsers[0].password
-
-    groups = Array.isArray(groups) && groups.length !== 0 ? groups.join(",") : groups //if any change to groups, update groups
-
-    // update user
-    // await adminEditUser({
-    //   username,
-    //   password,
-    //   email,
-    //   isActive,
-    //   groups
-    // })
-
-    
-  try {
-    const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
-
-    const updatedUser = await sql.query(updateUserQry)
-    if (updatedUser[0].affectedRows !== 1) {
-      throw new Error("more than one row affected")
-    }
-    res.json("success") //
+      if (foundUsers.length < 1) {
+        return res.status(500).json("Server error: no matching user found.")
+      }
+      if (foundUsers.length > 1) {
+        return res.status(500).json("Server error: more than one row found.")
+      }
+      // one or no rows should be returned
+      foundUser = foundUsers
+      
   } catch (err) {
     console.log(err)
-    res.status(500).json("failed to update user info")
+    return res.status(500).json("Failed to get user by ID")
+  }
+
+  // password will not be updated if not provided
+  password = password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10)) : foundUser[0].password
+
+  groups = Array.isArray(groups) && groups.length !== 0 ? groups.join(",") : groups //if any change to groups, update groups
+
+  // update user
+  // await adminEditUser({
+  //   username,
+  //   password,
+  //   email,
+  //   isActive,
+  //   groups
+  // })
+    
+  const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
+  try {
+    const updatedUser = await sql.query(updateUserQry)
+    if (updatedUser[0].affectedRows !== 1) {
+      return res.status(500).json("Server error: more than one row affected.")
+    }
+    return res.status(200).json("Successfully updated user.")
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json("failed to update user info")
   }
 } 
-
 
 // check this
 export const adminCreateUser = async (req, res) => { ///
 
-  try {
-    let { username, password, email, groups } = req.body
+  let { username, password, email, groups } = req.body
 
-    var users = []
-    // verify username does not exist in db
-    try {    
-      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${req.username}';`)
-  
-      // multiple results found,
-      // should not happen in db as id is unique
-      // fix data problem if so
-      if (users.length < 1) {
-        return("No users found")
-      }
-      if (users.length > 1) {
-        return("More than one row found")
-      }
-  
-      // one or no rows should be returned
-      return users[0]
-    
+  var user = null
+  // verify username does not exist in db
+
+  try {
+    const [foundUsers] = await sql.query(`SELECT * FROM accounts WHERE username= ? ;`, username)
+
+    // multiple results found,
+    // should not happen in db as id is unique
+    // fix data problem if so
+    if (foundUsers.length >= 1) {
+      return res.status(500).json("Server error: Multiple entries with this username found.")
+    }
+    if (foundUsers.length === 1) {
+      return res.status(500).json("Username already exists.")
+    }
+
   } catch (err) {
     console.log(err)
-    res.status(500).json("Failed to get user by ID")
+    res.status(500).json("Server error: Error checking db for existing user.")
   }
-    
-    if (foundUser){
-      return res.status(401).json("User already exists")
-    }
-
-    // verify fits constraints
-    const usernameMeetsConstraints =
-    new RegExp("^[a-zA-Z0-9]+$").test(username) && username.length >= 3 && username.length <= 20
-
-    if (!usernameMeetsConstraints) {
-      return res.status(401).json("Invalid username")
-    }
-
-    const passwordMeetsConstraints = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
-
-    if (!passwordMeetsConstraints) {
-      return res.status(401).json("Invalid password")
-    }
-
-    var emailMeetsConstraints = true
-
-    if (email !== "") {
-      emailMeetsConstraints = new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(email)
-    }
-
-    if (!emailMeetsConstraints) {
-      return res.status(401).json("Invalid email.")
-    }
-
-    //hash pw
-    password = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
-
-    // update user
-    try {
-      const createUserQry = `
-        INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${password}', '${email}', '${groups}');
-      `
-      //console.log(createUserQry)
-      const createdUser = await sql.query(createUserQry)
   
-      if (createdUser[0].affectedRows !== 1) {
-        throw new Error("more than one row affected")
-      }
-  
-      return res.status(200).json("Created user", {result:"true"})
-    } catch (err) {
-      console.log(err)
-      throw new Error(err)
-    }
-    // const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
-    // res.cookie("jwt", token, { maxAge: 3600000 })
+  // verify fits constraints
+  const usernameMeetsConstraints =
+  new RegExp("^[a-zA-Z0-9]+$").test(username) && username.length >= 3 && username.length <= 20
 
+  if (!usernameMeetsConstraints) {
+    return res.status(401).json("Invalid username")
+  }
+
+  const passwordMeetsConstraints = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
+
+  if (!passwordMeetsConstraints) {
+    return res.status(401).json("Invalid password")
+  }
+
+  var emailMeetsConstraints = true
+
+  if (email !== "") {
+    emailMeetsConstraints = new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(email)
+  }
+
+  if (!emailMeetsConstraints) {
+    return res.status(401).json("Invalid email.")
+  }
+
+  //hash pw
+  password = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
+
+  // update user
+  try {
+    const createUserQry = `
+    INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${password}', '${email}', '${groups}');`
+    //console.log(createUserQry)
+    const createdUser = await sql.query(createUserQry)
+
+    if (createdUser[0].affectedRows !== 1) {
+      throw new Error("more than one row affected")
+    }
+
+    return res.status(200).json("Created user")
   } catch (err) {
     console.log(err)
     res.status(500).json(err)
   }
+  // const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
+  // res.cookie("jwt", token, { maxAge: 3600000 })
 }
 
 export const updateUser = async (req, res) => {

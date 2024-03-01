@@ -33,7 +33,7 @@ export const userLogin = async (req, res) => {
     
   } catch (err) {
     console.log(err)
-    return res.status(500).json("Failed to get user by ID")
+    res.status(500).json("Failed to get user by ID")
   }
 
     const pwdCheck = bcrypt.compareSync(password, foundUser.password)

@@ -1,15 +1,17 @@
-import { useState } from "react"
-import { Switch, TableCell } from "@mui/material"
+import { useState, useContext } from "react"
+import { Switch } from "@mui/material"
 import Axios from "axios"
 import DispatchContext from "../DispatchContext"
 import { Autocomplete, TextField } from "@mui/material"
 
 function EditRow(props) {
+
   function handleCancel() {
     props.setEdit(false)
   }
 
   const appDispatch = useState(DispatchContext)
+
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState(props.email)
   const [isActive, setIsActive] = useState(props.isActive === 1)
@@ -37,10 +39,9 @@ function EditRow(props) {
       }
 
       if (response.status === 200) {
-        alert("Successfully updated user details")
+        appDispatch({type:"toast-success", data:"Successfully updated user details."})
       } else {
-        alert("Failed to update user details")
-        //popup/etc for u/pw error
+        appDispatch({type:"toast-failed", data:"Failed to update user details."})
       }
     } catch (err) {
       appDispatch({type:"toast-failed", data:err.response.data})
