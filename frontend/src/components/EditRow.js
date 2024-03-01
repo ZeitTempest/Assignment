@@ -36,18 +36,15 @@ function EditRow(props) {
         response = await Axios.post("/admin/updateUser", { username, email, groups, isActive })
       }
 
-      console.log(response.data)
-
       if (response.status === 200) {
         alert("Successfully updated user details")
       } else {
         alert("Failed to update user details")
         //popup/etc for u/pw error
       }
-    } catch (e) {
-      alert("Problem encountered when updating user details")
-      //console.log(e)
-      //popup/etc for unexpected error
+    } catch (err) {
+      appDispatch({type:"toast-failed", data:err.response.data})
+
       //IF JWT NO AUTH, DO LOGOUT
     }
     props.setEdit(false)

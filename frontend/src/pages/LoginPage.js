@@ -27,18 +27,19 @@ function LoginPage() {
     // if (unacceptable username i.e. blank field){
     //give error popup/alert
     // }
-
-    try {
+    if(!username || !password){
+      appDispatch({type:"toast-failed", data: "Fields cannot be empty."})
+    }
+    
+    else try {
       const response = await Axios.post("/auth/login", { username, password })
-      if (response.data.result === true) {
-        appDispatch({ type: "login", data: response.data })
-        appDispatch({type:"toast-success", data: "Successful login."})
-        Cookies.set("jwt", response.data.jwt)
-        navigate("/")
-      } else {
-        appDispatch({type:"toast-failed", data: "Unsuccessful login."})
-      }
-    } catch (e) {
+      
+      appDispatch({ type: "login", data: response.data })
+      appDispatch({type:"toast-success", data: "Successful login."})
+      Cookies.set("jwt", response.data.jwt)
+      navigate("/")
+      
+    } catch (err) {
       appDispatch({type:"toast-failed", data: "Unsuccessful login."})
       return
     }

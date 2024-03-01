@@ -4,12 +4,14 @@ import Axios from "axios"
 import { useContext } from "react"
 import DispatchContext from "../DispatchContext"
 
+
 const CreateGroupForm = () => {
-  const onFinish = async ({ groupName }) => {}
+  const appDispatch = useContext(DispatchContext)
+
+  const onFinish = async ({ groupname }) => {}
 
   const onFinishFailed = errorInfo => {
-    console.log("failed:", errorInfo)
-    //IF JWT NO AUTH, DO LOGOUT
+    console.log("create group failed:", errorInfo)
   }
 
   const [groupname, setnewGroup] = useState("")
@@ -17,24 +19,16 @@ const CreateGroupForm = () => {
   async function handleSubmit(e) {
     e.preventDefault() //prevent default behavior for the event, i.e. a checkbox checking when clicked
 
-    // if (unacceptable username i.e. blank field){
-    //give error popup/alert
-    // }
-
     try {
       if (groupname) {
         const response = await Axios.post("/createGroup", { groupname })
-        if (response.status === 200) {
-          setnewGroup("")
-          alert("Group successfully created")
-        }
+        setnewGroup("")
+        appDispatch({type:"toast-success", data:"User successfully created."})
       } else {
-        alert("field is blank")
+        appDispatch({type:"toast-failed", data:"Field cannot be blank."})
       }
-    } catch (e) {
-      console.log(e)
-      alert("Error creating group")
-      //IF JWT NO AUTH, DO LOGOUT
+    } catch (err) {
+      appDispatch({type:"toast-failed", data:err.response.data})
     }
   }
   return (

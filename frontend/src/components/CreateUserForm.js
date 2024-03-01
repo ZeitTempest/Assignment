@@ -17,36 +17,22 @@ const CreateUserForm = props => {
     e.preventDefault()
     try {
       if (username && password) {
-        const res = await axios.post("/createUser", { username, password, email, groups })
-        if (res.data.result === true) {
-          e.target.reset()
-          //reset fields
-          // setUsername("")
-          // setPassword("")
-          // setEmail("")
-          // setGroups([])
-          appDispatch({type:"toast-success", data:"User successfully created."})
-        }
+        await axios.post("/createUser", { username, password, email, groups })
+        
+        e.target.reset()
+        //reset fields
+        // setUsername("")
+        // setPassword("")
+        // setEmail("")
+        // setGroups([])
+        appDispatch({type:"toast-success", data:"User successfully created."})
+        
       } else {
         appDispatch({type:"toast-failed", data:"Username and password are mandatory!"})
         //error Username and password mandatory!
       }
     } catch (err) {
-      if(err.response.data === "User already exists"){
-        appDispatch({type:"toast-failed", data:"User already exists."})
-      }
-
-      if(err.response.data === "Invalid username"){
-        appDispatch({type:"toast-failed", data:"Invalid username."})
-      }
-
-      if(err.response.data === "Invalid password"){
-        appDispatch({type:"toast-failed", data:"Invalid password."})
-      }
-
-      if(err.response.data === "Invalid email"){
-        appDispatch({type:"toast-failed", data:"Invalid email."})
-      }
+        appDispatch({type:"toast-failed", data:err.response.data})
     }
   }
 

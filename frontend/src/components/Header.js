@@ -14,8 +14,8 @@ function Header() {
       const groupname = "admin"
       const res = await axios.post("/verifyAccessGroup", { groupname })
       setisAdmin(res.data.userIsInGroup)
-    } catch (e) {
-      console.log(e)
+    } catch (err) {
+      console.log(err)
     }
   }
 

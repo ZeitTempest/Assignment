@@ -2,8 +2,8 @@ import Cookie from "js-cookie"
 
 export const isLoggedIn = () => {
   const hasjwt = Cookie.get("jwt")
-  console.log("is logged in?:")
-  console.log(hasjwt)
+  // console.log("is logged in?:")
+  // console.log(hasjwt)
   return Cookie.get("jwt")
 }
 

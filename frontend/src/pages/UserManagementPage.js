@@ -21,11 +21,11 @@ function UserManagementPage() {
   async function getUsersTable() {
     try {
       const response = await Axios.get("/allUsers")
-      setUsers(response.data[0])
+      setUsers(response.data)
 
-      //console.log(response.data[0])
+      console.log(response.data)
       const allGroups = []
-      response.data[0].forEach(user => {
+      response.data.forEach(user => {
         const thisUserGroups = user.groups?.split(",")
         allGroups.push({ user: user.username, groups: thisUserGroups })
       })
@@ -33,9 +33,9 @@ function UserManagementPage() {
       //console.log(allGroups)
 
       setGroups(allGroups)
-    } catch (e) {
-      console.log(e)
-      if (e.code >= 400) {
+    } catch (err) {
+      console.log(err)
+      if (err.code >= 400) {
         appDispatch({type:"logout"})
         navigate("/logout")
       }
@@ -61,8 +61,8 @@ function UserManagementPage() {
         })
         setGroupList(options)
       }
-    } catch (e) {
-      console.log(e)
+    } catch (err) {
+      console.log(err)
     }
   }
 

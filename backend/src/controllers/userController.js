@@ -5,6 +5,7 @@ import bcrypt from "bcryptjs"
 import sql from "../config/query.js"
 
 export const getAllUsers = async (req, res) => {
+  const findAllQry = `SELECT * FROM tmsdatabase.accounts;`
     try {
       const [users] = await sql
         .query(findAllQry)
@@ -26,6 +27,7 @@ export const getUser = async (req, res) => {
   const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${req.byUser}';`
   try {    
       const [users] = await sql.query(getUserByIdQry)
+      res.status(200).json(users[0])
 
       if (users.length < 1) {
         res.error("No users found")
@@ -34,8 +36,8 @@ export const getUser = async (req, res) => {
         res.error("More than one row found")
       }
   
+
       // one or no rows should be returned
-      res.status(200).json(users[0])
     
   } catch (err) {
     console.log(err)
@@ -58,7 +60,6 @@ export const adminUpdateUser = async (req, res) => {
     const passwordMeetsConstraints = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
 
     if (password && password != "" && !passwordMeetsConstraints) {
-      console.log("admin update user")
       return res.status(401).json("Invalid password.")
     }
 
@@ -101,7 +102,6 @@ export const adminUpdateUser = async (req, res) => {
   try {
     const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
 
-    console.log("query is", updateUserQry)
     const updatedUser = await sql.query(updateUserQry)
     if (updatedUser[0].affectedRows !== 1) {
       throw new Error("more than one row affected")
@@ -168,7 +168,7 @@ export const adminCreateUser = async (req, res) => { ///
     }
 
     if (!emailMeetsConstraints) {
-      return res.status(401).json("Invalid email")
+      return res.status(401).json("Invalid email.")
     }
 
     //hash pw
@@ -200,7 +200,6 @@ export const adminCreateUser = async (req, res) => { ///
   }
 }
 
-// check this
 export const updateUser = async (req, res) => {
   try {
     // admin cannot be deleted, check if admin
@@ -219,41 +218,40 @@ export const updateUser = async (req, res) => {
     const emailMeetsConstraints = emailCompliant(email)
 
     if (!emailMeetsConstraints && email) {
-      return res.status(401).json("Invalid email")
+      return res.status(401).json("Invalid email.")
     }
-
-    // update user
-    //const response = await editUserSelf({ username, password, email })
-
+    
     var foundUser = null
     try {
-    const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${req.username}';`)
+    const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${username}';`)
 
     
     if (users.length < 1) {
-      return("No users found")
+      return res.status(401).json("No users found") //should display on frontend as "System error: contact an admin"
     }
     if (users.length > 1) {
-      return("More than one row found")
+      return res.status(401).json("More than one row found") //should display on frontend as "System error: contact an admin"
     }
   
     foundUser = users[0]
-     //hash pw
-     password = password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10)) : foundUser.password
-
+     
     } catch (err) {
       console.log(err)
-      res.status(500).json("Failed to get user by ID")
+      res.status(500).json({message:"Failed to get user by ID"})
     }
+
+    //hash pw
+    password = password ? bcrypt.hashSync(password, bcrypt.genSaltSync(10)) : foundUser.password //check for blank field, hash pw
+
+    email = email ? email : foundUser.email //check for blank field
   
     const updateUserQry = `UPDATE tmsdatabase.accounts SET password = ? , email = ? WHERE username = ?`
 
-    console.log("query is", updateUserQry)
     const updatedUser = await sql.query(updateUserQry, [password, email, foundUser.username])
     if (updatedUser[0].affectedRows !== 1) {
       throw new Error("more than one row affected")
     }
-      res.status(200).json("Success", {result:true})
+      res.status(200).json({message:"Success"})
     } catch (err) {
       console.log(err)
       throw new Error("user update self query failed")

@@ -1,20 +1,9 @@
-VScode Extensions to get
-Auto close tag
-auto rename tag
-code spell checker
-IntelliCode
-npm Intellisense
-
-Maybe needed:
-ESLint
-
-admincheck not running on createuser
-
+-there is an issue with header at login page: when doing the process of verifying, it gets an axios error
+-admincheck not running on createuser
+- implement refresh on form submit (my details, user mgmt)
+- double check if our constant login check is working
 
 Cleared:
-- USER MANAGEMENT  TABLE (OK)
-- Conditional rendering for admin priviledges (manage users button in header), remove buttons before login (OK)
-
 import { isAlphaNumeric, charLengthCompliant etc } from "../utils/utils.js"
 const { username, password } = req.body
   const meetsConstraints = isAlphaNumeric(username) && charLengthCompliant(username, 3, 20) //check for username compliance
@@ -37,4 +26,14 @@ frontend
 - Implement checkGroup route for frontend to call so u can checkgroup at any time
 
 backend
-- re-implement verify groups in authController if got time
+- re-implement verify groups in authController
+
+VScode Extensions to get
+Auto close tag
+auto rename tag
+code spell checker
+IntelliCode
+npm Intellisense
+
+Maybe needed:
+ESLint

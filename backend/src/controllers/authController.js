@@ -14,17 +14,18 @@ export const userLogin = async (req, res) => {
 
     var foundUser = null
     try {    
-      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${username}';`)
-  
+      const checkGroupQuery = `SELECT * FROM accounts WHERE username= ? ;`
+      const [users] = await sql.query(checkGroupQuery, [username])
+
       // multiple results found,
       // should not happen in db as id is unique
       // fix data problem if so
 
       if (users.length < 1) {
-        return res.status(401).json({ success: false, err: "no users found" })
+        return res.status(401).json("no users found") ///
       }
       if (users.length > 1) {
-        return res.status(401).json({ success: false, err: "db found more than one user" })
+        return res.status(401).json("db found more than one user") ///
       }
   
       // one or no rows should be returned
@@ -39,23 +40,23 @@ export const userLogin = async (req, res) => {
     //const pwdCheck = password === foundUser.password
 
     if (!pwdCheck) {
-      return res.status(401).json({ success: false, err: "pwd check failed" })
+      return res.status(401).json("pwd check failed")
     }
 
     //jwt token here
     const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
-    //console.log(`token: ${token}`)
     res.status(200).json({ success: true, result: true, data: foundUser.username, jwt: token })
-  } catch (e) {
-    console.log(e)
-    res.status(500).json(e)
+  } catch (err) {
+    console.log(err)
+    res.status(500).json(err)
   }
 }
 
 export const CheckGroup = async (username, groupname) => {
     try {    
       var foundUser = null
-      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${username}';`)
+      const checkGroupQuery = `SELECT * FROM accounts WHERE username= ? ;`
+      const [users] = await sql.query(checkGroupQuery, [username])
   
       // multiple results found,
       // should not happen in db as id is unique
@@ -72,8 +73,8 @@ export const CheckGroup = async (username, groupname) => {
     
     //console.log("checkgroup")
     return foundUser.groups.split(",").includes(groupname)
-  } catch (e) {
-    console.log(e)
+  } catch (err) {
+    console.log(err)
   }
 }
 
