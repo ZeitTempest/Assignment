@@ -20,7 +20,7 @@ import { checkJWT, checkAdmin } from "../middleware/auth.js"
 //repeat for each js file
 
 //auth routes
-router.route("/register").post(checkJWT, adminRegister) //w
+//router.route("/register").post(checkJWT, adminRegister) //w
 router.route("/auth/login").post(userLogin) //w
 router.route("/verifyAccessGroup").post(checkJWT, verifyAccessGroup) //w
 

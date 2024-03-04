@@ -1,16 +1,26 @@
 Issues:
 - admin update user not working
+- on run old/expired jwt is not checked, need to do a check and delete
 
 - e.target.reset not working in createuserform and mydetails
 - implement refresh on form submit (my details, user mgmt)
 - implement re-render on form submit (same implementation as above?)
+- Edit details - field state is resetting properly after submit, but the field itself is not being cleared. Clicking save again directly after submitting will submit 2 blank fields even though the textfields are not empty
+- Admin create user: If no groups specified, there will always be a blank group
+
 
 minor:
-- there is an issue with header at login page: when doing the process of verifying, it gets an axios error
+- non-logged in header attempts to do a verifyAccessGroup and thus returns axios error 403 (forbidden)
+
+frontend:
+- EditRow warning: "MUI: The value provided to Autocomplete is invalid.
+None of the options match with `""`."
 
 Todo:
 
 frontend
+- change UI colours to something brighter for presentation
+
 - double check if our constant login state check is working
 - protect routes
 
@@ -19,7 +29,7 @@ frontend
 - Implement checkGroup route for frontend to call so u can checkgroup at any time
 
 backend
-- re-implement verify groups in authController
+- some sort of function to auto create admin acc rather than "manually" setting it up
 
 VScode Extensions to get
 Auto close tag

@@ -1,5 +1,5 @@
 //import { adminEditUser, editUserSelf, createUser } from "../models/userModel.js"
-import { isAlphaNumeric, passwordCompliant, emailCompliant } from "../utils/utils.js"
+//import { isAlphaNumeric, passwordCompliant, emailCompliant } from "../utils/utils.js"
 import bcrypt from "bcryptjs"
 
 import sql from "../config/query.js"
@@ -205,14 +205,17 @@ export const updateUser = async (req, res) => {
     // get which user is requesting
     const username = req.byUser
 
+    //console.log(req.body)
     // verify fits constraints
-    const passwordMeetsConstraints = password && password != "" && (() => new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password)) && password.length >= 8 && username.length <= 10
+    const passwordMeetsConstraints = password && password != "" && new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
+    //console.log("pw clear: " + passwordMeetsConstraints)
 
     if (!passwordMeetsConstraints && password) {
-      return res.status(401).json("Invalid password")
+      return res.status(401).json("Invalid password.")
     }
 
-    const emailMeetsConstraints = emailCompliant(email)
+    const emailMeetsConstraints = email && email != "" && new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(email)
+    //console.log("email clear: " + emailMeetsConstraints)
 
     if (!emailMeetsConstraints && email) {
       return res.status(401).json("Invalid email.")
@@ -220,21 +223,22 @@ export const updateUser = async (req, res) => {
     
     var foundUser = null
     try {
-    const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${username}';`)
+      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${username}';`)
 
+      
+      if (users.length < 1) {
+        return res.status(401).json("No users found") //should display on frontend as "System error: contact an admin"
+      }
+      if (users.length > 1) {
+        return res.status(401).json("More than one row found") //should display on frontend as "System error: contact an admin"
+      }
     
-    if (users.length < 1) {
-      return res.status(401).json("No users found") //should display on frontend as "System error: contact an admin"
-    }
-    if (users.length > 1) {
-      return res.status(401).json("More than one row found") //should display on frontend as "System error: contact an admin"
-    }
-  
-    foundUser = users[0]
+      foundUser = users[0]
      
-    } catch (err) {
+    } 
+    catch (err) {
       console.log(err)
-      res.status(500).json({message:"Failed to get user by ID"})
+      res.status(500).json("Failed to get user by ID")
     }
 
     //hash pw
@@ -248,10 +252,11 @@ export const updateUser = async (req, res) => {
     if (updatedUser[0].affectedRows !== 1) {
       throw new Error("more than one row affected")
     }
-      res.status(200).json({message:"Success"})
-    } catch (err) {
-      console.log(err)
-      throw new Error("user update self query failed")
+      res.status(200).json("Successfully updated your details.")
+    } 
+    catch (err) {
+      //console.log(err)
+      res.status(500).json("user update self query failed.")
     }
   }
 

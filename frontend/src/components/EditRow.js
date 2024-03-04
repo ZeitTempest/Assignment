@@ -10,7 +10,7 @@ function EditRow(props) {
     props.setEdit(false)
   }
 
-  const appDispatch = useState(DispatchContext)
+  const appDispatch = useContext(DispatchContext)
 
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState(props.email)
@@ -39,11 +39,12 @@ function EditRow(props) {
       }
 
       if (response.status === 200) {
-        appDispatch({type:"toast-success", data:"Successfully updated user details."})
+        appDispatch({type:"toast-success", data: "Successfully updated user details."})
       } else {
-        appDispatch({type:"toast-failed", data:"Failed to update user details."})
+        //appDispatch({type:"toast-failed", data:"Failed to update user details."})
       }
     } catch (err) {
+      //console.log(err)
       appDispatch({type:"toast-failed", data:err.response.data})
 
       //IF JWT NO AUTH, DO LOGOUT
