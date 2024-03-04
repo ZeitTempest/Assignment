@@ -47,7 +47,7 @@ function EditRow(props) {
       //console.log(err)
       appDispatch({type:"toast-failed", data:err.response.data})
 
-      //IF JWT NO AUTH, DO LOGOUT
+      //IF JWT NO AUTH, LOGOUT
     }
     props.setEdit(false)
   }

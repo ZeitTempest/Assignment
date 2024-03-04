@@ -52,11 +52,11 @@ export const userLogin = async (req, res) => {
   }
 }
 
-export const CheckGroup = async (username, groupname) => {
+export const Checkgroup = async (userid, groupname) => {
     try {    
       var foundUser = null
       const checkGroupQuery = `SELECT * FROM accounts WHERE username= ? ;`
-      const [users] = await sql.query(checkGroupQuery, [username])
+      const [users] = await sql.query(checkGroupQuery, [userid])
   
       // multiple results found,
       // should not happen in db as id is unique
@@ -83,21 +83,20 @@ export const adminRegister = async (req, res) => {
     const { username, password, email, groups } = req.body
 
     // check submitted JWT is a valid admin
-    const isAdmin = await CheckGroup(req.byUser, "admin")
+    const isAdmin = await Checkgroup(req.byUser, "admin")
 
     if (!isAdmin) {
       return res.status(401).json("User is not an admin.")
     }
 
     // verify fits constraints
-    const usernameMeetsConstraints = () => 
-    new RegExp("^[a-zA-Z0-9]+$").test(username) && username.length >= 3 && username.length <= 20
+    const usernameMeetsConstraints = new RegExp("^[a-zA-Z0-9]+$").test(username) && username.length >= 3 && username.length <= 20
 
     if (!usernameMeetsConstraints) {
       return res.status(401).json("Invalid username.")
     }
 
-    const passwordMeetsConstraints = () => new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
+    const passwordMeetsConstraints = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
 
     if (!passwordMeetsConstraints) {
       return res.status(401).json("Invalid password.")
@@ -197,7 +196,7 @@ export const verifyAccessGroup = async (req, res) => {
   try {
     const { groupname } = req.body
     const username = req.byUser
-    const userIsInGroup = await CheckGroup(username, groupname)
+    const userIsInGroup = await Checkgroup(username, groupname)
     return res.status(200).json({ success: true, userIsInGroup })
   } catch (err) {
     console.log(err)

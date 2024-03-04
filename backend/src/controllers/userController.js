@@ -125,7 +125,7 @@ export const adminUpdateUser = async (req, res) => {
 } 
 
 // check this
-export const adminCreateUser = async (req, res) => { ///
+export const adminCreateUser = async (req, res) => {
 
   let { username, password, email, groups } = req.body
 

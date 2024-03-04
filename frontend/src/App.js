@@ -40,13 +40,28 @@ function App() {
         toast.success(action.data)
         break
       case "toast-failed":
-        toast.error(action.data)
+        switch(action.data){
+          case "jwt":
+            toast.error("Invalid JWT.")
+            //logout
+            break
+          case "Unauthorized":
+            toast.error("You are not authorized to do this action.")
+            //logout
+            break
+          case "Inactive":
+            toast.error("Your account is disabled.")
+            //logout
+            break
+          default:
+            toast.error(action.data)
+            break
+        }
         break
       default:
         break
     }
   }
-
 
   const [state, dispatch] = useImmerReducer(ourReducer, initialState)
 

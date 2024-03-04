@@ -44,6 +44,10 @@ CREATE TABLE IF NOT EXISTS `application` (
 `App_permit_Done` varchar(20)
 );
 
+-- INSERT INTO `application` (`App_Acronym`, `App_Description`, `App_Rnumber`, `App_startDate`, `App_endDate`, `App_permit_Create`, `App_permit_Open`, `App_permit_toDoList`, `App_permit_Doing`, `App_permit_Done`) VALUES 
+-- (),
+-- ();
+
 CREATE TABLE IF NOT EXISTS `plan` (
 `Plan_MVP_Name` varchar(20) NOT NULL,
 `Plan_startDate` date,
