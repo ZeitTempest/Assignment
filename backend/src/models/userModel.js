@@ -51,7 +51,7 @@ export const createUser = async ({ username, password, email, groups }) => {
 export const adminEditUser = async ({ username, password, email, isActive, groups }) => {
   try {
     const foundUsers = await findByUsername(username)
-    
+
     const updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
 
     const updatedUser = await sql.query(updateUserQry)

@@ -1,12 +1,14 @@
 import express from "express"
 const router = express.Router()
 
+//prettier-ignore
 import { 
   adminRegister, 
   userLogin, 
   verifyAccessGroup 
 } from "../controllers/authController.js"
 
+//prettier-ignore
 import { 
   getUser, 
   getAllUsers, 
@@ -15,42 +17,46 @@ import {
   adminCreateUser 
 } from "../controllers/userController.js"
 
+//prettier-ignore
 import { 
   getAllGroups, 
   createGroup 
 } from "../controllers/groupController.js"
 
+//prettier-ignore
 import { 
-  createApp,
-  getApps,
-  getApp,
-  editApp,
-  getPermit,
+  createApp, 
+  getApps, 
+  getApp, 
+  editApp, 
+  getPermit 
 } from "../controllers/applicationController.js"
 
+//prettier-ignore
 import { 
-  getPlans,
-  createPlan,
-  editPlan,
-  getPlanNames,
+  getPlans, 
+  createPlan, 
+  editPlan, 
+  getPlanNames 
 } from "../controllers/planController.js"
 
+//prettier-ignore
 import { 
-  createTask,
-  getTasks,
-  getTask,
-  editTask,
-  editTaskWithPlan,
-  editTaskWithState,
-  editTaskWithPlanState,
-  promoteDoingTask,
+  createTask, 
+  getTasks, 
+  getTask, 
+  editTask, 
+  editTaskWithPlan, 
+  editTaskWithState, 
+  editTaskWithPlanState, 
+  promoteDoingTask 
 } from "../controllers/taskController.js"
 
+//prettier-ignore
 import { 
   checkJWT, 
-  checkAdmin 
+  checkAdmin
 } from "../middleware/auth.js"
-
 
 //importing interceptors
 // const {
@@ -89,22 +95,16 @@ router.route("/plans/create").post(checkJWT, editPlan)
 router.route("/plans/edit").post(checkJWT, getPlanNames)
 
 //task functions
-router.route("/task/create").post(checkJWT, createTask);
-router.route("/tasks").post(checkJWT, getTasks);
-router.route("/task").post(checkJWT, getTask);
-router.route("/task/edit").post(checkJWT, editTask);
-router.route("/task/editWithPlan").post(checkJWT, editTaskWithPlan);
-router
-  .route("/task/editWithPlanState")
-  .post(checkJWT, editTaskWithState);
-router
-  .route("/task/editWithState")
-  .post(checkJWT, editTaskWithPlanState);
-router
-  .route("/task/promoteDoingTask")
-  .post(checkJWT, promoteDoingTask);
+router.route("/task/create").post(checkJWT, createTask)
+router.route("/tasks").post(checkJWT, getTasks)
+router.route("/task").post(checkJWT, getTask)
+router.route("/task/edit").post(checkJWT, editTask)
+router.route("/task/editWithPlan").post(checkJWT, editTaskWithPlan)
+router.route("/task/editWithPlanState").post(checkJWT, editTaskWithState)
+router.route("/task/editWithState").post(checkJWT, editTaskWithPlanState)
+router.route("/task/promoteDoingTask").post(checkJWT, promoteDoingTask)
 
 //permit functions ???
-//router.route("/app/permit").post(isAuthenticatedUser, getPermit);
+//router.route("/app/permit").post(isAuthenticatedUser, getPermit)
 
 export default router

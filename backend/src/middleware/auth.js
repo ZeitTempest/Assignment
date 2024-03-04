@@ -15,7 +15,7 @@ const secret = process.env.JWTSECRET
 //     next()
 //   } catch (err) {
 //     console.log(err)
-//     res.status(401).json({ message: "invalid user credentials" })
+//     res.status(500).json({ message: "invalid user credentials" })
 //   }
 // }
 
@@ -24,16 +24,13 @@ export const checkJWT = (req, res, next) => {
   // const token = authHeader && authHeader.split(" ")[1]
   // //const token = authHeader.split(" ")[1]
 
-  let token = false;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
+  let token = false
+  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
     console.log(req.headers.authorization)
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(" ")[1]
   }
 
-  if(token){
+  if (token) {
     jwt.verify(token, secret, async (err, decoded) => {
       // console.log(decoded); // { username: 'admin', iat: 1707118235, exp: 1707121835 }
       if (err) {
@@ -42,8 +39,8 @@ export const checkJWT = (req, res, next) => {
       }
       req.byUser = decoded.username
       next()
-    }
-    )}
+    })
+  }
 }
 export const checkAdmin = async (req, res, next) => {
   try {
@@ -58,6 +55,6 @@ export const checkAdmin = async (req, res, next) => {
     }
   } catch (err) {
     console.log(err)
-    return res.status(500).send("jwt")
+    return res.status(403).send("jwt")
   }
 }

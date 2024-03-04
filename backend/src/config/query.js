@@ -19,7 +19,7 @@ const mysqlCredentials = {
 // }
 
 const sql = mysql2.createPool({ ...mysqlCredentials })
-export default sql;
+export default sql
 
 // //alternate query method
 // export const executeQuery = query => {
