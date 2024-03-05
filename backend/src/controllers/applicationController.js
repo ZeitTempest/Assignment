@@ -120,6 +120,9 @@ export const editApp = async (req, res) => {
     const startArr = new Date(startDate)
     const endArr = new Date(endDate)
 
+    //App_Acronym should never be missing
+    if (!appName) return res.status(500).send("App_Acronym not found.")
+
     //neither date should ever be missing
     if (!startDate) res.status(500).send("Start date missing.")
     if (!endDate) res.status(500).send("End date missing.")

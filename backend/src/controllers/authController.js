@@ -14,8 +14,8 @@ export const userLogin = async (req, res) => {
 
     var foundUser = null
     try {
-      const checkGroupQuery = `SELECT * FROM accounts WHERE username= ? ;`
-      const [users] = await sql.query(checkGroupQuery, [username])
+      const getUsersQuery = `SELECT * FROM accounts WHERE username = ? ;`
+      const [users] = await sql.query(getUsersQuery, [username])
 
       // multiple results found,
       // should not happen in db as id is unique
@@ -54,7 +54,7 @@ export const userLogin = async (req, res) => {
 export const Checkgroup = async (userid, groupname) => {
   try {
     var foundUser = null
-    const checkGroupQuery = `SELECT * FROM accounts WHERE username= ? ;`
+    const checkGroupQuery = `SELECT * FROM accounts WHERE username = ? ;`
     const [users] = await sql.query(checkGroupQuery, [userid])
 
     // multiple results found,

@@ -84,20 +84,20 @@ router.route("/createGroup").post(checkJWT, checkAdmin, createGroup) //w
 //
 router.route("/updateGroup").post(checkJWT, checkAdmin)
 
-router.route("/app/create").post(checkJWT, createApp)
-router.route("/app/apps").get(checkJWT, getApps)
-router.route("/app/app").post(checkJWT, getApp)
-router.route("/app/edit").post(checkJWT, editApp)
+router.route("/app/create").post(checkJWT, createApp) //
+router.route("/app/apps").get(checkJWT, getApps) //
+router.route("/app/app").post(checkJWT, getApp) //
+router.route("/app/edit").post(checkJWT, editApp) //
 
-router.route("/plans").post(checkJWT, getPlans)
-router.route("/plans/list").post(checkJWT, createPlan)
-router.route("/plans/create").post(checkJWT, editPlan)
-router.route("/plans/edit").post(checkJWT, getPlanNames)
+router.route("/plans").post(checkJWT, getPlans) //
+router.route("/plans/list").post(checkJWT, getPlanNames) //
+router.route("/plans/create").post(checkJWT, createPlan) //
+router.route("/plans/edit").post(checkJWT, editPlan) //
 
 //task functions
-router.route("/task/create").post(checkJWT, createTask)
-router.route("/tasks").post(checkJWT, getTasks)
-router.route("/task").post(checkJWT, getTask)
+router.route("/task/create").post(checkJWT, createTask) //
+router.route("/tasks").post(checkJWT, getTasks) //
+router.route("/task").post(checkJWT, getTask) //
 router.route("/task/edit").post(checkJWT, editTask)
 router.route("/task/editWithPlan").post(checkJWT, editTaskWithPlan)
 router.route("/task/editWithPlanState").post(checkJWT, editTaskWithState)
