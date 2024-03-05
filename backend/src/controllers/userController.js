@@ -267,6 +267,6 @@ export const updateUser = async (req, res) => {
 //     res.cookie("jwt", token, { maxAge: 3600000 })
 //     res.status(200).json()
 //   } catch (err) {
-//     res.status(403).json(err)
+//     res.status(401).json(err)
 //   }
 // }

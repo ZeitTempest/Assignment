@@ -84,13 +84,13 @@ router.route("/createGroup").post(checkJWT, checkAdmin, createGroup) //w
 
 router.route("/app/create").post(checkJWT, createApp) //w, no backend check for valid groups
 router.route("/app/apps").get(checkJWT, getApps) //w
-router.route("/app/app").post(checkJWT, getApp) //
-router.route("/app/edit").post(checkJWT, editApp) //
+router.route("/app/app").post(checkJWT, getApp) //w
+router.route("/app/edit").post(checkJWT, editApp) /// not able to test, unsure how this works
 
-router.route("/plans").post(checkJWT, getPlans) //
-router.route("/plans/list").post(checkJWT, getPlanNames) //
-router.route("/plans/create").post(checkJWT, createPlan) //
-router.route("/plans/edit").post(checkJWT, editPlan) //
+router.route("/plans").post(checkJWT, getPlans) //w
+router.route("/plans/list").post(checkJWT, getPlanNames) //w
+router.route("/plans/create").post(checkJWT, createPlan) //w, no check for valid appName
+router.route("/plans/edit").post(checkJWT, editPlan) // not working yet
 
 //task functions
 router.route("/task/create").post(checkJWT, createTask) //

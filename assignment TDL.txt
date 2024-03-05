@@ -26,10 +26,11 @@ frontend
 - error handling based on appDispatch (logout, )
 - protect routes
 
-- Implement check on state chage(or re-render?) for jwt, do logout if no valid jwt //done?
+- Implement check on state change(or re-render?) for jwt, do logout if no valid jwt //done?
 - Implement groups/permissions check on state change in case permissions are revoked
 
 backend
+- what is the process for authenticating access to certain routes based on group?
 - some sort of function to auto create admin acc rather than "manually" setting it up
 
 other

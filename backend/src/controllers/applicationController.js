@@ -103,8 +103,8 @@ export const getApps = async (req, res) => {
 export const getApp = async (req, res, next) => {
   //find specific row in applications table by App_Acronym
 
-  //ensure this is named correctly in frontend
   try {
+    //ensure this is named correctly in frontend
     const appName = req.body.appName
     const results = await sql.query("SELECT * FROM application WHERE App_Acronym = ? ", appName)
     if (results.length > 0 && results[0].length > 0) {
