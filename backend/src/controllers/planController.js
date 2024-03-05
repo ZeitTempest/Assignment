@@ -1,10 +1,5 @@
 import sql from "../config/query.js"
 
-function validateDates(res, startDate, endDate) {
-  //
-  console.log("validateDates")
-}
-
 export const getPlans = async (req, res, next) => {
   //search for specific plan using acronym
   const name = req.body.appName

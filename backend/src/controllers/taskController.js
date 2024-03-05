@@ -29,8 +29,8 @@ export const getTask = async (req, res) => {
           res.status(200).json(results)
         }
       })
-    } catch (error) {
-      console.log(error)
+    } catch (err) {
+      console.log(err)
     }
   } else {
     res.status(500).send("Missing task.")
@@ -66,7 +66,7 @@ export const createTask = async (req, res) => {
   const regex = "^[a-zA-Z0-9]+$"
   let error = false
 
-  //task validity check
+  //task valid check
   if (task.length < 3 || task.length > 20) {
     return res.status(500).send("Task name must be between 3 - 20 characters.")
   }
@@ -74,7 +74,7 @@ export const createTask = async (req, res) => {
     return res.status(500).send("Task name contains illegal characters.")
   }
 
-  //plan validity check
+  //plan valid check
   if (plan && validatePlan(res, plan)) {
     return res.send()
   }
@@ -131,22 +131,117 @@ export const createTask = async (req, res) => {
 }
 
 export const editTask = async (req, res) => {
-  console.log("editTask")
+  try {
+    const { description, notes, taskId, state } = req.body
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const username = decoded.username
+    const time = new Date()
+    const audit = `${username}, ${state}, ${time}: ${notes}`
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, audit, username, taskId], function (err, results) {
+      if (err) {
+        console.log(err)
+      } else {
+        res.status(200).send("Successfully edited task.")
+      }
+    })
+    //res.end()
+  } catch (err) {
+    console.log(err)
+  }
 }
 export const editTaskWithPlan = async (req, res) => {
-  console.log("editTaskWithPlan")
+  try {
+    const { description, plan, notes, taskId, state } = req.body
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const username = decoded.username
+    const time = new Date()
+
+    if (plan && validatePlan(res, plan)) {
+      res.send()
+      return
+    }
+    const audit = `${username}, ${state}, ${time}: ${notes}`
+    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, plan, audit, username, taskId], function (err, results) {
+      if (err) {
+        console.log(err)
+      } else {
+        res.status(200).send("Successfully edited task.")
+      }
+    })
+    //res.end()
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const editTaskWithPlanState = async (req, res) => {
-  console.log("editTaskWithPlanState")
+  try {
+    const { description, plan, notes, taskId, state, newState } = req.body
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const username = decoded.username
+    const time = new Date()
+    if (plan && validatePlan(res, plan)) {
+      res.send()
+      return
+    }
+    const audit = `${username}, ${state}, ${time}: ${notes}`
+    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, plan, audit, username, newState, taskId], function (err, results) {
+      if (err) {
+        console.log(err)
+      } else {
+        res.status(200).send("Successfully edited and promoted task.")
+      }
+    })
+    //res.end()
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const editTaskWithState = async (req, res) => {
-  console.log("editTaskWithState")
+  try {
+    const { description, notes, task, state, newState } = req.body
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const username = decoded.username
+    const time = new Date()
+    const audit = `${username}, ${state}, ${time}: ${notes}`
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, audit, username, newState, task], function (err, results) {
+      if (err) {
+        console.log(err)
+      } else {
+        res.status(200).send("Successfully edited and promoted task.")
+      }
+    })
+    //res.end()
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 export const promoteDoingTask = async (req, res) => {
-  console.log("promoteDoingTask")
+  try {
+    const { description, notes, plan, task, state, newState, app } = req.body
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
+    const username = decoded.username
+    const time = new Date()
+    const audit = `${username}, ${state}, ${time}: ${notes}`
+    if (plan && validatePlan(res, plan)) {
+      res.send()
+      return
+    }
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ?, Task_plan = ? WHERE task_id = ?", [description, audit, username, newState, plan, task], function (err, results) {
+      if (err) {
+        console.log(err)
+      } else {
+        //sendEmail(app)
+        console.log("email gets sent here")
+        res.status(200).send("Successfully edited and promoted task to 'Done'.")
+      }
+    })
+    //res.end()
+  } catch (err) {
+    console.log(err)
+  }
 }
 
 // async function sendEmail(app, username) {

@@ -26,7 +26,7 @@ export const checkJWT = (req, res, next) => {
 
   let token = false
   if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
-    console.log(req.headers.authorization)
+    //console.log(req.headers.authorization)
     token = req.headers.authorization.split(" ")[1]
   }
 

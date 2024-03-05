@@ -33,34 +33,42 @@ export const createApp = async (req, res) => {
 
     if (appName) {
       if (appName.length < 3 || appName.length > 20) {
-        return res.status(500).send("App acronym must be between 3 - 20 characters.")
+        return res.status(500).send("App name must be between 3 - 20 characters.")
       }
       if (!AcronymMeetsConstraints) {
-        return res.status(500).send("App acronym includes illegal characters.")
+        return res.status(500).send("App name includes illegal characters.")
       }
-    } else return res.status(500).send("Missing app acronym.")
+    } else return res.status(500).send("Missing app name.")
 
     //dates validity check
+    if (!startDate) res.status(500).send("Start date missing.")
+    if (!endDate) res.status(500).send("End date missing.")
+
     const startArr = new Date(startDate)
     const endArr = new Date(endDate)
 
-    if (!startDate) res.status(500).send("Start date missing.")
-    if (!endDate) res.status(500).send("End date missing.")
+    if (isNaN(startArr.getTime())) {
+      return res.status(500).send("Start date is invalid.")
+    }
+
+    if (isNaN(endArr.getTime())) {
+      return res.status(500).send("End date is invalid.")
+    }
 
     if (startDate && endDate && startArr > endArr) {
       return res.status(500).send("Start date cannot be after end date.")
     }
 
-    const checkAppQuery = `SELECT * FROM application WHERE appName = ? `
+    const checkAppQuery = `SELECT * FROM application WHERE App_Acronym = ? `
     const AppExists = await sql.query(checkAppQuery, appName)
 
-    //console.log(AppExists)
+    //console.log(AppExists[0])
 
-    if (AppExists.length !== 0) {
-      return res.status(500).send("App acronym already exists.")
+    if (AppExists[0].length !== 0) {
+      return res.status(500).send("App name already exists.")
     }
     //prettier-ignore
-    sql.query("INSERT INTO application ((App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Create, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"), 
+    sql.query("INSERT INTO application (App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Create, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", 
     [
       appName, 
       description, 
@@ -71,7 +79,8 @@ export const createApp = async (req, res) => {
       todo, 
       doing, 
       done
-    ]
+    ])
+    return res.status(200).send("Successfully created application.")
   } catch (err) {
     res.status(500).send(err)
   }
@@ -79,27 +88,33 @@ export const createApp = async (req, res) => {
 
 export const getApps = async (req, res) => {
   //list all rows in applications table
-  sql.query("SELECT * FROM application", function (err, results) {
-    if (err) {
-      console.log(err)
+  try {
+    const results = await sql.query("SELECT * FROM application")
+    if (results.length > 0) {
+      res.status(200).json(results[0])
     } else {
-      res.json(results)
+      res.status(500).send("No applications found.")
     }
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 }
 
 export const getApp = async (req, res, next) => {
   //find specific row in applications table by App_Acronym
 
   //ensure this is named correctly in frontend
-  const acronym = req.body.appName
-  sql.query("SELECT * FROM application WHERE App_Acronym = ? ", acronym, function (err, results) {
-    if (err) {
-      console.log(err)
+  try {
+    const appName = req.body.appName
+    const results = await sql.query("SELECT * FROM application WHERE App_Acronym = ? ", appName)
+    if (results.length > 0 && results[0].length > 0) {
+      res.status(200).json(results[0])
     } else {
-      res.json(results)
+      res.status(200).send("No applications found.")
     }
-  })
+  } catch (err) {
+    res.status(500).send(err)
+  }
 }
 
 export const editApp = async (req, res) => {

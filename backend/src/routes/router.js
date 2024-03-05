@@ -20,7 +20,8 @@ import {
 //prettier-ignore
 import { 
   getAllGroups, 
-  createGroup 
+  createGroup, 
+  updateGroup
 } from "../controllers/groupController.js"
 
 //prettier-ignore
@@ -68,7 +69,7 @@ import {
 //auth routes
 //router.route("/register").post(checkJWT, adminRegister) //w
 router.route("/auth/login").post(userLogin) //w
-router.route("/verifyAccessGroup").post(checkJWT, verifyAccessGroup) //w
+router.route("/verifyAccessGroup").post(checkJWT, verifyAccessGroup) //w //route for checkGroup
 
 //update user details
 router.route("/allUsers").get(checkJWT, checkAdmin, getAllUsers) //w
@@ -81,11 +82,8 @@ router.route("/createUser").post(checkJWT, checkAdmin, adminCreateUser) //w
 router.route("/allGroups").get(checkJWT, checkAdmin, getAllGroups) //w
 router.route("/createGroup").post(checkJWT, checkAdmin, createGroup) //w
 
-//
-router.route("/updateGroup").post(checkJWT, checkAdmin)
-
-router.route("/app/create").post(checkJWT, createApp) //
-router.route("/app/apps").get(checkJWT, getApps) //
+router.route("/app/create").post(checkJWT, createApp) //w, no backend check for valid groups
+router.route("/app/apps").get(checkJWT, getApps) //w
 router.route("/app/app").post(checkJWT, getApp) //
 router.route("/app/edit").post(checkJWT, editApp) //
 
@@ -98,11 +96,11 @@ router.route("/plans/edit").post(checkJWT, editPlan) //
 router.route("/task/create").post(checkJWT, createTask) //
 router.route("/tasks").post(checkJWT, getTasks) //
 router.route("/task").post(checkJWT, getTask) //
-router.route("/task/edit").post(checkJWT, editTask)
-router.route("/task/editWithPlan").post(checkJWT, editTaskWithPlan)
-router.route("/task/editWithPlanState").post(checkJWT, editTaskWithState)
-router.route("/task/editWithState").post(checkJWT, editTaskWithPlanState)
-router.route("/task/promoteDoingTask").post(checkJWT, promoteDoingTask)
+router.route("/task/edit").post(checkJWT, editTask) //
+router.route("/task/editWithPlan").post(checkJWT, editTaskWithPlan) //
+router.route("/task/editWithPlanState").post(checkJWT, editTaskWithState) //
+router.route("/task/editWithState").post(checkJWT, editTaskWithPlanState) //
+router.route("/task/promoteDoingTask").post(checkJWT, promoteDoingTask) //
 
 //permit functions ???
 //router.route("/app/permit").post(isAuthenticatedUser, getPermit)

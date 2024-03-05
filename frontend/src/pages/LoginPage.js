@@ -12,7 +12,7 @@ function LoginPage() {
   const appDispatch = useContext(DispatchContext)
 
   useEffect(() => {
-    console.log(Cookies.get('jwt')) //jwt check
+    //console.log(Cookies.get('jwt')) //jwt check
   }, [])
 
   const navigate = useNavigate()
@@ -27,22 +27,20 @@ function LoginPage() {
     // if (unacceptable username i.e. blank field){
     //give error popup/alert
     // }
-    if(!username || !password){
-      appDispatch({type:"toast-failed", data: "Fields cannot be empty."})
-    }
-    
-    else try {
-      const response = await Axios.post("/auth/login", { username, password })
-      
-      appDispatch({ type: "login", data: response.data })
-      appDispatch({type:"toast-success", data: "Successful login."})
-      Cookies.set("jwt", response.data.jwt)
-      navigate("/")
-      
-    } catch (err) {
-      appDispatch({type:"toast-failed", data: "Unsuccessful login."})
-      return
-    }
+    if (!username || !password) {
+      appDispatch({ type: "toast-failed", data: "Fields cannot be empty." })
+    } else
+      try {
+        const response = await Axios.post("/auth/login", { username, password })
+
+        appDispatch({ type: "login", data: response.data })
+        appDispatch({ type: "toast-success", data: "Successful login." })
+        Cookies.set("jwt", response.data.jwt)
+        navigate("/")
+      } catch (err) {
+        appDispatch({ type: "toast-failed", data: "Unsuccessful login." })
+        return
+      }
     //popup/etc for unexpected error
   }
 
