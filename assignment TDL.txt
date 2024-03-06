@@ -48,6 +48,3 @@ npm Intellisense
 tailwind CSS intellisense
 gitlens
 prettier
-
-Maybe needed:
-ESLint
