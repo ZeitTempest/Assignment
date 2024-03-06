@@ -74,7 +74,7 @@ export const createPlan = async (req, res) => {
       return res.status(200).send("Successfully created plan.")
     }
   } catch (err) {
-    console.log(err)
+    return res.status(500).send(err)
   }
 }
 
@@ -83,6 +83,8 @@ export const editPlan = async (req, res) => {
   //be careful with naming
   try {
     const { appName, planName, startDate, endDate } = req.body
+
+    if (!planName) return res.status(500).send("Plan name missing.")
 
     const startArr = new Date(startDate)
     const endArr = new Date(endDate)
@@ -95,15 +97,10 @@ export const editPlan = async (req, res) => {
     }
 
     await sql.query("UPDATE plan SET Plan_startDate = ?, Plan_endDate = ? WHERE Plan_MVP_name = ? AND Plan_app_Acronym = ? ", [startDate, endDate, planName, appName])
-
-    if (err) {
-      console.log(err)
-    } else {
-      res.status(200).send("Successfully edited plan.")
-    }
+    res.status(200).send("Successfully edited plan.")
 
     //res.end()
   } catch (err) {
-    console.log(err)
+    return res.status(500).send(err)
   }
 }

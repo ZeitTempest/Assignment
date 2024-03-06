@@ -68,6 +68,8 @@ INSERT INTO `plan` (`Plan_MVP_name`, `Plan_startDate`, `Plan_endDate`, `Plan_app
 ("My Plan 3", "2024-12-18", "2025-06-01", "MyApp1"),
 ("My Plan 4", "2025-06-06", "2026-12-20", "MyApp2");
 
+DROP TABLE IF EXISTS `task`; -- remove this line after development
+
 CREATE TABLE IF NOT EXISTS `task` (
 `Task_name` varchar(20) NOT NULL,
 `Task_description` longtext,
@@ -80,3 +82,11 @@ CREATE TABLE IF NOT EXISTS `task` (
 `Task_id` varchar(30) NOT NULL UNIQUE, -- created using App_Acronym + App_Rnumber
 `Task_plan` varchar(20)
 );
+
+INSERT INTO task (Task_name, Task_description, Task_notes, Task_id, Task_plan, Task_app_Acronym, Task_creator, Task_owner, Task_createDate) VALUES 
+('MytaskA','asdasd','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): qweqwe','MyApp1_1','My Plan 1','MyApp1','admin','admin','2024-04-04'),
+('MytaskB','qweqwe','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): qweqwe','MyApp2_1','My Plan 2','MyApp2','admin','admin','2024-05-05'),
+('MytaskB','zxczxc','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): qweqwe','MyApp1_2','My Plan 3','MyApp1','admin','admin','2024-06-06');

@@ -17,6 +17,16 @@ UPDATE accounts SET `id`=(@i:=@i+1); -- regenerate id column for all entries sta
 
 SELECT username, email, isActive, `groups` FROM accounts;
 
+SELECT App_Rnumber FROM application WHERE App_Acronym = "MyApp1";
+
+SELECT * FROM task WHERE Task_id = "MyApp1_NaN";
+
+BEGIN; 
+INSERT INTO task (Task_name, Task_description, Task_notes, Task_id, Task_plan, Task_app_Acronym, Task_creator, Task_owner, Task_createDate) VALUES ('MytaskA','asdasd asd','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): aqwqeq axcz xz','MyApp1_1','plan123','MyApp1','admin','admin','2024-04-04');
+UPDATE application SET App_Rnumber = "abcd" WHERE App_Acronym = 'MyApp1_1';
+COMMIT;
+
 SELECT * FROM `accounts`;
 SELECT * FROM `groups`;
 SELECT * FROM `application`;

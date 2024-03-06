@@ -172,7 +172,7 @@ export const editApp = async (req, res) => {
       sql.query("UPDATE application SET App_permit_Create = ? WHERE App_Acronym = ? ", [create, appName])
     }
   } catch (err) {
-    console.log(err)
+    return res.status(500).send(err)
   }
   res.end()
 }

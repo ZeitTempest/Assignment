@@ -90,17 +90,17 @@ router.route("/app/edit").post(checkJWT, editApp) /// not able to test, unsure h
 router.route("/plans").post(checkJWT, getPlans) //w
 router.route("/plans/list").post(checkJWT, getPlanNames) //w
 router.route("/plans/create").post(checkJWT, createPlan) //w, no check for valid appName
-router.route("/plans/edit").post(checkJWT, editPlan) // not working yet
+router.route("/plans/edit").post(checkJWT, editPlan) //w, no check for planName matching
 
 //task functions
-router.route("/task/create").post(checkJWT, createTask) //
-router.route("/tasks").post(checkJWT, getTasks) //
-router.route("/task").post(checkJWT, getTask) //
-router.route("/task/edit").post(checkJWT, editTask) //
-router.route("/task/editWithPlan").post(checkJWT, editTaskWithPlan) //
-router.route("/task/editWithPlanState").post(checkJWT, editTaskWithState) //
-router.route("/task/editWithState").post(checkJWT, editTaskWithPlanState) //
-router.route("/task/promoteDoingTask").post(checkJWT, promoteDoingTask) //
+router.route("/task/create").post(checkJWT, createTask) //w
+router.route("/tasks").post(checkJWT, getTasks) //w
+router.route("/task").post(checkJWT, getTask) //w
+router.route("/task/edit").post(checkJWT, editTask) //w
+router.route("/task/editWithPlan").post(checkJWT, editTaskWithPlan) //w
+router.route("/task/editWithState").post(checkJWT, editTaskWithState) //w
+router.route("/task/editWithPlanState").post(checkJWT, editTaskWithPlanState) //w
+router.route("/task/promoteDoingTask").post(checkJWT, promoteDoingTask) //w
 
 //permit functions ???
 //router.route("/app/permit").post(isAuthenticatedUser, getPermit)

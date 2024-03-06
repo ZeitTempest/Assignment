@@ -8,32 +8,32 @@ function validatePlan(res, plan) {
   //returns true if error
   const regex = "^[a-zA-Z0-9]+$"
   if (plan.length > 20) {
-    res.status(500).write("Plan length cannot exceed 20 characters.")
+    res.status(500).write("Plan name cannot exceed 20 characters.")
     return true
   }
   if (!plan.match(regex)) {
-    res.status(500).write("Plan contains illegal characters.")
+    res.status(500).write("Plan name contains illegal characters.")
     return true
   }
   return false
 }
 
 export const getTask = async (req, res) => {
-  const { task } = req.body
-  if (task) {
+  //get a single task row by querying with task_id
+  const { taskId } = req.body
+  console.log(taskId)
+  if (taskId) {
     try {
-      sql.query("SELECT * FROM task WHERE Task_id = ? ", [task], function (err, results) {
-        if (err) {
-          console.log(err)
-        } else {
-          res.status(200).json(results)
-        }
-      })
+      const results = await sql.query("SELECT * FROM task WHERE Task_id = ? ", taskId)
+      //console.log(results[0][0])
+      if (results[0].length > 0) {
+        res.status(200).json(results[0][0])
+      } else {
+        res.status(500).send("Task with this name not found.")
+      }
     } catch (err) {
-      console.log(err)
+      return res.status(500).send(err)
     }
-  } else {
-    res.status(500).send("Missing task.")
   }
 }
 
@@ -42,24 +42,24 @@ export const getTasks = async (req, res) => {
   const { state, appName } = req.body
   if (state) {
     try {
-      sql.query("SELECT * from task WHERE Task_state = ? AND Task_app_Acronym = ? ", [state, appName], function (err, results) {
-        if (err) {
-          console.log(err)
-        } else {
-          res.json(results)
-        }
-      })
+      const results = await sql.query("SELECT * from task WHERE Task_state = ? AND Task_app_Acronym = ? ", [state, appName])
+      if (results[0].length > 0) {
+        res.status(200).json(results[0])
+      } else {
+        res.status(500).send("Task with this name not found.")
+      }
     } catch (err) {
-      console.log(err)
+      return res.status(500).send(err)
     }
   } else return res.status(500).send("Error: given state missing.")
 }
 
 export const createTask = async (req, res) => {
   //careful with names!
-  const { taskName, description, notes, plan, name, createDate } = req.body
-  const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-  const username = decoded.username
+  const { taskName, description, notes, plan, appName, createDate } = req.body
+  const username = req.byUser
+
+  //console.log("username: " + username)
 
   if (!taskName) return res.status(500).send("Failed to create task: missing task name")
 
@@ -67,10 +67,10 @@ export const createTask = async (req, res) => {
   let error = false
 
   //task valid check
-  if (task.length < 3 || task.length > 20) {
+  if (taskName.length < 3 || taskName.length > 20) {
     return res.status(500).send("Task name must be between 3 - 20 characters.")
   }
-  if (!task.match(regex)) {
+  if (!taskName.match(regex)) {
     return res.status(500).send("Task name contains illegal characters.")
   }
 
@@ -83,15 +83,21 @@ export const createTask = async (req, res) => {
     //get App_Rnumber from the associated application
     const rNumberQuery = "SELECT App_Rnumber FROM application WHERE App_Acronym = ?"
 
-    const rNumber = (await sql.query(rNumberQuery, appName)) + 1
-    const taskId = name + "_" + rNumber
+    //const rNumber = (await sql.query(rNumberQuery, appName)[0]) + 1
+
+    const rNumberResult = await sql.query(rNumberQuery, appName)
+
+    const rNumber = rNumberResult[0][0].App_Rnumber + 1
+
+    const taskId = appName + "_" + rNumber
 
     //check if task already exists
     const taskExistsQuery = "SELECT * FROM task WHERE Task_id = ?"
     const taskExists = await sql.query(taskExistsQuery, taskId)
 
-    if (taskExists) {
-      res.status(500).send("The task you are attempting to create already exists.")
+    console.log(taskExists[0])
+    if (taskExists[0].length > 0) {
+      return res.status(500).send("The task you are attempting to create already exists.")
     }
 
     //double check this logic: where do the previous audit entries get appended?
@@ -101,146 +107,107 @@ export const createTask = async (req, res) => {
       const state = "create"
       audit = `${username}, ${state}, ${time}: ${notes}`
     }
-    //prettier-ignore
-    sql.query(
-      "BEGIN; INSERT INTO task (Task_name, Task_description, Task_notes, Task_id, Task_plan, Task_app_Acronym, Task_creator, Task_owner, Task_createDate) VALUES (?,?,?,?,?,?,?,?,?); UPDATE application SET App_Rnumber = ? WHERE App_Acronym = ?; COMMIT", 
-      [
-        taskName,
-        description, 
-        audit, 
-        taskId, 
-        plan, 
-        name, 
-        username, 
-        username, 
-        createDate, 
-        rNumber, 
-        name
-      ], 
-      function (err, results) {
-        if (err) {
-          console.log(err)
-        } else {
-          res.status(200).send("Successfully created task.")
-        }
-      }
-    )
+    try {
+      //prettier-ignore
+      sql.query("INSERT INTO task (Task_name, Task_description, Task_notes, Task_id, Task_plan, Task_app_Acronym, Task_creator, Task_owner, Task_createDate) VALUES (?,?,?,?,?,?,?,?,?);", [taskName, description, audit, taskId, plan, appName, username, username, createDate], function (err, results) {})
+    } catch (err) {
+      console.log(err)
+      res.status(500).send("insert query error")
+    }
+
+    try {
+      sql.query("UPDATE application SET App_Rnumber = ? WHERE App_Acronym = ?;", [rNumber, appName])
+      res.status(200).send("Task created")
+    } catch (err) {
+      console.log(err)
+      return res.status(500).send("update query error")
+    }
   } catch (err) {
     console.log(err)
+    return res.status(500).send("some other error")
   }
 }
 
 export const editTask = async (req, res) => {
+  //edit the task selected using task_id
   try {
     const { description, notes, taskId, state } = req.body
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    const username = decoded.username
+    const username = req.byUser
     const time = new Date()
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, audit, username, taskId], function (err, results) {
-      if (err) {
-        console.log(err)
-      } else {
-        res.status(200).send("Successfully edited task.")
-      }
-    })
-    //res.end()
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, audit, username, taskId])
+    res.status(200).send("Successfully edited task.")
   } catch (err) {
-    console.log(err)
+    return res.status(500).send(err)
   }
 }
 export const editTaskWithPlan = async (req, res) => {
   try {
     const { description, plan, notes, taskId, state } = req.body
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    const username = decoded.username
+    const username = req.byUser
     const time = new Date()
 
     if (plan && validatePlan(res, plan)) {
-      res.send()
-      return
+      console.log("plan failed validation")
+      return res.send()
     }
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, plan, audit, username, taskId], function (err, results) {
-      if (err) {
-        console.log(err)
-      } else {
-        res.status(200).send("Successfully edited task.")
-      }
-    })
-    //res.end()
+    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, plan, audit, username, taskId])
+    res.status(200).send("Successfully edited task.")
   } catch (err) {
-    console.log(err)
+    return res.status(500).send(err)
+  }
+}
+
+export const editTaskWithState = async (req, res) => {
+  try {
+    const { description, notes, taskId, state, newState } = req.body
+    const username = req.byUser
+    const time = new Date()
+    const audit = `${username}, ${state}, ${time}: ${notes}`
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, audit, username, newState, taskId])
+
+    res.status(200).send("Successfully edited and promoted task.")
+  } catch (err) {
+    return res.status(500).send(err)
   }
 }
 
 export const editTaskWithPlanState = async (req, res) => {
   try {
     const { description, plan, notes, taskId, state, newState } = req.body
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    const username = decoded.username
+
+    const username = req.byUser
+
     const time = new Date()
     if (plan && validatePlan(res, plan)) {
       res.send()
       return
     }
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, plan, audit, username, newState, taskId], function (err, results) {
-      if (err) {
-        console.log(err)
-      } else {
-        res.status(200).send("Successfully edited and promoted task.")
-      }
-    })
-    //res.end()
+    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, plan, audit, username, newState, taskId])
+    res.status(200).send("Successfully edited and promoted task.")
   } catch (err) {
     console.log(err)
-  }
-}
-
-export const editTaskWithState = async (req, res) => {
-  try {
-    const { description, notes, task, state, newState } = req.body
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    const username = decoded.username
-    const time = new Date()
-    const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, audit, username, newState, task], function (err, results) {
-      if (err) {
-        console.log(err)
-      } else {
-        res.status(200).send("Successfully edited and promoted task.")
-      }
-    })
-    //res.end()
-  } catch (err) {
-    console.log(err)
+    return res.status(500).send("asd")
   }
 }
 
 export const promoteDoingTask = async (req, res) => {
   try {
-    const { description, notes, plan, task, state, newState, app } = req.body
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY)
-    const username = decoded.username
+    const { description, notes, taskId, state, newState, appName } = req.body
+    const username = req.byUser
     const time = new Date()
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    if (plan && validatePlan(res, plan)) {
-      res.send()
-      return
-    }
-    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ?, Task_plan = ? WHERE task_id = ?", [description, audit, username, newState, plan, task], function (err, results) {
-      if (err) {
-        console.log(err)
-      } else {
-        //sendEmail(app)
-        console.log("email gets sent here")
-        res.status(200).send("Successfully edited and promoted task to 'Done'.")
-      }
-    })
+
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, audit, username, newState, taskId])
+
+    //sendEmail(appName)
+    console.log("email gets sent here")
+    res.status(200).send("Successfully edited and promoted task to 'Done'.")
     //res.end()
   } catch (err) {
-    console.log(err)
+    return res.status(500).send(err)
   }
 }
 

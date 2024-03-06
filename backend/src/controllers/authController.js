@@ -73,7 +73,7 @@ export const Checkgroup = async (userid, groupname) => {
     //console.log("checkgroup")
     return foundUser.groups.split(",").includes(groupname)
   } catch (err) {
-    console.log(err)
+    return res.status(500).send(err)
   }
 }
 
