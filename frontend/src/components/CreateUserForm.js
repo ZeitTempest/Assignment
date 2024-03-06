@@ -1,44 +1,44 @@
-import axios from "axios"
-import { Autocomplete, Chip, TextField } from "@mui/material"
-import React, { useState } from "react"
+import axios from "axios";
+import { Autocomplete, Chip, TextField } from "@mui/material";
+import React, { useState } from "react";
 
-import { useContext } from "react"
-import DispatchContext from "../DispatchContext"
+import { useContext } from "react";
+import DispatchContext from "../DispatchContext";
 
 const CreateUserForm = props => {
-  const appDispatch = useContext(DispatchContext) 
+  const appDispatch = useContext(DispatchContext);
 
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [email, setEmail] = useState("")
-  const [groups, setGroups] = useState([])
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [groups, setGroups] = useState([]);
 
   async function handleCreateUser(e) {
-    e.preventDefault()
+    e.preventDefault();
     try {
       if (username && password) {
-        await axios.post("/createUser", { username, password, email, groups })
-        
+        await axios.post("/createUser", { username, password, email, groups });
+
         //e.target.reset()
         //reset fields
         // setUsername("")
         // setPassword("")
         // setEmail("")
         // setGroups([])
-        appDispatch({type:"toast-success", data:"User successfully created."})
-        
+        window.location.reload();
+        appDispatch({ type: "toast-success", data: "User successfully created." });
       } else {
-        appDispatch({type:"toast-failed", data:"Username and password are mandatory!"})
+        appDispatch({ type: "toast-failed", data: "Username and password are mandatory!" });
         //error Username and password mandatory!
       }
     } catch (err) {
-      appDispatch({type:"toast-failed", data:err.response.data})
+      appDispatch({ type: "toast-failed", data: err.response.data });
     }
   }
 
   function handleGroupChange(event, values) {
-    setGroups(values)
-    console.log(groups)
+    setGroups(values);
+    console.log(groups);
   }
 
   return (
@@ -60,7 +60,7 @@ const CreateUserForm = props => {
           <div className="flex-col space-y">
             {/*Add Groups Field*/}
             {/* <input type="addGroups" name="addGroups" id="addGroups" className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 bg-blue-gray-700 border-blue-gray-100 placeholder-blue-gray-200 focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg block w-full p-2.5 bg-gray-700" placeholder="Add Groups" required="" /> */}
-            <Autocomplete clearIcon={false} onChange={handleGroupChange} sx={{ width: "250px" }} options={props.groupList} multiple className="bg-blue-gray-50 border border-blue-gray-300 block border-blue-gray-100 text-xs rounded-lg bg-gray-700" renderInput={params => <TextField label="Select Groups.." {...params} />} />
+            <Autocomplete clearIcon={false} onChange={handleGroupChange} size="small" sx={{ width: "250px" }} options={props.groupList} multiple className="bg-blue-gray-50 border border-blue-gray-300 block border-blue-gray-100 text-xs rounded-lg bg-gray-700" renderInput={params => <TextField label="Select Groups.." {...params} />} />
           </div>
           <div>
             {/* Submit Button */}
@@ -71,7 +71,7 @@ const CreateUserForm = props => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CreateUserForm
+export default CreateUserForm;

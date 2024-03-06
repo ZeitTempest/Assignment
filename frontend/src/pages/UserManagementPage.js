@@ -1,75 +1,77 @@
-import React, { useEffect, useState /*, useContext*/ } from "react"
-import Page from "../components/Page"
+import React, { useEffect, useState /*, useContext*/ } from "react";
+import Page from "../components/Page";
 //import { logoutUser } from "../utils/auth"
-import Axios from "axios"
-import { useNavigate } from "react-router-dom"
-import CreateGroupForm from "../components/CreateGroupForm"
-import CreateUserForm from "../components/CreateUserForm"
-import ViewRow from "../components/ViewRow"
+import Axios from "axios";
+import { useNavigate } from "react-router-dom";
+import CreateGroupForm from "../components/CreateGroupForm";
+import CreateUserForm from "../components/CreateUserForm";
+import ViewRow from "../components/ViewRow";
 
-import { useContext } from "react"
-import DispatchContext from "../DispatchContext"
+import { useContext } from "react";
+import DispatchContext from "../DispatchContext";
 
 function UserManagementPage() {
-  const appDispatch = useContext(DispatchContext)
+  const appDispatch = useContext(DispatchContext);
 
-  const navigate = useNavigate()
-  const [users, setUsers] = useState([])
-  const [groups, setGroups] = useState([])
-  const [groupList, setGroupList] = useState([])
+  const navigate = useNavigate();
+  const [users, setUsers] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [groupList, setGroupList] = useState([]);
 
   async function getUsersTable() {
     try {
-      const response = await Axios.get("/allUsers")
-      setUsers(response.data)
+      const response = await Axios.get("/allUsers");
+      setUsers(response.data);
 
-      console.log(response.data)
-      const allGroups = []
+      // console.log(response.data)
+      const allGroups = [];
       response.data.forEach(user => {
-        const thisUserGroups = user.groups?.split(",")
-        allGroups.push({ user: user.username, groups: thisUserGroups })
-      })
+        const thisUserGroups = user.groups?.split(",");
 
-      //console.log(allGroups)
+        allGroups.push({ user: user.username, groups: thisUserGroups });
+        //allGroups.push({ user: user.username, groups: thisUserGroups !== "" ? thisUserGroups : null });
+      });
 
-      setGroups(allGroups)
+      console.log(allGroups);
+
+      setGroups(allGroups);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       if (err.code >= 400) {
-        appDispatch({type:"logout"})
-        navigate("/logout")
+        appDispatch({ type: "logout" });
+        navigate("/logout");
       }
     }
   }
 
   function findUserGroups(username) {
-    const group = groups.find(group => group.user === username)
+    const group = groups.find(group => group.user === username);
     if (group) {
-      return group.groups
-    }
+      return group.groups;
+    } //else return null
   }
 
   async function getGroupsList() {
     //returns array of all groups
     try {
-      const response = await Axios.get("/allGroups")
+      const response = await Axios.get("/allGroups");
 
       if (response.data) {
-        const options = []
+        const options = [];
         response.data.forEach(group => {
-          options.push(group.groupname)
-        })
-        setGroupList(options)
+          options.push(group.groupname);
+        });
+        setGroupList(options);
       }
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }
 
   useEffect(() => {
-    getUsersTable()
-    getGroupsList()
-  }, [])
+    getUsersTable();
+    getGroupsList();
+  }, []);
 
   return (
     <Page title="User Management">
@@ -108,7 +110,7 @@ function UserManagementPage() {
                     </thead>
                     <tbody>
                       {users.map(user => {
-                        return <ViewRow username={user.username} email={user.email} isActive={user.isActive} groupList={groupList} userGroups={findUserGroups(user.username)} />
+                        return <ViewRow username={user.username} email={user.email} isActive={user.isActive} groupList={groupList} userGroups={findUserGroups(user.username)} />;
                       })}
                     </tbody>
                   </table>
@@ -119,7 +121,7 @@ function UserManagementPage() {
         </div>
       </section>
     </Page>
-  )
+  );
 }
 
-export default UserManagementPage
+export default UserManagementPage;

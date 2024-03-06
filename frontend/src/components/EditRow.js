@@ -1,55 +1,55 @@
-import { useState, useContext } from "react"
-import { Switch } from "@mui/material"
-import Axios from "axios"
-import DispatchContext from "../DispatchContext"
-import { Autocomplete, TextField } from "@mui/material"
+import { useState, useContext } from "react";
+import { Switch } from "@mui/material";
+import Axios from "axios";
+import DispatchContext from "../DispatchContext";
+import { Autocomplete, TextField } from "@mui/material";
 
 function EditRow(props) {
-
   function handleCancel() {
-    props.setEdit(false)
+    props.setEdit(false);
   }
 
-  const appDispatch = useContext(DispatchContext)
+  const appDispatch = useContext(DispatchContext);
 
-  const [password, setPassword] = useState("")
-  const [email, setEmail] = useState(props.email)
-  const [isActive, setIsActive] = useState(props.isActive === 1)
-  const [groupsArray, setGroups] = useState(props.userGroups)
-  const username = props.username
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState(props.email);
+  const [isActive, setIsActive] = useState(props.isActive === 1);
+  const [groupsArray, setGroups] = useState(props.userGroups);
+  const username = props.username;
 
   function handleGroupChange(event, values) {
-    setGroups(values)
+    console.log(values);
+    setGroups(values);
   }
 
   function toggleSwitch(event) {
-    setIsActive(event.target.checked)
+    setIsActive(event.target.checked);
   }
   async function handleSave() {
     //console.log(groupsArray)
-    const groups = groupsArray?.join()
-
+    const groups = groupsArray.length > 0 ? groupsArray?.join() : null;
+    console.log(groups);
     try {
-      var response
+      var response;
       //const isActive = checkIsActive ? 1 : 0
       if (password) {
-        response = await Axios.post("/admin/updateUser", { username, password, email, groups, isActive })
+        response = await Axios.post("/admin/updateUser", { username, password, email, groups, isActive });
       } else {
-        response = await Axios.post("/admin/updateUser", { username, email, groups, isActive })
+        response = await Axios.post("/admin/updateUser", { username, email, groups, isActive });
       }
 
       if (response.status === 200) {
-        appDispatch({type:"toast-success", data: "Successfully updated user details."})
+        appDispatch({ type: "toast-success", data: "Successfully updated user details." });
       } else {
         //appDispatch({type:"toast-failed", data:"Failed to update user details."})
       }
     } catch (err) {
       //console.log(err)
-      appDispatch({type:"toast-failed", data:err.response.data})
+      appDispatch({ type: "toast-failed", data: err.response.data });
 
       //IF JWT NO AUTH, LOGOUT
     }
-    props.setEdit(false)
+    props.setEdit(false);
   }
 
   return (
@@ -78,7 +78,7 @@ function EditRow(props) {
         </td>
       </tr>
     </>
-  )
+  );
 }
 
-export default EditRow
+export default EditRow;

@@ -15,7 +15,7 @@ minor:
 
 frontend:
 - EditRow warning: "MUI: The value provided to Autocomplete is invalid.
-None of the options match with `""`."
+None of the options match with `""`." - seems to be fixed for now?
 
 Todo:
 

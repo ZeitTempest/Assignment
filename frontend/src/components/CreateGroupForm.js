@@ -4,7 +4,6 @@ import Axios from "axios"
 import { useContext } from "react"
 import DispatchContext from "../DispatchContext"
 
-
 const CreateGroupForm = () => {
   const appDispatch = useContext(DispatchContext)
 
@@ -23,12 +22,13 @@ const CreateGroupForm = () => {
       if (groupname) {
         await Axios.post("/createGroup", { groupname })
         setnewGroup("")
-        appDispatch({type:"toast-success", data:"Group successfully created."})
+        window.location.reload()
+        appDispatch({ type: "toast-success", data: "Group successfully created." })
       } else {
-        appDispatch({type:"toast-failed", data:"Field cannot be blank."})
+        appDispatch({ type: "toast-failed", data: "Field cannot be blank." })
       }
     } catch (err) {
-      appDispatch({type:"toast-failed", data:err.response.data})
+      appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }
   return (

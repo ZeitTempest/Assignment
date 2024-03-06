@@ -34,21 +34,21 @@ function MyDetails() {
     // if (unacceptable username i.e. blank field){
     //give error popup/alert
     // }
-    if(!email && !password) appDispatch({type:"toast-failed", data:"Both fields cannot be empty."})
+    if (!email && !password) appDispatch({ type: "toast-failed", data: "Both fields cannot be empty." })
     try {
       const response = await Axios.post("/updateUser", { email, password })
 
-      if(email) appDispatch({type:"toast-success", data:"Successfully updated email."})
-      if(password) appDispatch({type:"toast-success", data:"Successfully updated password."})
-      
+      if (email) appDispatch({ type: "toast-success", data: "Successfully updated email." })
+      if (password) appDispatch({ type: "toast-success", data: "Successfully updated password." })
+
       setnewEmail("")
       setnewPassword("")
       //e.target.reset()
-
+      window.location.reload()
     } catch (err) {
-      appDispatch({type:"toast-failed", data:err.response.data})
+      appDispatch({ type: "toast-failed", data: err.response.data })
       if (err.code >= 400) {
-        appDispatch({type:"logout"})
+        appDispatch({ type: "logout" })
         navigate("/logout")
       }
     }

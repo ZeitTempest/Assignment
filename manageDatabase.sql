@@ -27,6 +27,8 @@ Time): aqwqeq axcz xz','MyApp1_1','plan123','MyApp1','admin','admin','2024-04-04
 UPDATE application SET App_Rnumber = "abcd" WHERE App_Acronym = 'MyApp1_1';
 COMMIT;
 
+UPDATE `accounts` SET `password`='$2a$10$B6loTC0ZV1WElgNuvMHboO2snALcz673lUHl8b8z.I19OfIlyuuEW', `email`='dev1@company.com', `isActive`='1', `groups`=NULL WHERE `username`='dev1';
+
 SELECT * FROM `accounts`;
 SELECT * FROM `groups`;
 SELECT * FROM `application`;

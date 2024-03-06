@@ -10,6 +10,8 @@ import LoginPage from "../pages/LoginPage"
 import TMSPage from "../pages/TMSPage"
 import MyDetails from "../pages/MyDetails"
 import UserManagementPage from "../pages/UserManagementPage"
+import EditApp from "../pages/EditApp"
+import Kanban from "../pages/Kanban"
 
 export default function BrowserRoutes() {
   return (
@@ -17,7 +19,7 @@ export default function BrowserRoutes() {
       <Header />
       <Routes>
         <Route element={<PrivateRoute />}>
-          <Route path="" element={ <TMSPage/> } /> {/* root redirect to login or tms */}
+          <Route path="" element={<TMSPage />} /> {/* root redirect to login or tms */}
           <Route path="/home" element={<TMSPage />} />
         </Route>
 
@@ -25,11 +27,12 @@ export default function BrowserRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/details" element={<MyDetails />} />
         <Route path="/management" element={<UserManagementPage />} />
+        <Route path="/editApp/:appName" element={<EditApp />} />
+        <Route path="/:appName" element={<Kanban />} />
       </Routes>
     </BrowserRouter>
   )
 }
-
 
 const PrivateRoute = () => {
   const [loginState, setisLoggedIn] = useState(Cookie.get("jwt"))
