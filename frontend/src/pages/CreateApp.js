@@ -169,7 +169,7 @@ function CreateApp() {
                 <h1>Permit Done</h1>
                 <Autocomplete clearIcon={false} size="small" sx={{ width: "250px" }} onChange={handleDoneChange} value={done} options={groupList} className="50 border block border-blue-gray-300 text-xs rounded-lg bg-white" renderInput={params => <TextField {...params} />} />
               </div>
-              <button type="submit" onClick={handleCancel} className="w-2/5 mr-6 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center ">
+              <button type="submit" onClick={handleCancel} className="w-2/5 mr-6 self-auto text-white bg-pink-500 hover:bg-pink-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center ">
                 Cancel
               </button>
               <button type="submit" onClick={handleSubmit} className="w-2/5 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center ">

@@ -43,6 +43,7 @@ export const getTasks = async (req, res) => {
   if (state) {
     try {
       const results = await sql.query("SELECT * from task WHERE Task_state = ? AND Task_app_Acronym = ? ", [state, appName])
+      //console.log(results[0])
       if (results[0].length > 0) {
         res.status(200).json(results[0])
       } else {
@@ -51,7 +52,7 @@ export const getTasks = async (req, res) => {
     } catch (err) {
       return res.status(500).send(err)
     }
-  } else return res.status(500).send("Error: given state missing.")
+  } else return res.status(500).send("Error: no state provided.")
 }
 
 export const createTask = async (req, res) => {
@@ -95,7 +96,7 @@ export const createTask = async (req, res) => {
     const taskExistsQuery = "SELECT * FROM task WHERE Task_id = ?"
     const taskExists = await sql.query(taskExistsQuery, taskId)
 
-    console.log(taskExists[0])
+    //console.log(taskExists[0])
     if (taskExists[0].length > 0) {
       return res.status(500).send("The task you are attempting to create already exists.")
     }

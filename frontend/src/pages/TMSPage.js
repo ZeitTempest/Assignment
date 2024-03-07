@@ -96,7 +96,7 @@ function TMSPage() {
                         {apps.map(app => {
                           return (
                             <>
-                              <tr class="bg-white border-b bg-gray-800 border-gray-700 font-md text-center">
+                              <tr class="border-b border-gray-700 font-md text-center">
                                 <td class="px-6 py-4 bg-gray-300 text-gray-800">
                                   <Link to={`/${app.App_Acronym}`} className="underline font-bold">
                                     {" "}

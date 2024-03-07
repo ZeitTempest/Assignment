@@ -105,7 +105,7 @@ function MyDetails() {
                   <input onChange={e => setnewPassword(e.target.value)} type="password" name="password" id="password" placeholder="••••••••" className="border text-white sm:text-sm rounded-lg block w-full p-2.5 bg-blue-gray-500 border-blue-gray-300 placeholder-gray-100 focus:bg-blue-gray-400 focus:ring-blue-gray-200 focus:border-blue-500" required="" />
                 </div>
                 <div className="pt-4">
-                  <button type="submit" className="w-1/2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center ">
+                  <button type="submit" className="w-1/2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center ">
                     Save
                   </button>
                 </div>

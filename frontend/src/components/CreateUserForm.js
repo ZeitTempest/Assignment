@@ -66,7 +66,7 @@ const CreateUserForm = props => {
           <div className="flex-col space-y">
             {/*Add Groups Field*/}
             {/* <input type="addGroups" name="addGroups" id="addGroups" className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 bg-blue-gray-700 border-blue-gray-100 placeholder-gray-100 focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg block w-full p-2.5 bg-gray-700" placeholder="Add Groups" required="" /> */}
-            <Autocomplete clearIcon={false} onChange={handleGroupChange} size="small" sx={{ width: "250px" }} options={props.groupList} multiple className="border text-white block text-xs rounded-lg bg-blue-gray-50 border-blue-gray-300" renderInput={params => <TextField label="Select Groups.." {...params} />} />
+            <Autocomplete clearIcon={false} onChange={handleGroupChange} size="small" sx={{ width: "350px" }} options={props.groupList} multiple className="border text-white block text-xs rounded-lg bg-blue-gray-50 border-blue-gray-300" renderInput={params => <TextField label="Select Groups.." {...params} />} />
           </div>
           <div>
             {/* Submit Button */}
