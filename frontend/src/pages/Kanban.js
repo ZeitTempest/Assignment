@@ -103,6 +103,13 @@ function Kanban() {
             </div>
           </div>
         </div>
+        <div className="px-6 mt-6">
+          <div className="w-full rounded-lg shadow border md:mt-0 xl:p-0 bg-white border-gray-300">
+            <div className="sm:pt-8">
+              <h1 className="text-xl font-bold leading-tight tracking-tight md:text-3xl text-center text-blue-900">{appName}</h1>
+            </div>
+          </div>
+        </div>
       </div>
     </Page>
   )
