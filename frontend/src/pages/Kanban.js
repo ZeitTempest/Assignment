@@ -40,13 +40,15 @@ function Kanban() {
 
   async function checkPL() {
     try {
-      const app = appName
-      const response = await Axios.post("/app/permit", { app })
-      const groupname = response.data[0].App_permit_Create
+      const response = await Axios.post("/app/permit", { appName })
+      var groupname = null
+      if (response.data.length > 0) {
+        groupname = response.data[0].App_permit_Create
+      } else console.log("failed to get any groups")
       if (groupname) {
         try {
           const res = await Axios.post("/verifyAccessGroup", { groupname })
-          setPermitted(res.data)
+          setPermitted(res.data.userIsInGroup)
         } catch (err) {
           console.log(err)
         }
@@ -79,51 +81,72 @@ function Kanban() {
   }, [])
 
   return (
-    <>
-      <Page>
-        <div className="d-flex flex-column flex-md-row align-items-center p-30">
-          <h4 className="my-20 mr-md-auto font-weight-normal">
-            <Tooltip title="Applications" arrow>
-              <Link to="/home" className="text-dark">
-                <b>{appName}</b>
-              </Link>
-            </Tooltip>
-          </h4>
-          <button onClick={handlePlans} className="btn btn-sm btn-info">
-            Plans
-          </button>
-          <Dialog open={openPlan} onClose={handleClose} fullWidth maxWidth="lg">
-            <DialogTitle>Plans</DialogTitle>
-            <DialogContent>
-              <PlanDialog />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose}>Close</Button>
-            </DialogActions>
-          </Dialog>
-          <div className="text-white">...</div>
-          {permitted ? (
-            <>
-              <button onClick={handleAddTask} className="btn btn-sm btn-success">
-                Add Task
-              </button>
-              <Dialog open={openAddTask} onClose={handleCloseAddTask} fullWidth maxWidth="lg">
-                <DialogTitle>Create Task for {appName}</DialogTitle>
-                <DialogContent>
-                  <AddTaskDialog plans={plans} setOpenAddTask={setOpenAddTask} />
-                </DialogContent>
-              </Dialog>
-            </>
-          ) : (
-            ""
-          )}
+    <Page>
+      <div className="bg-blue-gray-100 min-h-screen">
+        <div className="flex items-center justify-center px-6 mx-auto lg:py-0">
+          <div className="min-w-full rounded-lg shadow border md:mt-24 mb-2 sm:max-w-screen-lg xl:p-0 bg-white border-gray-300">
+            <div className="flex space-x-6 sm:p-8 items-center justify-end">
+              <div>
+                <button type="submit" className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center">
+                  Plans
+                </button>
+              </div>
+              {permitted ? (
+                <div>
+                  <button type="submit" className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center">
+                    Add Task
+                  </button>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
         </div>
-        <div className="mt-3">
-          <TaskBoard appName={appName} />
-        </div>
-      </Page>
-    </>
+      </div>
+    </Page>
   )
+
+  // <div className="d-flex flex-column flex-md-row align-items-center p-30">
+  //   <h4 className="my-20 mr-md-auto font-weight-normal">
+  //     <Tooltip title="Applications" arrow>
+  //       <Link to="/home" className="text-dark">
+  //         <b>{appName}</b>
+  //       </Link>
+  //     </Tooltip>
+  //   </h4>
+  //   <button onClick={handlePlans} className="btn btn-sm btn-info">
+  //     Plans
+  //   </button>
+  //   <Dialog open={openPlan} onClose={handleClose} fullWidth maxWidth="lg">
+  //     <DialogTitle>Plans</DialogTitle>
+  //     <DialogContent>
+  //       <PlanDialog />
+  //     </DialogContent>
+  //     <DialogActions>
+  //       <Button onClick={handleClose}>Close</Button>
+  //     </DialogActions>
+  //   </Dialog>
+  //   <div className="text-white">...</div>
+  //   {permitted ? (
+  //     <>
+  //       <button onClick={handleAddTask} className="btn btn-sm btn-success">
+  //         Add Task
+  //       </button>
+  //       <Dialog open={openAddTask} onClose={handleCloseAddTask} fullWidth maxWidth="lg">
+  //         <DialogTitle>Create Task for {appName}</DialogTitle>
+  //         <DialogContent>
+  //           <AddTaskDialog plans={plans} setOpenAddTask={setOpenAddTask} />
+  //         </DialogContent>
+  //       </Dialog>
+  //     </>
+  //   ) : (
+  //     ""
+  //   )}
+  // </div>
+  // <div className="mt-3">
+  //   <TaskBoard appName={appName} />
+  // </div>
 
   // return (
   //   <Page title={appName}>

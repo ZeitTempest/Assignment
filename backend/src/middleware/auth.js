@@ -49,7 +49,7 @@ export const checkAdmin = async (req, res, next) => {
     const isAdmin = await Checkgroup(username, "admin")
     //console.log("is admin: " + isAdmin)
     if (!isAdmin) {
-      return res.status(403).send("Unauthorized")
+      return res.status(403).send("Not admin")
     } else {
       //console.log(`${username} is admin`)
       next()

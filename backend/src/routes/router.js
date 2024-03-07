@@ -79,7 +79,7 @@ router.route("/getUser").get(checkJWT, getUser) //w
 router.route("/createUser").post(checkJWT, checkAdmin, adminCreateUser) //w
 
 //modify groups
-router.route("/allGroups").get(checkJWT, checkAdmin, getAllGroups) //w
+router.route("/allGroups").get(checkJWT, getAllGroups) //w
 router.route("/createGroup").post(checkJWT, checkAdmin, createGroup) //w
 
 router.route("/app/create").post(checkJWT, createApp) //w, no backend check for valid groups

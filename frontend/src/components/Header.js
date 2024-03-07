@@ -13,7 +13,7 @@ function Header() {
       //console.log("chkadmin")
       const groupname = "admin"
       const res = await axios.post("/verifyAccessGroup", { groupname })
-      setisAdmin(res.data.userIsInGroup)
+      setisAdmin(res.data.userIsInGroup) //if we get any data back, the check was successful
     } catch (err) {
       console.log(err)
     }
