@@ -9,7 +9,7 @@ const CreateGroupForm = () => {
 
   const onFinish = async ({ groupname }) => {}
 
-  const onFinishFailed = (errorInfo) => {
+  const onFinishFailed = errorInfo => {
     console.log("create group failed:", errorInfo)
   }
 
@@ -25,7 +25,7 @@ const CreateGroupForm = () => {
         window.location.reload()
         appDispatch({
           type: "toast-success",
-          data: "Group successfully created.",
+          data: "Group successfully created."
         })
       } else {
         appDispatch({ type: "toast-failed", data: "Field cannot be blank." })
@@ -41,22 +41,11 @@ const CreateGroupForm = () => {
           <div className="flex space-x-6 sm:p-8 items-center justify-end">
             <div className="flex-col space-y">
               {/* column 1 */}
-              <input
-                onChange={(e) => setnewGroup(e.target.value)}
-                type="username"
-                name="groupname"
-                id="groupname"
-                className="border text-white sm:text-sm rounded-lg block w-full p-2.5 bg-blue-gray-500 border-blue-gray-100 placeholder-blue-gray-200 focus:bg-blue-gray-400 focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Group Name"
-                required=""
-              />
+              <input onChange={e => setnewGroup(e.target.value)} type="username" name="groupname" id="groupname" className="border text-white sm:text-sm rounded-lg block w-full p-2.5 bg-blue-gray-500 border-blue-gray-100 placeholder-gray-100 focus:bg-blue-gray-400 focus:ring-blue-500 focus:border-blue-500" placeholder="Group Name" required="" />
             </div>
             <div>
               {/* column 2 */}
-              <button
-                type="submit"
-                className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center"
-              >
+              <button type="submit" className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center">
                 Create Group
               </button>
             </div>

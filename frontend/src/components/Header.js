@@ -45,7 +45,7 @@ function Header() {
         <div className="flex flex-wrap justify-around justify-items-center items-center mx-auto max-w-screen-xl">
           <Link to="/" className="flex items-center">
             <img src={require("../assets/TMS_Logo2.png")} className="mr-3 h-6 lg:h-12" alt="TMS Logo" />
-            <span className="self-center text-xl font-semibold whitespace-nowrap text-white">TMS</span>
+            <span className="self-center text-3xl font-semibold whitespace-nowrap text-white">TMS</span>
           </Link>
           <div className="flex items-right lg:order-2">{!appState.loggedIn ? "" : isAdmin ? <HeaderLoggedInAdmin /> : <HeaderLoggedIn />}</div>
         </div>

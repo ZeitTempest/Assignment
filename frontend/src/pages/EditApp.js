@@ -79,10 +79,10 @@ function EditApp() {
     try {
       const response = await Axios.get("/allGroups")
       const data = response.data
-      console.log(data)
+      //console.log(data)
       if (data) {
         const options = []
-        response.data.forEach((group) => {
+        response.data.forEach(group => {
           options.push(group.groupname)
         })
         setGroupList(options)
@@ -126,7 +126,7 @@ function EditApp() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    console.log(startDate)
+    //console.log(startDate)
     try {
       let obj = { appName }
       if (description) {
@@ -162,7 +162,7 @@ function EditApp() {
       navigate("/home")
     } catch (err) {
       console.log(err)
-      appDispatch({ type: "toast-failed", data: err })
+      appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }
 
@@ -171,161 +171,75 @@ function EditApp() {
   }
 
   return (
+    //prettier-ignore
     <Page title="Edit Application">
       {isPL ? (
-        <section className="bg-gray-300 flex">
-          <div className="items-center flex flex-row basis-1/2 justify-center px-6 py-8 lg:py-0">
-            <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-lg xl:p-0 bg-blue-gray-800 border-gray-700">
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-teal-100">
-                  Edit Application
-                </h1>
-                <div className="flex-col space-y">
-                  {/*App Description Field*/}
-                  <input
-                    onChange={(e) => setDescription(e.target.value)}
-                    defaultValue={description}
-                    name="appDescription"
-                    id="appDescription"
-                    className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 border-blue-gray-100 placeholder-blue-gray-200 text-white focus:ring-blue-500 focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg bg-gray-700"
-                    placeholder="App Description"
-                  />
-                </div>
-                <div>
-                  <div>Start Date</div>
-                  <input
-                    type="date"
-                    onChange={(e) => setStartDate(e.target.value)}
-                    defaultValue={startDate}
-                    name="appStartDate"
-                    id="appStartDate"
-                    className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 border-blue-gray-100 placeholder-blue-gray-200 text-white focus:ring-blue-500 focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg bg-gray-700"
-                  />
-                  <div>End Date</div>
-                  <input
-                    type="date"
-                    onChange={(e) => setEndDate(e.target.value)}
-                    defaultValue={endDate}
-                    name="appEndDate"
-                    id="appEndDate"
-                    className="bg-blue-gray-50 border border-blue-gray-300 text-white focus:ring-blue-600 block w-full p-2.5 border-blue-gray-100 placeholder-blue-gray-200 text-white focus:ring-blue-500 focus:border-blue-600 focus:bg-blue-gray-600 text-xs rounded-lg bg-gray-700"
-                  />
-                </div>
+        <section className="bg-blue-gray-100 flex justify-center items-center h-screen w-screen">
+          <div className="rounded-lg shadow border bg-white border-gray-300 items-center flex w-auto h-auto">
+            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+              <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-blue-900">Edit {appName}</h1>
+              <div className="flex-col space-y">
+                {/*App Description Field*/}
+                
+                <div>App Description</div>
+                <TextField
+                  style={{width: 400}} 
+                  multiline
+                  rows={8}
+                  defaultValue={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                ></TextField>
+                {/* <input onChange={e => setDescription(e.target.value)} 
+                defaultValue={description} 
+                name="appDescription" 
+                id="appDescription" 
+                className="text-white sm:text-sm rounded-lg block h-auto p-20 bg-blue-gray-500 border-blue-gray-300 placeholder-blue-gray-200 focus:bg-blue-gray-400 focus:ring-blue-500 focus:border-blue-500 overflow-auto resize-y whitespace-normal" 
+                placeholder="App Description" /> */}
+              </div>
+              <div>
+                <div>Start Date</div>
+                <input type="date" onChange={e => setStartDate(e.target.value)} defaultValue={startDate} name="appStartDate" id="appStartDate" className="border text-white sm:text-sm rounded-lg block w-3/5 p-2.5 bg-blue-gray-500 border-blue-gray-300 placeholder-blue-gray-200 focus:bg-blue-gray-400 focus:ring-blue-500 focus:border-blue-500" />
+                <div>End Date</div>
+                <input type="date" onChange={e => setEndDate(e.target.value)} defaultValue={endDate} name="appEndDate" id="appEndDate" className="border text-white sm:text-sm rounded-lg block w-3/5 p-2.5 bg-blue-gray-500 border-blue-gray-300 placeholder-blue-gray-200 focus:bg-blue-gray-400 focus:ring-blue-500 focus:border-blue-500" />
               </div>
             </div>
-            <div>
-              <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-                <div className="flex-col space-y">
-                  {/*Permit Create Field*/}
-                  <h1>Permit Create</h1>
-                  <Autocomplete
-                    clearIcon={false}
-                    size="small"
-                    sx={{ width: "250px" }}
-                    onChange={handleCreateChange}
-                    value={create}
-                    options={groupList}
-                    className="bg-blue-gray-50 border border-blue-gray-300 block border-blue-gray-100 text-xs rounded-lg bg-white"
-                    renderInput={(params) => (
-                      <TextField label="Permit Create" {...params} />
-                    )}
-                  />
-                </div>
-                <div className="flex-col space-y">
-                  {/*Permit Open Field*/}
-                  <h1>Permit Open</h1>
-                  <Autocomplete
-                    clearIcon={false}
-                    size="small"
-                    sx={{ width: "250px" }}
-                    onChange={handleOpenChange}
-                    value={open}
-                    options={groupList}
-                    className="bg-blue-gray-50 border border-blue-gray-300 block border-blue-gray-100 text-xs rounded-lg bg-white"
-                    renderInput={(params) => (
-                      <TextField label="Permit Open" {...params} />
-                    )}
-                  />
-                </div>
-                <div className="flex-col space-y">
-                  {/*Permit Todo Field*/}
-                  <h1>Permit Todo</h1>
-                  <Autocomplete
-                    clearIcon={false}
-                    size="small"
-                    sx={{ width: "250px" }}
-                    onChange={handleTodoChange}
-                    value={todo}
-                    options={groupList}
-                    className="bg-blue-gray-50 border border-blue-gray-300 block border-blue-gray-100 text-xs rounded-lg bg-white"
-                    renderInput={(params) => (
-                      <TextField label="Permit Todo" {...params} />
-                    )}
-                  />
-                </div>{" "}
-                <div className="flex-col space-y">
-                  {/*Permit Doing Field*/}
-                  <h1>Permit Doing</h1>
-                  <Autocomplete
-                    clearIcon={false}
-                    size="small"
-                    sx={{ width: "250px" }}
-                    onChange={handleDoingChange}
-                    value={doing}
-                    options={groupList}
-                    className="bg-blue-gray-50 border border-blue-gray-300 block border-blue-gray-100 text-xs rounded-lg bg-white"
-                    renderInput={(params) => (
-                      <TextField label="Permit Doing" {...params} />
-                    )}
-                  />
-                </div>{" "}
-                <div className="flex-col space-y">
-                  {/*Permit Done Field*/}
-                  <h1>Permit Done</h1>
-                  <Autocomplete
-                    clearIcon={false}
-                    size="small"
-                    sx={{ width: "250px" }}
-                    onChange={handleDoneChange}
-                    value={done}
-                    options={groupList}
-                    className="bg-blue-gray-50 border border-blue-gray-300 block border-blue-gray-100 text-xs rounded-lg bg-white"
-                    renderInput={(params) => (
-                      <TextField label="Permit Done" {...params} />
-                    )}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  onClick={handleCancel}
-                  className="w-1/2 mx-2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center "
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  onClick={handleSubmit}
-                  className="w-1/2 mx-2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none focus:ring-blue-800 font-medium rounded-lg text-md px-5 py-2.5 text-center "
-                >
-                  Save
-                </button>
+            <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+              <div className="flex-col space-y">
+                {/*Permit Create Field*/}
+                <h1>Permit Create</h1>
+                <Autocomplete clearIcon={false} size="small" sx={{ width: "250px" }} onChange={handleCreateChange} value={create} options={groupList} className="border block border-blue-gray-300 text-xs rounded-lg bg-white" renderInput={params => <TextField {...params} />} />
               </div>
+              <div className="flex-col space-y">
+                {/*Permit Open Field*/}
+                <h1>Permit Open</h1>
+                <Autocomplete clearIcon={false} size="small" sx={{ width: "250px" }} onChange={handleOpenChange} value={open} options={groupList} className="border block border-blue-gray-300 text-xs rounded-lg bg-white" renderInput={params => <TextField {...params} />} />
+              </div>
+              <div className="flex-col space-y">
+                {/*Permit Todo Field*/}
+                <h1>Permit Todo</h1>
+                <Autocomplete clearIcon={false} size="small" sx={{ width: "250px" }} onChange={handleTodoChange} value={todo} options={groupList} className="border block border-blue-gray-300 text-xs rounded-lg bg-white" renderInput={params => <TextField {...params} />} />
+              </div>{" "}
+              <div className="flex-col space-y">
+                {/*Permit Doing Field*/}
+                <h1>Permit Doing</h1>
+                <Autocomplete clearIcon={false} size="small" sx={{ width: "250px" }} onChange={handleDoingChange} value={doing} options={groupList} className="border block border-blue-gray-300 text-xs rounded-lg bg-white" renderInput={params => <TextField {...params} />} />
+              </div>{" "}
+              <div className="flex-col space-y">
+                {/*Permit Done Field*/}
+                <h1>Permit Done</h1>
+                <Autocomplete clearIcon={false} size="small" sx={{ width: "250px" }} onChange={handleDoneChange} value={done} options={groupList} className="border block border-blue-gray-300 text-xs rounded-lg bg-white" renderInput={params => <TextField {...params} />} />
+              </div>
+              <button type="submit" onClick={handleCancel} className="w-2/5 mr-6 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center ">
+                Cancel
+              </button>
+              <button type="submit" onClick={handleSubmit} className="w-2/5 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center ">
+                Save
+              </button>
             </div>
           </div>
-
-          <div className="items-center flex flex-col basis-1/2 justify-center px-6 py-8 md:h-screen lg:py-0"></div>
         </section>
       ) : (
-        <ViewApp
-          description={description}
-          startDate={startDate}
-          endDate={endDate}
-          create={create}
-          open={open}
-          todo={todo}
-          doing={doing}
-          done={done}
-        />
+        <ViewApp description={description} startDate={startDate} endDate={endDate} create={create} open={open} todo={todo} doing={doing} done={done} />
       )}
     </Page>
   )

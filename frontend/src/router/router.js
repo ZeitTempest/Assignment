@@ -12,6 +12,7 @@ import MyDetails from "../pages/MyDetails"
 import UserManagementPage from "../pages/UserManagementPage"
 import EditApp from "../pages/EditApp"
 import Kanban from "../pages/Kanban"
+import CreateApp from "../pages/CreateApp"
 
 export default function BrowserRoutes() {
   return (
@@ -27,6 +28,7 @@ export default function BrowserRoutes() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/details" element={<MyDetails />} />
         <Route path="/management" element={<UserManagementPage />} />
+        <Route path="/createApp" element={<CreateApp />} />
         <Route path="/editApp/:appName" element={<EditApp />} />
         <Route path="/:appName" element={<Kanban />} />
       </Routes>
@@ -37,7 +39,8 @@ export default function BrowserRoutes() {
 const PrivateRoute = () => {
   const [loginState, setisLoggedIn] = useState(Cookie.get("jwt"))
   useEffect(() => {
-    console.log(<Outlet />)
+    //console.log(<Outlet />)
+    //console.log("in PR, this is my login state: ", loginState, window.location.href)
     // setisLoggedIn(Cookie.get("jwt"))
     //gets called on first render and state change/re-render
     //however does not get called on

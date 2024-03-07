@@ -51,6 +51,7 @@ export const checkAdmin = async (req, res, next) => {
     if (!isAdmin) {
       return res.status(403).send("Unauthorized")
     } else {
+      //console.log(`${username} is admin`)
       next()
     }
   } catch (err) {
