@@ -1,5 +1,5 @@
 Issues:
-- admin update user not working
+
 - on run old/expired jwt is not auto deleted in some cases, need to do a check and delete
 
 - e.target.reset not working in createuserform and mydetails
@@ -22,6 +22,14 @@ Todo:
 frontend
 - change UI colours to something brighter for presentation
 
+- add jwt checks to some/all(?) frontend routes:
+
+if (response.data === "jwt_error") {
+            appDispatch({ type: "errorMessage", value: "Token invalid." })
+            appDispatch({ type: "logout" })
+            navigate("/")
+          }
+          
 - double check if our constant login state check is working
 - error handling based on appDispatch (logout, )
 - protect routes

@@ -196,6 +196,7 @@ export const verifyAccessGroup = async (req, res) => {
     const { groupname } = req.body
     const username = req.byUser
     const userIsInGroup = await Checkgroup(username, groupname)
+    //console.log("username:" + username + "groupname:" + groupname)
     return res.status(200).json({ success: true, userIsInGroup })
   } catch (err) {
     console.log(err)

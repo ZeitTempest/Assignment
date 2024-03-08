@@ -85,7 +85,6 @@ function UserManagementPage() {
             </div>
             <div className="flex space-x-4 px-8 pb-8">
               <div className="flex-col w-full justify-center items-center space-y">
-                {/* column 1 */}
                 <div class="relative overflow-x-auto">
                   <table class="w-full text-sm text-left rtl:text-right text-gray-400">
                     <thead class="text-xs text-gray-100 uppercase bg-gray-700 text-center">

@@ -35,12 +35,12 @@ export const checkJWT = (req, res, next) => {
       // console.log(decoded); // { username: 'admin', iat: 1707118235, exp: 1707121835 }
       if (err) {
         console.log(err)
-        return res.status(401).send("Invalid JWT")
+        return res.status(401).send("jwt_error")
       }
       req.byUser = decoded.username
       next()
     })
-  } else return res.status(401).send("No JWT")
+  } else return res.status(401).send("jwt_error")
 }
 export const checkAdmin = async (req, res, next) => {
   try {
