@@ -11,10 +11,19 @@ function ViewRow(props) {
     setEdit(true)
   }
 
+  //prettier-ignore
   return (
     <>
       {edit ? (
-        <EditRow username={props.username} email={props.email} userGroups={props.userGroups} groupList={props.groupList} isActive={props.isActive} isDefaultAdmin={props.isDefaultAdmin} setEdit={setEdit} />
+        <EditRow 
+        username={props.username}
+        email={props.email} 
+        userGroups={props.userGroups} 
+        groupList={props.groupList} 
+        isActive={props.isActive} 
+        isDefaultAdmin={props.isDefaultAdmin} 
+        setEdit={setEdit}
+        setRefresh={props.setRefresh} />
       ) : (
         <tr class="border-b bg-gray-800 border-gray-700 font-md text-center">
           <td class="px-6 py-4 bg-gray-300 text-gray-800">{props.username}</td>

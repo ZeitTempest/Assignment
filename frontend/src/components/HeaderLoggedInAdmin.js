@@ -8,7 +8,7 @@ function HeaderLoggedInAdmin() {
   const appDispatch = useContext(DispatchContext)
 
   function handleLogout() {
-    appDispatch({type:"logout"})
+    appDispatch({ type: "logout" })
     navigate("/login")
   }
 
@@ -22,13 +22,22 @@ function HeaderLoggedInAdmin() {
 
   return (
     <div>
-      <button onClick={goToUserMgmt} className="bg-teal-500 hover:bg-teal-700 text-white mx-2 font-bold py-2 px-4 rounded">
+      <button
+        onClick={goToUserMgmt}
+        className="bg-teal-500 hover:bg-teal-700 text-white mx-2 font-bold py-2 px-4 rounded"
+      >
         User Management
       </button>
-      <button onClick={goToDetails} className="bg-teal-500 hover:bg-teal-700 text-white mx-2 font-bold py-2 px-4 rounded">
+      <button
+        onClick={goToDetails}
+        className="bg-teal-500 hover:bg-teal-700 text-white mx-2 font-bold py-2 px-4 rounded"
+      >
         My Details
       </button>
-      <button onClick={handleLogout} className="bg-teal-500 hover:bg-teal-700 text-white mx-2 font-bold py-2 px-4 rounded">
+      <button
+        onClick={handleLogout}
+        className="bg-pink-500 hover:bg-pink-700 text-white mx-2 font-bold py-2 px-4 rounded"
+      >
         Logout
       </button>
     </div>

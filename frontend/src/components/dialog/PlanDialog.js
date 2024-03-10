@@ -4,6 +4,7 @@ import DispatchContext from "../../DispatchContext"
 import Axios from "axios"
 import ViewPlanRow from "../../components/ViewPlanRow"
 import dayjs from "dayjs"
+import axios from "axios"
 
 function PlanDialog() {
   const [planName, setPlanName] = useState()
@@ -20,7 +21,10 @@ function PlanDialog() {
     e.preventDefault()
     if (planName) {
       if (!startDate || !setEndDate) {
-        return appDispatch({ type: "toast-failed", data: "Start and end dates required." })
+        return appDispatch({
+          type: "toast-failed",
+          data: "Start and end dates required.",
+        })
       }
       if (startDate && endDate) {
         try {
@@ -28,7 +32,7 @@ function PlanDialog() {
             planName,
             startDate,
             endDate,
-            appName
+            appName,
           })
 
           if (response.data === "jwt_error") {
@@ -36,7 +40,10 @@ function PlanDialog() {
             appDispatch({ type: "logout" })
             navigate("/")
           } else if (response.status === 200) {
-            appDispatch({ type: "toast-success", data: "Successfully created plan." })
+            appDispatch({
+              type: "toast-success",
+              data: "Successfully created plan.",
+            })
           }
         } catch (err) {
           appDispatch({ type: "toast-failed", data: err.response.data })
@@ -50,9 +57,8 @@ function PlanDialog() {
     try {
       const response = await Axios.post("/plans", { appName })
       setPlans(response.data)
-      //console.log(plans)
     } catch (err) {
-      console.log(err)
+      appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }
 
@@ -144,7 +150,7 @@ function PlanDialog() {
                     dayjs(plan.Plan_startDate).format("YYYY-MM-DD") : null} 
                   endDate={plan.Plan_endDate ?
                     dayjs(plan.Plan_endDate).format("YYYY-MM-DD") : null} 
-                   setRefresh={setRefresh} />
+                    setRefresh={setRefresh} />
                 })}
               </tbody>
             </table>

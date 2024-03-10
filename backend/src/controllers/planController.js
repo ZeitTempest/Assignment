@@ -4,14 +4,18 @@ export const getPlans = async (req, res, next) => {
   //search for specific plan using appName
   try {
     const appName = req.body.appName
-    //console.log(appName)
-    const results = await sql.query("SELECT * FROM plan WHERE Plan_app_Acronym = ? ", appName)
+
+    const results = await sql.query(
+      "SELECT * FROM plan WHERE Plan_app_Acronym = ? ",
+      appName
+    )
     if (results.length > 0 && results[0].length > 0) {
       res.status(200).json(results[0])
     } else {
-      res.status(200).send("No plans found.")
+      res.status(500).send("No plans found.")
     }
   } catch (err) {
+    console.log("err")
     res.status(500).send(err)
   }
 }
@@ -21,7 +25,10 @@ export const getPlanNames = async (req, res, next) => {
   try {
     const appName = req.body.appName
     //console.log(appName)
-    const results = await sql.query("SELECT Plan_MVP_Name FROM plan WHERE Plan_app_Acronym = ? ", appName)
+    const results = await sql.query(
+      "SELECT Plan_MVP_Name FROM plan WHERE Plan_app_Acronym = ? ",
+      appName
+    )
     if (results.length > 0 && results[0].length > 0) {
       res.status(200).json(results[0])
     } else {
@@ -60,17 +67,25 @@ export const createPlan = async (req, res) => {
     }
     //check plan alr exists (findplan), else send error
 
-    const findPlanQuery = "SELECT * FROM plan WHERE Plan_MVP_name = ? AND Plan_app_Acronym = ? "
+    const findPlanQuery =
+      "SELECT * FROM plan WHERE Plan_MVP_name = ? AND Plan_app_Acronym = ? "
     const [foundPlans] = await sql.query(findPlanQuery, [planName, appName])
 
     if (foundPlans.length > 1) {
-      return res.status(500).send("Error: More than one plan with this name exists. Please contact an administrator.")
+      return res
+        .status(500)
+        .send(
+          "Error: More than one plan with this name exists. Please contact an administrator."
+        )
     }
 
     if (foundPlans.length === 1) {
       return res.status(500).send("Plan name already exists.")
     } else {
-      sql.query("INSERT INTO plan (Plan_MVP_name, Plan_startDate, Plan_endDate, Plan_app_Acronym) VALUES (?, ?, ?, ?)", [planName, startDate, endDate, appName])
+      sql.query(
+        "INSERT INTO plan (Plan_MVP_name, Plan_startDate, Plan_endDate, Plan_app_Acronym) VALUES (?, ?, ?, ?)",
+        [planName, startDate, endDate, appName]
+      )
       return res.status(200).send("Successfully created plan.")
     }
   } catch (err) {
@@ -84,6 +99,8 @@ export const editPlan = async (req, res) => {
   try {
     const { appName, planName, startDate, endDate } = req.body
 
+    if (!appName) return res.status(500).send("App name missing.")
+
     if (!planName) return res.status(500).send("Plan name missing.")
 
     const startArr = new Date(startDate)
@@ -96,7 +113,10 @@ export const editPlan = async (req, res) => {
       return res.status(500).send("Start date cannot be after end date.")
     }
 
-    await sql.query("UPDATE plan SET Plan_startDate = ?, Plan_endDate = ? WHERE Plan_MVP_name = ? AND Plan_app_Acronym = ? ", [startDate, endDate, planName, appName])
+    await sql.query(
+      "UPDATE plan SET Plan_startDate = ?, Plan_endDate = ? WHERE Plan_MVP_name = ? AND Plan_app_Acronym = ? ",
+      [startDate, endDate, planName, appName]
+    )
     res.status(200).send("Successfully edited plan.")
 
     //res.end()
