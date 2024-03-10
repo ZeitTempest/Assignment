@@ -32,7 +32,6 @@ function TaskBoard(props) {
   async function getTasks(state) {
     try {
       const response = await Axios.post("/tasks", { state, appName })
-      console.log(response.data)
       switch (state) {
         case "open":
           setOpenTasks(response.data)
@@ -53,7 +52,7 @@ function TaskBoard(props) {
           break
       }
     } catch (err) {
-      console.log(err)
+      //console.log(err)
     }
   }
 
@@ -68,13 +67,184 @@ function TaskBoard(props) {
   const navigate = useNavigate()
 
   return (
-    <div className="bg-blue-gray-100 flex justify-center items-center h-screen w-screen px-6 mx-auto lg:py-0">
-      <div className="justify-center items-center rounded-lg sm:max-w-lg xl:p-0 shadow border bg-white border-gray-300 flex w-screen h-3/5">
-        <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <div className="text-xl font-bold leading-tight tracking-tight text-center md:text-2xl text-blue-900">TaskBoard</div>
-        </div>
-      </div>
-    </div>
+    <Grid container>
+      <Grid item xs={2.4}>
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Open</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {openTasks.map((open) => (
+                <TableRow>
+                  <TableCell align="center">
+                    <Card
+                      variant="outlined"
+                      style={{ backgroundColor: "#F85297" }}
+                    >
+                      <CardContent>
+                        <Tooltip title="View Task" arrow>
+                          {" "}
+                          <Link to={`/${open.Task_id}`}>
+                            {open.Task_name} (ID: {open.Task_id})
+                          </Link>
+                        </Tooltip>
+                        <br></br>
+                        Plan: {open.Task_plan}
+                        <br></br>
+                        Owner: {open.Task_owner}
+                      </CardContent>
+                    </Card>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid item xs={2.4}>
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Todo</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {todoTasks.map((todo) => (
+                <TableRow>
+                  <TableCell align="center">
+                    <Card
+                      variant="outlined"
+                      style={{ backgroundColor: "#9F98F3" }}
+                    >
+                      <CardContent>
+                        <Tooltip title="View Task" arrow>
+                          <Link to={`/${todo.Task_id}`}>
+                            {todo.Task_name} (#{todo.Task_id})
+                          </Link>
+                        </Tooltip>
+                        <br></br>
+                        Plan: {todo.Task_plan}
+                        <br></br>
+                        Owner: {todo.Task_owner}
+                      </CardContent>
+                    </Card>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid item xs={2.4}>
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Doing</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {doingTasks.map((doing) => (
+                <TableRow>
+                  <TableCell align="center">
+                    <Card
+                      variant="outlined"
+                      style={{ backgroundColor: "#ACBBF3" }}
+                    >
+                      <CardContent>
+                        <Tooltip title="View Task" arrow>
+                          <Link to={`/${doing.Task_id}`}>
+                            {doing.Task_name} (#{doing.Task_id})
+                          </Link>
+                        </Tooltip>
+                        <br></br>
+                        Plan: {doing.Task_plan}
+                        <br></br>
+                        Owner: {doing.Task_owner}
+                      </CardContent>
+                    </Card>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid item xs={2.4}>
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Done</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {doneTasks.map((done) => (
+                <TableRow>
+                  <TableCell align="center">
+                    <Card
+                      variant="outlined"
+                      style={{ backgroundColor: "#ADE3EC" }}
+                    >
+                      <CardContent>
+                        <Tooltip title="View Task" arrow>
+                          <Link to={`/${done.Task_id}`}>
+                            {done.Task_name} (#{done.Task_id})
+                          </Link>
+                        </Tooltip>
+                        <br></br>
+                        Plan: {done.Task_plan}
+                        <br></br>
+                        Owner: {done.Task_owner}
+                      </CardContent>
+                    </Card>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid item xs={2.4}>
+        <TableContainer>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="center">Closed</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {closedTasks.map((closed) => (
+                <TableRow>
+                  <TableCell align="center">
+                    <Card
+                      variant="outlined"
+                      style={{ backgroundColor: "#E6B6F1" }}
+                    >
+                      <CardContent>
+                        <Tooltip title="View Task" arrow>
+                          <Link to={`/${closed.Task_id}`}>
+                            {closed.Task_name} (#{closed.Task_id})
+                          </Link>
+                        </Tooltip>
+                        <br></br>
+                        Plan: {closed.Task_plan}
+                        <br></br>
+                        Owner: {closed.Task_owner}
+                      </CardContent>
+                    </Card>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+    </Grid>
   )
 }
 export default TaskBoard

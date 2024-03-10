@@ -1,6 +1,12 @@
 import "../App.css"
 import { React, useState, useEffect } from "react"
-import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+} from "react-router-dom"
 import { isLoggedIn } from "../utils/auth"
 import Header from "../components/Header"
 import Cookie from "js-cookie"
@@ -13,6 +19,8 @@ import UserManagementPage from "../pages/UserManagementPage"
 import EditApp from "../pages/EditApp"
 import Kanban from "../pages/Kanban"
 import CreateApp from "../pages/CreateApp"
+import Task from "../components/task/Task"
+import DoneTaskContent from "../components/task/DoneTaskContent"
 
 export default function BrowserRoutes() {
   return (
@@ -20,7 +28,8 @@ export default function BrowserRoutes() {
       <Header />
       <Routes>
         <Route element={<PrivateRoute />}>
-          <Route path="" element={<TMSPage />} /> {/* root redirect to login or tms */}
+          <Route path="" element={<TMSPage />} />{" "}
+          {/* root redirect to login or tms */}
           <Route path="/home" element={<TMSPage />} />
         </Route>
 
@@ -31,6 +40,8 @@ export default function BrowserRoutes() {
         <Route path="/createApp" element={<CreateApp />} />
         <Route path="/editApp/:appName" element={<EditApp />} />
         <Route path="/:appName" element={<Kanban />} />
+        <Route path="/:task" element={<Task />} />
+        <Route path="/:task/:action" element={<DoneTaskContent />} />
       </Routes>
     </BrowserRouter>
   )

@@ -51,6 +51,7 @@ function EditRow(props) {
       }
 
       if (response.status === 200) {
+        window.location.reload()
         appDispatch({
           type: "toast-success",
           data: "Successfully updated user details.",
