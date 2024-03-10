@@ -6,7 +6,7 @@ import nodemailer from "nodemailer"
 
 function validatePlan(res, plan) {
   //returns true if error
-  const regex = "^[a-zA-Z0-9]+$"
+  const regex = "^[a-zA-Z0-9 ]+$"
   if (plan.length > 20) {
     res.status(500).write("Plan name cannot exceed 20 characters.")
     return true
@@ -21,7 +21,7 @@ function validatePlan(res, plan) {
 export const getTask = async (req, res) => {
   //get a single task row by querying with task_id
   const { taskId } = req.body
-  console.log(taskId)
+  //console.log(taskId)
   if (taskId) {
     try {
       const results = await sql.query(
@@ -96,15 +96,15 @@ export const createTask = async (req, res) => {
 
     const rNumberResult = await sql.query(rNumberQuery, appName)
 
-    console.log("rNumberResult:" + rNumberResult[0][0])
+    //console.log("rNumberResult:" + rNumberResult[0][0])
 
     const rNumber = rNumberResult[0][0].App_Rnumber + 1
 
-    console.log("new rNumber:" + rNumber)
+    //console.log("new rNumber:" + rNumber)
 
     const taskId = appName + "_" + rNumber
 
-    console.log("new taskId:" + taskId)
+    //console.log("new taskId:" + taskId)
 
     //check if task already exists
     const taskExistsQuery = "SELECT * FROM task WHERE Task_id = ?"

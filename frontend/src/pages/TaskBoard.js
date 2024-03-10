@@ -64,7 +64,7 @@ function TaskBoard(props) {
     getTasks("closed")
   }, [])
 
-  const navigate = useNavigate()
+  //const navigate = useNavigate()
 
   return (
     <Grid container>

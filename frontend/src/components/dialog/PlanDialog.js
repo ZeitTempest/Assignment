@@ -150,6 +150,7 @@ function PlanDialog() {
                     dayjs(plan.Plan_startDate).format("YYYY-MM-DD") : null} 
                   endDate={plan.Plan_endDate ?
                     dayjs(plan.Plan_endDate).format("YYYY-MM-DD") : null} 
+                    isPM={isPM}
                     setRefresh={setRefresh} />
                 })}
               </tbody>

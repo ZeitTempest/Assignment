@@ -211,11 +211,11 @@ export const getPermit = async (req, res) => {
   //get the group with permission to edit current state so u can run checkgroup on it
   try {
     const { appName } = req.body
+    //console.log(req.body)
     const results = await sql.query(
-      "SELECT * FROM application WHERE App_Acronym = ?",
+      "SELECT * FROM application WHERE App_Acronym = ? ",
       [appName]
     )
-    //console.log(results[0])
     res.json(results[0])
   } catch (err) {
     console.log(err)

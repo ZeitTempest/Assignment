@@ -5,9 +5,10 @@ export const getPlans = async (req, res, next) => {
   try {
     const appName = req.body.appName
 
+    //console.log(appName)
     const results = await sql.query(
       "SELECT * FROM plan WHERE Plan_app_Acronym = ? ",
-      appName
+      [appName]
     )
     if (results.length > 0 && results[0].length > 0) {
       res.status(200).json(results[0])
@@ -24,7 +25,7 @@ export const getPlanNames = async (req, res, next) => {
   //search for specific plan name using appName
   try {
     const appName = req.body.appName
-    //console.log(appName)
+
     const results = await sql.query(
       "SELECT Plan_MVP_Name FROM plan WHERE Plan_app_Acronym = ? ",
       appName

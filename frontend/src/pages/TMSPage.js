@@ -62,10 +62,16 @@ function TMSPage() {
           <div className="mt-24 w-full">
             <div className="w-full rounded-lg shadow border md:my-2 sm:max-w-screen-mx xl:p-0 bg-white border-gray-300">
               <div className="sm:pt-8">
-                <h1 className="text-xl font-bold leading-tight tracking-tight md:text-3xl text-center text-blue-900">Applications</h1>
+                <h1 className="text-xl font-bold leading-tight tracking-tight md:text-3xl text-center text-blue-900">
+                  Applications
+                </h1>
                 <div className="justify-end flex">
                   {isPL ? (
-                    <button type="submit" onClick={createApp} className="w-40 mr-8 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center">
+                    <button
+                      type="submit"
+                      onClick={createApp}
+                      className="w-40 mr-8 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center"
+                    >
                       Add Application
                     </button>
                   ) : (
@@ -93,25 +99,52 @@ function TMSPage() {
                         </tr>
                       </thead>
                       <tbody>
-                        {apps.map(app => {
+                        {apps.map((app) => {
                           return (
                             <>
                               <tr class="border-b border-gray-700 font-md text-center">
                                 <td class="px-6 py-4 bg-gray-300 text-gray-800">
-                                  <Link to={`/${app.App_Acronym}`} className="underline font-bold">
+                                  <Link
+                                    to={`/kanban/${app.App_Acronym}`}
+                                    className="underline font-bold"
+                                  >
                                     {" "}
                                     {app.App_Acronym}
                                   </Link>
                                 </td>
-                                <td class="px-6 py-4 bg-gray-300 text-gray-800">{app.App_startDate ? dayjs(app.App_startDate).format("DD/MM/YYYY") : "No Start Date"}</td>
-                                <td class="px-6 py-4 bg-gray-300 text-gray-800">{app.App_endDate ? dayjs(app.App_endDate).format("DD/MM/YYYY") : "No End Date"}</td>
+                                <td class="px-6 py-4 bg-gray-300 text-gray-800">
+                                  {app.App_startDate
+                                    ? dayjs(app.App_startDate).format(
+                                        "DD/MM/YYYY"
+                                      )
+                                    : "No Start Date"}
+                                </td>
+                                <td class="px-6 py-4 bg-gray-300 text-gray-800">
+                                  {app.App_endDate
+                                    ? dayjs(app.App_endDate).format(
+                                        "DD/MM/YYYY"
+                                      )
+                                    : "No End Date"}
+                                </td>
                                 <td class="px-6 py-4 bg-gray-300 text-gray-800">
                                   {isPL ? (
-                                    <button type="submit" onClick={() => onSelectApp(app.App_Acronym)} className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center">
+                                    <button
+                                      type="submit"
+                                      onClick={() =>
+                                        onSelectApp(app.App_Acronym)
+                                      }
+                                      className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center"
+                                    >
                                       View/Edit
                                     </button>
                                   ) : (
-                                    <button type="submit" onClick={() => onSelectApp(app.App_Acronym)} className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center">
+                                    <button
+                                      type="submit"
+                                      onClick={() =>
+                                        onSelectApp(app.App_Acronym)
+                                      }
+                                      className="w-40 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:ring-blue-gray-200 focus:outline-none rounded-lg font-bold text-sm px-5 py-2.5 text-center"
+                                    >
                                       View
                                     </button>
                                   )}

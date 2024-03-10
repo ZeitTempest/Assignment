@@ -30,9 +30,9 @@ function ViewPlanRow(props) {
               ? dayjs(props.endDate).format("DD-MM-YYYY")
               : "-"}</td>
           <td class="px-6 py-4 bg-gray-300 text-gray-800">
-            <button onClick={handleEdit} className="w-1/2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:outline-none focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center">
+            {props.isPM ? (<button onClick={handleEdit} className="w-1/2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:outline-none focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center">
               Edit
-            </button>
+            </button>): ("")}
           </td>
         </tr>
       )}

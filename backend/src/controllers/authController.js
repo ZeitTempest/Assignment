@@ -44,7 +44,12 @@ export const userLogin = async (req, res) => {
 
     //jwt token here
     const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
-    res.status(200).json({ success: true, result: true, data: foundUser.username, jwt: token })
+    res.status(200).json({
+      success: true,
+      result: true,
+      data: foundUser.username,
+      jwt: token,
+    })
   } catch (err) {
     console.log(err)
     res.status(500).json(err)
@@ -70,7 +75,6 @@ export const Checkgroup = async (userid, groupname) => {
     // one or no rows should be returned
     foundUser = users[0]
 
-    //console.log("checkgroup")
     return foundUser.groups.split(",").includes(groupname)
   } catch (err) {
     return res.status(500).send(err)
@@ -89,19 +93,29 @@ export const adminRegister = async (req, res) => {
     }
 
     // verify fits constraints
-    const usernameMeetsConstraints = new RegExp("^[a-zA-Z0-9]+$").test(username) && username.length >= 3 && username.length <= 20
+    const usernameMeetsConstraints =
+      new RegExp("^[a-zA-Z0-9]+$").test(username) &&
+      username.length >= 3 &&
+      username.length <= 20
 
     if (!usernameMeetsConstraints) {
       return res.status(500).json("Invalid username.")
     }
 
-    const passwordMeetsConstraints = new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(password) && password.length >= 8 && password.length <= 10
+    const passwordMeetsConstraints =
+      new RegExp("^(?=.*[0-9])(?=.*[!@#$%^?/&*])[a-zA-Z0-9!@#$%^?/&*]").test(
+        password
+      ) &&
+      password.length >= 8 &&
+      password.length <= 10
 
     if (!passwordMeetsConstraints) {
       return res.status(500).json("Invalid password.")
     }
 
-    const emailMeetsConstraints = new RegExp("^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$").test(email)
+    const emailMeetsConstraints = new RegExp(
+      "^[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+$"
+    ).test(email)
 
     if (!emailMeetsConstraints) {
       return res.status(500).json("Invalid email.")
@@ -126,7 +140,9 @@ export const adminRegister = async (req, res) => {
     var user = null
     try {
       //adminedituser
-      const [users] = await sql.query(`SELECT * FROM accounts WHERE username='${req.username}';`)
+      const [users] = await sql.query(
+        `SELECT * FROM accounts WHERE username='${req.username}';`
+      )
 
       // multiple results found,
       // should not happen in db as id is unique
@@ -135,7 +151,9 @@ export const adminRegister = async (req, res) => {
         res.status(500).json({ success: false, err: "no users found" })
       }
       if (users.length > 1) {
-        res.status(500).json({ success: false, err: "db found more than one user" })
+        res
+          .status(500)
+          .json({ success: false, err: "db found more than one user" })
       }
 
       // one or no rows should be returned
@@ -164,7 +182,9 @@ export const adminRegister = async (req, res) => {
     ;async () => {
       try {
         const createdUser = await sql.query(`
-      INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${hash}', '${email}', '${groups.join(",")}');
+      INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${hash}', '${email}', '${groups.join(
+          ","
+        )}');
     `)
 
         if (createdUser[0].affectedRows !== 1) {
@@ -181,7 +201,9 @@ export const adminRegister = async (req, res) => {
     const token = jwt.sign({ username }, secret, { expiresIn })
 
     if (!token || !user) {
-      return res.status(500).json({ success: false, err: "failed to create user" })
+      return res
+        .status(500)
+        .json({ success: false, err: "failed to create user" })
     }
 
     res.status(200).json({ data: { token, user } })
@@ -195,8 +217,10 @@ export const verifyAccessGroup = async (req, res) => {
   try {
     const { groupname } = req.body
     const username = req.byUser
+    //console.log(req.body)
+
     const userIsInGroup = await Checkgroup(username, groupname)
-    //console.log("username:" + username + "groupname:" + groupname)
+
     return res.status(200).json({ success: true, userIsInGroup })
   } catch (err) {
     console.log(err)

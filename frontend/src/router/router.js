@@ -20,7 +20,7 @@ import EditApp from "../pages/EditApp"
 import Kanban from "../pages/Kanban"
 import CreateApp from "../pages/CreateApp"
 import Task from "../components/task/Task"
-import DoneTaskContent from "../components/task/DoneTaskContent"
+import DoneTaskContent from "../components/task/Task"
 
 export default function BrowserRoutes() {
   return (
@@ -39,9 +39,9 @@ export default function BrowserRoutes() {
         <Route path="/management" element={<UserManagementPage />} />
         <Route path="/createApp" element={<CreateApp />} />
         <Route path="/editApp/:appName" element={<EditApp />} />
-        <Route path="/:appName" element={<Kanban />} />
-        <Route path="/:task" element={<Task />} />
-        <Route path="/:task/:action" element={<DoneTaskContent />} />
+        <Route path="/kanban/:appName" element={<Kanban />} />
+        <Route path="/:taskId" element={<Task />} />
+        <Route path="/:taskId/:action" element={<DoneTaskContent />} />
       </Routes>
     </BrowserRouter>
   )

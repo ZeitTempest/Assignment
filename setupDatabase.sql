@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `application` (
 ) AUTO_INCREMENT=1;
 
 INSERT INTO `application` (`App_Acronym`, `App_Description`, `App_Rnumber`, `App_startDate`, `App_endDate`, `App_permit_Create`, `App_permit_Open`, `App_permit_toDoList`, `App_permit_Doing`, `App_permit_Done`) VALUES 
-("MyApp1", "Hi, this is test application 1.", "2", "2024-06-02", "2024-06-17", "project-lead", "project-manager", "developer", "developer", "project-lead"),
+("MyApp1", "Hi, this is test application 1.", "5", "2024-06-02", "2024-06-17", "project-lead", "project-manager", "developer", "developer", "project-lead"),
 ("MyApp2", "Hi, this is test application 2.", "1", "2024-09-02", "2024-12-02", "project-lead", "project-manager", "developer", "developer", "project-lead");
 -- ();
 
@@ -85,8 +85,14 @@ CREATE TABLE IF NOT EXISTS `task` (
 
 INSERT INTO task (Task_name, Task_description, Task_notes, Task_id, Task_plan, Task_app_Acronym, Task_creator, Task_owner, Task_createDate) VALUES 
 ('MytaskA','asdasd','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): qweqwe','MyApp1_1','My Plan 1','MyApp1','admin','admin','2024-04-04'),
+Time): asdasd','MyApp1_1','My Plan 1','MyApp1','admin','admin','2024-04-04'),
 ('MytaskB','qweqwe','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): qweqwe','MyApp2_1','My Plan 2','MyApp2','admin','admin','2024-05-05'),
-('MytaskB','zxczxc','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): qweqwe','MyApp1_2','My Plan 3','MyApp1','admin','admin','2024-06-06');
+Time): qweqwe','MyApp1_2','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskC','hjkhjk','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): hjkhjk','MyApp1_3','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskD','yuiyui','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): yuiyui','MyApp1_4','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskE','opopop','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): opopop','MyApp1_5','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskF','zxczxc','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): zxczxc','MyApp2_1','My Plan 2','MyApp2','admin','admin','2024-06-06');
