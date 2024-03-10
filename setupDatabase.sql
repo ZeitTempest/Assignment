@@ -14,8 +14,10 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `accounts` (`username`, `password`, `email`, `groups`) VALUES 
-('admin', '$2a$10$B6loTC0ZV1WElgNuvMHboO2snALcz673lUHl8b8z.I19OfIlyuuEW', 'admin@company.com', 'admin'),
-('dev1', '$2a$10$1ttoaikVjTiyvXgTb5NAN.WMhM/BVGykBAYGi/PAhCMtbbJSDqV72', 'dev1@company.com', 'developer');
+('admin', '$2a$10$WKJh0SPHRY3ez4MwOnbzx.1tclSySUumzvYgehO4Lgq5Ln1JKCfvi', 'admin@company.com', 'admin'),
+('pl1', '$2a$10$hvEMBcAF5PIOlJhcaRMU5ey0nMGRX49S/vaq5ZQChqSPTb8ar/T2q', 'pl1@company.com', 'project-lead'),
+('pm1', '$2a$10$/qbTebmXYVKh7NI1NmNChO6hy.Dm/AVK0W4WsFdVkZsp1CQfatVtC', 'pm1@company.com', 'project-manager'),
+('dev1', '$2a$10$K4r2Udga/NOfJ34m46GWoOkOqemkroIGh9sqadahi41IIHkk0Itge', 'dev1@company.com', 'developer');
 
 SELECT * FROM `accounts`;
 
@@ -84,15 +86,15 @@ CREATE TABLE IF NOT EXISTS `task` (
 );
 
 INSERT INTO task (Task_name, Task_description, Task_notes, Task_id, Task_plan, Task_app_Acronym, Task_creator, Task_owner, Task_createDate) VALUES 
-('MytaskA','asdasd','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): asdasd','MyApp1_1','My Plan 1','MyApp1','admin','admin','2024-04-04'),
-('MytaskB','qweqwe','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): qweqwe','MyApp1_2','My Plan 1','MyApp1','admin','admin','2024-05-05'),
-('MytaskC','hjkhjk','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): hjkhjk','MyApp1_3','My Plan 1','MyApp1','admin','admin','2024-05-05'),
-('MytaskD','yuiyui','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): yuiyui','MyApp1_4','My Plan 1','MyApp1','admin','admin','2024-05-05'),
-('MytaskE','opopop','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): opopop','MyApp1_5','My Plan 1','MyApp1','admin','admin','2024-05-05'),
-('MytaskF','zxczxc','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
-Time): zxczxc','MyApp2_1','My Plan 2','MyApp2','admin','admin','2024-06-06');
+('MytaskA','This is MytaskA.','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): This is MytaskA.','MyApp1_1','My Plan 1','MyApp1','admin','admin','2024-04-04'),
+('MytaskB','This is MytaskB.','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): This is MytaskB.','MyApp1_2','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskC','This is MytaskC.','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): This is MytaskC.','MyApp1_3','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskD','This is MytaskD.','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): This is MytaskD.','MyApp1_4','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskE','This is MytaskE.','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): This is MytaskE.','MyApp1_5','My Plan 1','MyApp1','admin','admin','2024-05-05'),
+('MytaskF','This is MytaskF.','admin, create, Wed Mar 06 2024 09:56:59 GMT+0800 (Singapore Standard 
+Time): This is MytaskF.','MyApp2_1','My Plan 2','MyApp2','admin','admin','2024-06-06');
