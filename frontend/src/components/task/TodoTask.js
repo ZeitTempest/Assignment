@@ -88,14 +88,12 @@ function TodoTask(props) {
 
   async function checkTodoPermit() {
     try {
-      //console.log(app)
       const response = await Axios.post("/app/permit", { appName })
-      const group_name = response.data[0].App_permit_toDoList
-      //console.log(group_name)
-      if (group_name) {
+      const groupname = response.data[0].App_permit_toDoList
+      if (groupname) {
         try {
           const res = await Axios.post("/verifyAccessGroup", {
-            group_name,
+            groupname,
           })
           setPermitted(res.data.userIsInGroup)
         } catch (e) {
@@ -176,17 +174,19 @@ function TodoTask(props) {
                 rows={6}
                 defaultValue={props.notes}
                 placeholder="No existing notes"
-              ></TextField>
-              <label className="text-muted mb-1">
-                <small>Additional Notes</small>
-              </label>
-              <TextField
-                style={{ width: 400 }}
-                multiline
-                rows={6}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Enter notes"
-              ></TextField>
+              />
+              <div className="text-muted mt-4">
+                <label className="text-muted mb-1">
+                  <h1>Additional Notes</h1>
+                </label>
+                <TextField
+                  style={{ width: 400 }}
+                  multiline
+                  rows={6}
+                  onChange={(e) => setNotes(e.target.value)}
+                  placeholder="Enter notes"
+                ></TextField>
+              </div>
             </>
           ) : (
             <TextField
@@ -195,7 +195,6 @@ function TodoTask(props) {
               style={{ width: 400 }}
               rows={6}
               defaultValue={props.notes}
-              placeholder="No notes"
             ></TextField>
           )}
         </div>

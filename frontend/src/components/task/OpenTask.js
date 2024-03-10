@@ -38,25 +38,8 @@ function OpenTask(props) {
           navigate("/")
           appDispatch({ type: "toast-failed", data: "Inactive." })
         } else {
-          const data = response.data.split(" ")
-          data.pop()
-          if (data.length > 0) {
-            if (data.includes("PlanLength")) {
-              appDispatch({
-                type: "toast-failed",
-                data: "Plan name must be at most 20 characters long.",
-              })
-            }
-            if (data.includes("PlanCharacter")) {
-              appDispatch({
-                type: "toast-failed",
-                data: "Plan name can only contain alphanumeric characters.",
-              })
-            }
-          } else {
-            appDispatch({ type: "toast-success", data: "Task updated." })
-            navigate(`/kanban/${appName}`)
-          }
+          appDispatch({ type: "toast-success", data: "Task updated." })
+          navigate(`/kanban/${appName}`)
         }
       } else {
         appDispatch({
@@ -89,28 +72,11 @@ function OpenTask(props) {
           navigate("/")
           appDispatch({ type: "toast-failed", data: "Inactive." })
         } else {
-          const data = response.data.split(" ")
-          data.pop()
-          if (data.length > 0) {
-            if (data.includes("PlanLength")) {
-              appDispatch({
-                type: "toast-failed",
-                data: "Plan name must be at most 20 characters long.",
-              })
-            }
-            if (data.includes("PlanCharacter")) {
-              appDispatch({
-                type: "toast-failed",
-                data: "Plan name can only contain alphanumeric characters.",
-              })
-            }
-          } else {
-            appDispatch({
-              type: "toast-success",
-              data: "Task updated and promoted.",
-            })
-            navigate(`/kanban/${appName}`)
-          }
+          appDispatch({
+            type: "toast-success",
+            data: "Task updated and promoted.",
+          })
+          navigate(`/kanban/${appName}`)
         }
       } else {
         appDispatch({
@@ -132,7 +98,7 @@ function OpenTask(props) {
       //console.log(app)
       const response = await Axios.post("/app/permit", { appName })
       const groupname = response.data[0].App_permit_Open
-      console.log("group_name:" + groupname)
+      //console.log("group_name:" + groupname)
       if (groupname) {
         try {
           const res = await Axios.post("/verifyAccessGroup", { groupname })

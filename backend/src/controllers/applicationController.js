@@ -223,5 +223,13 @@ export const getPermit = async (req, res) => {
 }
 
 export const getDonePermit = async (req, res) => {
-  console.log("getDonePermit")
+  try {
+    const results = await sql.query(
+      "SELECT * FROM application WHERE App_Acronym = ? ",
+      [appName]
+    )
+    res.json(results[0].App_permit_Done)
+  } catch (err) {
+    console.log(err)
+  }
 }

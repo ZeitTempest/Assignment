@@ -145,7 +145,8 @@ function DoneTaskContent() {
   async function getTaskDetails() {
     try {
       const response = await Axios.post("/task", { taskId })
-      const data = response.data[0]
+      const data = response.data
+      console.log(data)
       setTaskName(data.Task_name)
       setDescription(data.Task_description)
       setOldNotes(data.Task_notes)
@@ -155,7 +156,7 @@ function DoneTaskContent() {
       setOwner(data.Task_owner)
       const name = data.Task_app_Acronym
       try {
-        const response = await Axios.post("/plan/list", { name })
+        const response = await Axios.post("/plans/list", { name })
         const list = []
         response.data.forEach((plan) => {
           list.push(plan.Plan_MVP_name)
@@ -178,104 +179,103 @@ function DoneTaskContent() {
   }
 
   return (
-    <>
-      <div className="container md-5">
-        <Grid container spacing={3} className="mt-1">
-          <Grid item xs={6}>
-            <h4>
-              Task #{taskId}: {taskName}
-            </h4>
-            Created by: {creator} <br></br> Created on:{" "}
-            {dayjs(createDate).format("DD-MM-YYYY")}
-            <br></br>Owner: {owner}
-            <br></br> State: done
-            <div className="form-group">
-              <label className="text-muted mb-1">
-                <small>Plan Name</small>
-              </label>{" "}
-              {action === "demote" ? (
-                <Autocomplete
-                  size="small"
-                  value={plan}
-                  options={plans}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="No plans" />
-                  )}
-                  onChange={handlePlanChange}
-                />
-              ) : (
-                <Autocomplete
-                  size="small"
-                  readOnly
-                  value={plan}
-                  options={plans}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="No plans" />
-                  )}
-                />
-              )}
-            </div>
-            <div className="form-group">
-              <label className="text-muted mb-1">
-                <small>Task Description</small>
-              </label>
-              <TextField
-                fullWidth
-                multiline
-                rows={7}
-                defaultValue={description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></TextField>
-            </div>
-          </Grid>
-          <Grid item xs={6}>
-            <div className="form-group">
-              <label className="text-muted mb-1">
-                <small>Task Notes</small>
-              </label>
-              <>
-                <TextField
-                  fullWidth
-                  multiline
-                  InputProps={{ readOnly: true }}
-                  rows={6}
-                  defaultValue={oldNotes}
-                  placeholder="No existing notes"
-                ></TextField>
-                <label className="text-muted mb-1">
-                  <small>Additional Notes</small>
-                </label>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={6}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Enter notes"
-                ></TextField>
-              </>
-            </div>
-            <>
-              {action === "promote" ? (
-                <Button onClick={handleSavePromote} color="success">
-                  Save and Promote
-                </Button>
-              ) : action === "demote" ? (
-                <Button onClick={handleSaveDemote} color="warning">
-                  Save and Demote
-                </Button>
-              ) : (
-                <Button onClick={handleSave} color="primary">
-                  Save
-                </Button>
-              )}
-              <Button onClick={handleCancel} color="error">
-                Cancel
-              </Button>
-            </>
-          </Grid>
-        </Grid>
+    <div className="rounded-lg shadow border bg-white border-gray-300 items-center flex w-auto h-auto mx-8 my-0">
+      <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-blue-900">
+          Task #{taskId}: {taskName}
+        </h1>
+        <div className="flex-col space-y">
+          Created by: {creator} <br></br> Created on:{" "}
+          {dayjs(createDate).format("DD-MM-YYYY")}
+          <br></br>Owner: {owner}
+          <br></br> State: {state}
+          <div className="mt-4 form-group">
+            <label className="text-muted mb-1">
+              <h1>Plan Name</h1>
+            </label>{" "}
+            {action === "demote" ? (
+              <Autocomplete
+                size="small"
+                value={plan}
+                options={plans}
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="No plans" />
+                )}
+                onChange={handlePlanChange}
+              />
+            ) : (
+              <Autocomplete
+                size="small"
+                readOnly
+                value={plan}
+                options={plans}
+                renderInput={(params) => (
+                  <TextField {...params} placeholder="No plans" />
+                )}
+              />
+            )}
+          </div>
+          <div className="form-group mt-4">
+            <label className="text-muted mb-1">
+              <h1>Task Description</h1>
+            </label>
+            <TextField
+              fullWidth
+              multiline
+              style={{ width: 400 }}
+              rows={7}
+              defaultValue={description}
+              onChange={(e) => setDescription(e.target.value)}
+            />
+          </div>
+        </div>
       </div>
-    </>
+      <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+        <div className="form-group">
+          <label className="text-muted mb-1">
+            <h1>Task Notes</h1>
+          </label>
+          <TextField
+            multiline
+            InputProps={{ readOnly: true }}
+            style={{ width: 400 }}
+            rows={6}
+            defaultValue={oldNotes}
+            placeholder="No existing notes"
+          />
+          <div className="text-muted mt-4">
+            <label className="text-muted mb-1">
+              <h1>Additional Notes</h1>
+            </label>
+            <TextField
+              style={{ width: 400 }}
+              multiline
+              rows={6}
+              onChange={(e) => setNotes(e.target.value)}
+              placeholder="Enter notes"
+            />
+          </div>
+          <div className="flex justify-end">
+            {action === "promote" ? (
+              <Button onClick={handleSavePromote} color="success">
+                Save and Promote
+              </Button>
+            ) : action === "demote" ? (
+              <Button onClick={handleSaveDemote} color="warning">
+                Save and Demote
+              </Button>
+            ) : (
+              <Button onClick={handleSave} color="primary">
+                Save
+              </Button>
+            )}
+            <Button onClick={handleCancel} color="error">
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 export default DoneTaskContent

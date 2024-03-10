@@ -20,7 +20,7 @@ import EditApp from "../pages/EditApp"
 import Kanban from "../pages/Kanban"
 import CreateApp from "../pages/CreateApp"
 import Task from "../components/task/Task"
-import DoneTaskContent from "../components/task/Task"
+import DoneTaskContent from "../components/task/DoneTaskContent"
 
 export default function BrowserRoutes() {
   return (

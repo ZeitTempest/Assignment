@@ -1,8 +1,8 @@
 import sql from "../config/query.js"
-
-//
 import jwt from "jsonwebtoken"
 import nodemailer from "nodemailer"
+import { getDonePermit } from "./applicationController.js"
+import { getAllPermitDoneEmails } from "./userController.js"
 
 function validatePlan(res, plan) {
   //returns true if error
@@ -237,7 +237,7 @@ export const promoteDoingTask = async (req, res) => {
       [description, audit, username, newState, taskId]
     )
 
-    //sendEmail(appName)
+    sendEmail(appName, username)
     console.log("email gets sent here")
     res.status(200).send("Successfully edited and promoted task to 'Done'.")
     //res.end()
@@ -246,37 +246,37 @@ export const promoteDoingTask = async (req, res) => {
   }
 }
 
-// async function sendEmail(app, username) {
-//   const transporter = nodemailer.createTransport({
-//     host: process.env.SMTP_HOST,
-//     port: process.env.SMTP_PORT,
-//     auth: {
-//       user: process.env.SMTP_USERNAME,
-//       pass: process.env.SMTP_PASSWORD
-//     }
-//   })
-//   const group = await getDonePermit(app)
-//   if (group) {
-//     const sender = username
-//     const permitUsers = await getAllPermitDoneEmails(group)
-//     const emails = []
-//     permitUsers.forEach(user => {
-//       if (user.email.length > 0) {
-//         emails.push(user.email)
-//       }
-//     })
-//     emails.forEach(email => {
-//       const content = {
-//         from: sender,
-//         to: email,
-//         subject: "Approval of done task",
-//         text: "Submitting task for approval."
-//       }
-//       transporter.sendMail(content, function (err, info) {
-//         if (err) {
-//           console.log(err)
-//         }
-//       })
-//     })
-//   }
-// }
+async function sendEmail(appName, username) {
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SMTP_USERNAME,
+      pass: process.env.SMTP_PASSWORD,
+    },
+  })
+  const group = await getDonePermit(appName)
+  if (group) {
+    const sender = username
+    const permitUsers = await getAllPermitDoneEmails(group)
+    const emails = []
+    permitUsers.forEach((user) => {
+      if (user.email.length > 0) {
+        emails.push(user.email)
+      }
+    })
+    emails.forEach((email) => {
+      const content = {
+        from: sender,
+        to: email,
+        subject: "Approval of done task",
+        text: "Submitting task for approval.",
+      }
+      transporter.sendMail(content, function (err, info) {
+        if (err) {
+          console.log(err)
+        }
+      })
+    })
+  }
+}
