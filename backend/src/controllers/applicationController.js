@@ -223,6 +223,9 @@ export const getPermit = async (req, res) => {
 }
 
 export const getDonePermit = async (req, res) => {
+  console.log(req.body)
+  const { appName } = req.body
+
   try {
     const results = await sql.query(
       "SELECT * FROM application WHERE App_Acronym = ? ",

@@ -237,8 +237,7 @@ export const promoteDoingTask = async (req, res) => {
       [description, audit, username, newState, taskId]
     )
 
-    sendEmail(appName, username)
-    console.log("email gets sent here")
+    //sendEmail(appName, username)
     res.status(200).send("Successfully edited and promoted task to 'Done'.")
     //res.end()
   } catch (err) {
@@ -256,6 +255,7 @@ async function sendEmail(appName, username) {
     },
   })
   const group = await getDonePermit(appName)
+  console.log("passed")
   if (group) {
     const sender = username
     const permitUsers = await getAllPermitDoneEmails(group)
