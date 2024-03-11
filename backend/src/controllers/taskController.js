@@ -260,8 +260,16 @@ async function sendEmail(appName, username) {
   const group = await getDonePermit(appName)
 
   if (group) {
-    const sender = username
-    console.log("sender: " + sender)
+    var userMail = ""
+    try {
+      userMail = await sql.query(
+        "SELECT email FROM accounts WHERE username = ? ",
+        [username]
+      )
+      console.log(userMail[0][0].email)
+    } catch (err) {
+      console.log(err)
+    }
     var results = []
     try {
       results = await getAllPermitDoneEmails(group)
@@ -278,11 +286,12 @@ async function sendEmail(appName, username) {
     })
     emails.forEach((email) => {
       const content = {
-        from: sender,
+        from: userMail[0][0].email,
         to: email,
         subject: "Approval of done task",
         text: "Submitting task for approval.",
       }
+
       transporter.sendMail(content, function (err, info) {
         if (err) {
           console.log(err)
