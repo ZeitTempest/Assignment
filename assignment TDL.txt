@@ -19,7 +19,6 @@ None of the options match with `""`." - seems to be fixed for now?
 Todo:
 
 frontend
-- change UI colours to something brighter for presentation
 
 - add jwt checks to some/all(?) frontend routes:
 

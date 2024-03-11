@@ -238,7 +238,6 @@ async function sendEmail(appName, username) {
     }
 
     const permitUsers = results[0]
-    console.log(permitUsers)
     const emails = []
     permitUsers.forEach(user => {
       if (user.email && user.email.length > 0) {

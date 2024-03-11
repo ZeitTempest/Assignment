@@ -3,6 +3,12 @@ CREATE DATABASE IF NOT EXISTS `TMSDatabase` DEFAULT CHARACTER SET utf8 COLLATE
 utf8_general_ci;
 USE `TMSDatabase`;
 
+DROP TABLE IF EXISTS `accounts`; 
+DROP TABLE IF EXISTS `groups`;
+DROP TABLE IF EXISTS `application`;
+DROP TABLE IF EXISTS `plan`;
+DROP TABLE IF EXISTS `task`;
+
 CREATE TABLE IF NOT EXISTS `accounts` (
  `username` varchar(20) NOT NULL PRIMARY KEY UNIQUE,
  `password` varchar(64) NOT NULL,
@@ -12,7 +18,10 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 INSERT INTO `accounts` (`username`, `password`, `email`, `groups`) VALUES 
-('admin', '$2a$10$WKJh0SPHRY3ez4MwOnbzx.1tclSySUumzvYgehO4Lgq5Ln1JKCfvi', 'admin@company.com', 'admin');
+('admin', '$2a$10$WKJh0SPHRY3ez4MwOnbzx.1tclSySUumzvYgehO4Lgq5Ln1JKCfvi', 'admin@company.com', 'admin'),
+('pl1', '$2a$10$WKJh0SPHRY3ez4MwOnbzx.1tclSySUumzvYgehO4Lgq5Ln1JKCfvi', 'pl1@company.com', 'project-lead'),
+('pm1', '$2a$10$WKJh0SPHRY3ez4MwOnbzx.1tclSySUumzvYgehO4Lgq5Ln1JKCfvi', 'pm1@company.com', 'project-manager'),
+('dev1', '$2a$10$WKJh0SPHRY3ez4MwOnbzx.1tclSySUumzvYgehO4Lgq5Ln1JKCfvi', 'dev1@company.com', 'developer');
 
 CREATE TABLE IF NOT EXISTS `groups` (
 `groupname` varchar(255) PRIMARY KEY 
@@ -38,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `application` (
 ) AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `plan` (
-`Plan_MVP_Name` varchar(20) NOT NULL,
+`Plan_MVP_Name` varchar(255) NOT NULL,
 `Plan_startDate` date,
 `Plan_endDate` date,
 `Plan_app_Acronym` varchar(20) NOT NULL,

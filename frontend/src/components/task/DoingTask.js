@@ -23,7 +23,7 @@ function DoingTask(props) {
           description,
           notes,
           taskId,
-          state,
+          state
         })
         if (response.data === "Jwt") {
           appDispatch({ type: "toast-failed", data: "Token invalid." })
@@ -39,7 +39,7 @@ function DoingTask(props) {
       } else {
         appDispatch({
           type: "toast-failed",
-          data: "Enter notes to update task.",
+          data: "Enter notes to update task."
         })
       }
     } catch (err) {
@@ -58,7 +58,7 @@ function DoingTask(props) {
           state,
           plan,
           newState,
-          appName,
+          appName
         })
         if (response.data === "Jwt") {
           appDispatch({ type: "toast-failed", data: "Token invalid." })
@@ -70,14 +70,14 @@ function DoingTask(props) {
         } else {
           appDispatch({
             type: "toast-success",
-            data: "Task updated and promoted.",
+            data: "Task updated and promoted."
           })
           navigate(`/kanban/${appName}`)
         }
       } else {
         appDispatch({
           type: "toast-failed",
-          data: "Enter notes to update task.",
+          data: "Enter notes to update task."
         })
       }
     } catch (err) {
@@ -94,7 +94,7 @@ function DoingTask(props) {
           notes,
           taskId,
           state,
-          newState,
+          newState
         })
         if (response.data === "Jwt") {
           appDispatch({ type: "toast-failed", data: "Token invalid." })
@@ -106,14 +106,14 @@ function DoingTask(props) {
         } else {
           appDispatch({
             type: "toast-success",
-            data: "Task updated and demoted.",
+            data: "Task updated and demoted."
           })
           navigate(`/kanban/${appName}`)
         }
       } else {
         appDispatch({
           type: "toast-failed",
-          data: "Enter notes to update task.",
+          data: "Enter notes to update task."
         })
       }
     } catch (err) {
@@ -132,7 +132,7 @@ function DoingTask(props) {
       if (groupname) {
         try {
           const res = await Axios.post("/verifyAccessGroup", {
-            groupname,
+            groupname
           })
           setPermitted(res.data.userIsInGroup)
         } catch (e) {
@@ -155,47 +155,20 @@ function DoingTask(props) {
           Task #{taskId}: {props.taskName}
         </h1>
         <div className="flex-col space-y">
-          Created by: {props.creator} <br></br> Created on:{" "}
-          {dayjs(props.createDate).format("DD-MM-YYYY")}
+          Created by: {props.creator} <br></br> Created on: {dayjs(props.createDate).format("DD-MM-YYYY")}
           <br></br>Owner: {props.owner}
           <br></br> State: {props.state}
           <div className="mt-4 form-group">
             <label className="text-muted mb-1">
               <h1>Plan Name</h1>
             </label>{" "}
-            <Autocomplete
-              size="small"
-              readOnly
-              value={props.plan}
-              options={props.plans}
-              renderInput={(params) => (
-                <TextField {...params} placeholder="No plans" />
-              )}
-            />
+            <Autocomplete size="small" readOnly value={props.plan} options={props.plans} renderInput={params => <TextField {...params} placeholder="No plans" />} />
           </div>
           <div className="form-group mt-4">
             <label className="text-muted mb-1">
               <h1>Task Description</h1>
             </label>
-            {permitted ? (
-              <TextField
-                fullWidth
-                multiline
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={props.description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></TextField>
-            ) : (
-              <TextField
-                fullWidth
-                multiline
-                InputProps={{ readOnly: true }}
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={props.description}
-              ></TextField>
-            )}
+            {permitted ? <TextField fullWidth multiline style={{ width: 400 }} rows={7} defaultValue={props.description} onChange={e => setDescription(e.target.value)}></TextField> : <TextField fullWidth multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={7} defaultValue={props.description}></TextField>}
           </div>
         </div>
       </div>
@@ -206,35 +179,16 @@ function DoingTask(props) {
           </label>
           {permitted ? (
             <>
-              <TextField
-                multiline
-                InputProps={{ readOnly: true }}
-                style={{ width: 400 }}
-                rows={6}
-                defaultValue={props.notes}
-                placeholder="No existing notes"
-              />
+              <TextField multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={6} defaultValue={props.notes} placeholder="No existing notes" />
               <div className="text-muted mt-4">
                 <label className="text-muted mb-1">
                   <h1>Additional Notes</h1>
                 </label>
-                <TextField
-                  style={{ width: 400 }}
-                  multiline
-                  rows={6}
-                  onChange={(e) => setNotes(e.target.value)}
-                  placeholder="Enter notes"
-                ></TextField>
+                <TextField style={{ width: 400 }} multiline rows={6} onChange={e => setNotes(e.target.value)} placeholder="Enter notes"></TextField>
               </div>
             </>
           ) : (
-            <TextField
-              multiline
-              InputProps={{ readOnly: true }}
-              style={{ width: 400 }}
-              rows={6}
-              defaultValue={props.notes}
-            ></TextField>
+            <TextField multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={6} defaultValue={props.notes}></TextField>
           )}
         </div>
         <div className="flex justify-end">

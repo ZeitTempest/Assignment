@@ -59,13 +59,6 @@ import {
   checkAdmin
 } from "../middleware/auth.js"
 
-//importing interceptors
-// const {
-//   isAuthenticatedUser,
-//   authorizedAdmin
-//  } = require("../middlewares/auth")
-//repeat for each js file
-
 //auth routes
 //router.route("/register").post(checkJWT, adminRegister) //w
 router.route("/auth/login").post(userLogin) //w
