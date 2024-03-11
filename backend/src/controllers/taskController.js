@@ -7,8 +7,8 @@ import { getAllPermitDoneEmails } from "./userController.js"
 function validatePlan(res, plan) {
   //returns true if error
   const regex = "^[a-zA-Z0-9 ]+$"
-  if (plan.length > 20) {
-    res.status(500).write("Plan name cannot exceed 20 characters.")
+  if (plan.length > 255) {
+    res.status(500).write("Plan name cannot exceed 255 characters.")
     return true
   }
   if (!plan.match(regex)) {

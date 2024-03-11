@@ -11,6 +11,17 @@ function AddTaskDialog(props) {
   const [plan, setPlan] = useState("")
   const [notes, setNotes] = useState()
   const appDispatch = useContext(DispatchContext)
+
+  const [isFocused, setIsFocused] = useState(false)
+
+  const handleFocus = () => {
+    setIsFocused(true)
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
+  }
+
   let { appName } = useParams()
 
   function handlePlanChange(event, values) {
@@ -70,7 +81,19 @@ function AddTaskDialog(props) {
           <div>Plan Name</div>
           <Autocomplete size="small" options={props.plans} renderInput={params => <TextField {...params} placeholder="Plans" />} onChange={handlePlanChange} />
           <div className="pt-4">Task Notes</div>
-          <TextField style={{ width: 400 }} readOnly multiline rows={8} value={props.description} onChange={e => setNotes(e.target.value)} />
+          <TextField
+            style={{
+              width: isFocused ? "300%" : 400,
+              transition: "width 0.5s"
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            rows={isFocused ? 12 : 6}
+            readOnly
+            multiline
+            value={props.description}
+            onChange={e => setNotes(e.target.value)}
+          />
         </div>
         <button type="submit" onClick={handleCancelTask} className="w-2/5 mr-6 self-auto text-white bg-pink-500 hover:bg-pink-700 focus:ring-blue-gray-200 my-2 focus:ring-4 focus:outline-none font-medium rounded-lg text-md px-5 py-2.5 text-center ">
           Cancel

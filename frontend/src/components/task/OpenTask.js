@@ -15,6 +15,15 @@ function OpenTask(props) {
   const appDispatch = useContext(DispatchContext)
   let { taskId } = useParams()
   const appName = taskId.split("_")[0]
+  const [isFocused, setIsFocused] = useState(false)
+
+  const handleFocus = () => {
+    setIsFocused(true)
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
+  }
 
   function handlePlanChange(event, values) {
     setPlan(values)
@@ -22,30 +31,23 @@ function OpenTask(props) {
 
   async function handleSave() {
     try {
-      if (notes && notes !== props.notes) {
-        const response = await Axios.post("/task/editWithPlan", {
-          description,
-          plan,
-          notes,
-          taskId,
-          state
-        })
-        if (response.data === "Jwt") {
-          appDispatch({ type: "toast-failed", data: "Token invalid." })
-          appDispatch({ type: "logout" })
-          navigate("/")
-        } else if (response.data === "Inactive") {
-          navigate("/")
-          appDispatch({ type: "toast-failed", data: "Inactive." })
-        } else {
-          appDispatch({ type: "toast-success", data: "Task updated." })
-          navigate(`/kanban/${appName}`)
-        }
+      const response = await Axios.post("/task/editWithPlan", {
+        description,
+        plan,
+        notes,
+        taskId,
+        state
+      })
+      if (response.data === "Jwt") {
+        appDispatch({ type: "toast-failed", data: "Token invalid." })
+        appDispatch({ type: "logout" })
+        navigate("/")
+      } else if (response.data === "Inactive") {
+        navigate("/")
+        appDispatch({ type: "toast-failed", data: "Inactive." })
       } else {
-        appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task."
-        })
+        appDispatch({ type: "toast-success", data: "Task updated." })
+        navigate(`/kanban/${appName}`)
       }
     } catch (err) {
       console.log(err)
@@ -54,35 +56,28 @@ function OpenTask(props) {
 
   async function handleSavePromote() {
     try {
-      if (notes && notes !== props.notes) {
-        const newState = "todo"
-        const response = await Axios.post("/task/editWithPlanState", {
-          description,
-          plan,
-          notes,
-          taskId,
-          state,
-          newState
-        })
-        if (response.data === "Jwt") {
-          appDispatch({ type: "toast-failed", data: "Token invalid." })
-          appDispatch({ type: "logout" })
-          navigate("/")
-        } else if (response.data === "Inactive") {
-          navigate("/")
-          appDispatch({ type: "toast-failed", data: "Inactive." })
-        } else {
-          appDispatch({
-            type: "toast-success",
-            data: "Task updated and promoted."
-          })
-          navigate(`/kanban/${appName}`)
-        }
+      const newState = "todo"
+      const response = await Axios.post("/task/editWithPlanState", {
+        description,
+        plan,
+        notes,
+        taskId,
+        state,
+        newState
+      })
+      if (response.data === "Jwt") {
+        appDispatch({ type: "toast-failed", data: "Token invalid." })
+        appDispatch({ type: "logout" })
+        navigate("/")
+      } else if (response.data === "Inactive") {
+        navigate("/")
+        appDispatch({ type: "toast-failed", data: "Inactive." })
       } else {
         appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task."
+          type: "toast-success",
+          data: "Task updated and promoted."
         })
+        navigate(`/kanban/${appName}`)
       }
     } catch (err) {
       console.log(err)
@@ -95,10 +90,10 @@ function OpenTask(props) {
 
   async function checkOpenPermit() {
     try {
-      // console.log(appName)
+      //console.log(appName)
       const response = await Axios.post("/app/permit", { appName })
       const groupname = response.data[0].App_permit_Open
-      // console.log("group_name:" + groupname)
+      //console.log("group_name_permitted:" + groupname)
       if (groupname) {
         try {
           const res = await Axios.post("/verifyAccessGroup", { groupname })
@@ -147,16 +142,51 @@ function OpenTask(props) {
           </label>
           {permitted ? (
             <>
-              <TextField multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={6} defaultValue={props.notes} placeholder="No existing notes" />
+              <TextField
+                multiline
+                InputProps={{ readOnly: true }}
+                style={{
+                  width: isFocused ? "250%" : 400,
+                  transition: "width 0.5s"
+                }}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                rows={isFocused ? 12 : 6}
+                defaultValue={props.notes}
+                placeholder="No existing notes"
+              />
+
               <div className="text-muted mt-4">
                 <label className="text-muted mb-1">
                   <h1>Additional Notes</h1>
                 </label>
-                <TextField style={{ width: 400 }} multiline rows={6} onChange={e => setNotes(e.target.value)} placeholder="Enter notes"></TextField>
+                <TextField
+                  style={{
+                    width: isFocused ? "250%" : 400,
+                    transition: "width 0.5s"
+                  }}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  rows={isFocused ? 12 : 6}
+                  onChange={e => setNotes(e.target.value)}
+                  placeholder="Enter notes"
+                ></TextField>
               </div>
             </>
           ) : (
-            <TextField multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={6} defaultValue={props.notes} placeholder="No notes"></TextField>
+            <TextField
+              multiline
+              InputProps={{ readOnly: true }}
+              style={{
+                width: isFocused ? "250%" : 400,
+                transition: "width 0.5s"
+              }}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              rows={isFocused ? 12 : 6}
+              defaultValue={props.notes}
+              placeholder="No notes"
+            ></TextField>
           )}
         </div>
         <div className="flex justify-end">

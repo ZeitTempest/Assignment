@@ -25,23 +25,16 @@ function DoneTaskContent() {
 
   async function handleSave() {
     try {
-      if (!notes) {
-        appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task.",
-        })
-      } else {
-        const response = await Axios.post("/task/edit", {
-          description,
-          notes,
-          taskId,
-          state,
-        })
+      const response = await Axios.post("/task/edit", {
+        description,
+        notes,
+        taskId,
+        state
+      })
 
-        if (response.data) {
-          appDispatch({ type: "toast-success", value: "Task updated." })
-          navigate(`/kanban/${app}`)
-        }
+      if (response.data) {
+        appDispatch({ type: "toast-success", value: "Task updated." })
+        navigate(`/kanban/${app}`)
       }
     } catch (err) {
       console.log(err)
@@ -50,34 +43,27 @@ function DoneTaskContent() {
 
   async function handleSavePromote() {
     try {
-      if (notes) {
-        const newState = "closed"
-        const response = await Axios.post("/task/editWithState", {
-          description,
-          notes,
-          taskId,
-          state,
-          newState,
-        })
-        if (response.data === "Jwt") {
-          appDispatch({ type: "toast-failed", data: "Token invalid." })
-          appDispatch({ type: "logout" })
-          navigate("/")
-        } else if (response.data === "Inactive") {
-          navigate("/")
-          appDispatch({ type: "toast-failed", data: "Inactive." })
-        } else {
-          appDispatch({
-            type: "toast-success",
-            data: "Task updated and promoted.",
-          })
-          navigate(`/kanban/${app}`)
-        }
+      const newState = "closed"
+      const response = await Axios.post("/task/editWithState", {
+        description,
+        notes,
+        taskId,
+        state,
+        newState
+      })
+      if (response.data === "Jwt") {
+        appDispatch({ type: "toast-failed", data: "Token invalid." })
+        appDispatch({ type: "logout" })
+        navigate("/")
+      } else if (response.data === "Inactive") {
+        navigate("/")
+        appDispatch({ type: "toast-failed", data: "Inactive." })
       } else {
         appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task.",
+          type: "toast-success",
+          data: "Task updated and promoted."
         })
+        navigate(`/kanban/${app}`)
       }
     } catch (err) {
       console.log(err)
@@ -86,52 +72,45 @@ function DoneTaskContent() {
 
   async function handleSaveDemote() {
     try {
-      if (notes) {
-        const newState = "doing"
-        const response = await Axios.post("/task/editWithPlanState", {
-          description,
-          notes,
-          plan,
-          taskId,
-          state,
-          newState,
-        })
-        if (response.data === "Jwt") {
-          appDispatch({ type: "toast-failed", data: "Token invalid." })
-          appDispatch({ type: "logout" })
-          navigate("/")
-        } else if (response.data === "Inactive") {
-          navigate("/")
-          appDispatch({ type: "toast-failed", data: "Inactive." })
-        } else {
-          const data = response.data.split(" ")
-          data.pop()
-          if (data.length > 0) {
-            if (data.includes("PlanLength")) {
-              appDispatch({
-                type: "toast-failed",
-                data: "Plan name must be at most 20 characters long.",
-              })
-            }
-            if (data.includes("PlanCharacter")) {
-              appDispatch({
-                type: "toast-failed",
-                data: "Plan name can only contain alphanumeric characters.",
-              })
-            }
-          } else {
-            appDispatch({
-              type: "toast-success",
-              data: "Task updated and demoted.",
-            })
-            navigate(`/kanban/${app}`)
-          }
-        }
+      const newState = "doing"
+      const response = await Axios.post("/task/editWithPlanState", {
+        description,
+        notes,
+        plan,
+        taskId,
+        state,
+        newState
+      })
+      if (response.data === "Jwt") {
+        appDispatch({ type: "toast-failed", data: "Token invalid." })
+        appDispatch({ type: "logout" })
+        navigate("/")
+      } else if (response.data === "Inactive") {
+        navigate("/")
+        appDispatch({ type: "toast-failed", data: "Inactive." })
       } else {
-        appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task.",
-        })
+        const data = response.data.split(" ")
+        data.pop()
+        if (data.length > 0) {
+          if (data.includes("PlanLength")) {
+            appDispatch({
+              type: "toast-failed",
+              data: "Plan name must be at most 255 characters long."
+            })
+          }
+          if (data.includes("PlanCharacter")) {
+            appDispatch({
+              type: "toast-failed",
+              data: "Plan name can only contain alphanumeric characters."
+            })
+          }
+        } else {
+          appDispatch({
+            type: "toast-success",
+            data: "Task updated and demoted."
+          })
+          navigate(`/kanban/${app}`)
+        }
       }
     } catch (err) {
       console.log(err)
@@ -157,7 +136,7 @@ function DoneTaskContent() {
       try {
         const response = await Axios.post("/plans/list", { appName })
         const list = []
-        response.data.forEach((plan) => {
+        response.data.forEach(plan => {
           list.push(plan.Plan_MVP_Name)
         })
         setPlans(list)
@@ -182,56 +161,23 @@ function DoneTaskContent() {
       <div className="rounded-lg shadow border bg-white border-gray-300 items-center flex w-auto h-auto mx-8 my-0">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-blue-900">
-            {action === "promote"
-              ? "Promoting"
-              : action === "demote"
-              ? "Demoting"
-              : "Editing"}{" "}
-            Task #{taskId}: {taskName}
+            {action === "promote" ? "Promoting" : action === "demote" ? "Demoting" : "Editing"} Task #{taskId}: {taskName}
           </h1>
           <div className="flex-col space-y">
-            Created by: {creator} <br></br> Created on:{" "}
-            {dayjs(createDate).format("DD-MM-YYYY")}
+            Created by: {creator} <br></br> Created on: {dayjs(createDate).format("DD-MM-YYYY")}
             <br></br>Owner: {owner}
             <br></br> State: {state}
             <div className="mt-4 form-group">
               <label className="text-muted mb-1">
                 <h1>Plan Name</h1>
               </label>{" "}
-              {action === "demote" ? (
-                <Autocomplete
-                  size="small"
-                  value={plan}
-                  options={plans}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="No plans" />
-                  )}
-                  onChange={handlePlanChange}
-                />
-              ) : (
-                <Autocomplete
-                  size="small"
-                  readOnly
-                  value={plan}
-                  options={plans}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="No plans" />
-                  )}
-                />
-              )}
+              {action === "demote" ? <Autocomplete size="small" value={plan} options={plans} renderInput={params => <TextField {...params} placeholder="No plans" />} onChange={handlePlanChange} /> : <Autocomplete size="small" readOnly value={plan} options={plans} renderInput={params => <TextField {...params} placeholder="No plans" />} />}
             </div>
             <div className="form-group mt-4">
               <label className="text-muted mb-1">
                 <h1>Task Description</h1>
               </label>
-              <TextField
-                fullWidth
-                multiline
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+              <TextField fullWidth multiline style={{ width: 400 }} rows={7} defaultValue={description} onChange={e => setDescription(e.target.value)} />
             </div>
           </div>
         </div>
@@ -240,25 +186,12 @@ function DoneTaskContent() {
             <label className="text-muted mb-1">
               <h1>Task Notes</h1>
             </label>
-            <TextField
-              multiline
-              InputProps={{ readOnly: true }}
-              style={{ width: 400 }}
-              rows={6}
-              defaultValue={oldNotes}
-              placeholder="No existing notes"
-            />
+            <TextField multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={6} defaultValue={oldNotes} placeholder="No existing notes" />
             <div className="text-muted mt-4">
               <label className="text-muted mb-1">
                 <h1>Additional Notes</h1>
               </label>
-              <TextField
-                style={{ width: 400 }}
-                multiline
-                rows={6}
-                onChange={(e) => setNotes(e.target.value)}
-                placeholder="Enter notes"
-              />
+              <TextField style={{ width: 400 }} multiline rows={6} onChange={e => setNotes(e.target.value)} placeholder="Enter notes" />
             </div>
             <div className="flex justify-end my-4">
               {action === "promote" ? (

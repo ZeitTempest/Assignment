@@ -16,31 +16,34 @@ function DoingTask(props) {
   let { taskId } = useParams()
   const appName = taskId.split("_")[0]
 
+  const [isFocused, setIsFocused] = useState(false)
+
+  const handleFocus = () => {
+    setIsFocused(true)
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
+  }
+
   async function handleSave() {
     try {
-      if (notes && notes !== props.notes) {
-        const response = await Axios.post("/task/edit", {
-          description,
-          notes,
-          taskId,
-          state
-        })
-        if (response.data === "Jwt") {
-          appDispatch({ type: "toast-failed", data: "Token invalid." })
-          appDispatch({ type: "logout" })
-          navigate("/")
-        } else if (response.data === "Inactive") {
-          navigate("/")
-          appDispatch({ type: "toast-failed", data: "Inactive." })
-        } else {
-          appDispatch({ type: "toast-success", data: "Task updated." })
-          navigate(`/kanban/${appName}`)
-        }
+      const response = await Axios.post("/task/edit", {
+        description,
+        notes,
+        taskId,
+        state
+      })
+      if (response.data === "Jwt") {
+        appDispatch({ type: "toast-failed", data: "Token invalid." })
+        appDispatch({ type: "logout" })
+        navigate("/")
+      } else if (response.data === "Inactive") {
+        navigate("/")
+        appDispatch({ type: "toast-failed", data: "Inactive." })
       } else {
-        appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task."
-        })
+        appDispatch({ type: "toast-success", data: "Task updated." })
+        navigate(`/kanban/${appName}`)
       }
     } catch (err) {
       console.log(err)
@@ -49,36 +52,29 @@ function DoingTask(props) {
 
   async function handleSavePromote() {
     try {
-      if (notes && notes !== props.notes) {
-        const newState = "done"
-        const response = await Axios.post("/task/promoteDoingTask", {
-          description,
-          notes,
-          taskId,
-          state,
-          plan,
-          newState,
-          appName
-        })
-        if (response.data === "Jwt") {
-          appDispatch({ type: "toast-failed", data: "Token invalid." })
-          appDispatch({ type: "logout" })
-          navigate("/")
-        } else if (response.data === "Inactive") {
-          navigate("/")
-          appDispatch({ type: "toast-failed", data: "Inactive." })
-        } else {
-          appDispatch({
-            type: "toast-success",
-            data: "Task updated and promoted."
-          })
-          navigate(`/kanban/${appName}`)
-        }
+      const newState = "done"
+      const response = await Axios.post("/task/promoteDoingTask", {
+        description,
+        notes,
+        taskId,
+        state,
+        plan,
+        newState,
+        appName
+      })
+      if (response.data === "Jwt") {
+        appDispatch({ type: "toast-failed", data: "Token invalid." })
+        appDispatch({ type: "logout" })
+        navigate("/")
+      } else if (response.data === "Inactive") {
+        navigate("/")
+        appDispatch({ type: "toast-failed", data: "Inactive." })
       } else {
         appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task."
+          type: "toast-success",
+          data: "Task updated and promoted."
         })
+        navigate(`/kanban/${appName}`)
       }
     } catch (err) {
       console.log(err)
@@ -87,34 +83,27 @@ function DoingTask(props) {
 
   async function handleSaveDemote() {
     try {
-      if (notes && notes !== props.notes) {
-        const newState = "todo"
-        const response = await Axios.post("/task/editWithState", {
-          description,
-          notes,
-          taskId,
-          state,
-          newState
-        })
-        if (response.data === "Jwt") {
-          appDispatch({ type: "toast-failed", data: "Token invalid." })
-          appDispatch({ type: "logout" })
-          navigate("/")
-        } else if (response.data === "Inactive") {
-          navigate("/")
-          appDispatch({ type: "toast-failed", data: "Inactive." })
-        } else {
-          appDispatch({
-            type: "toast-success",
-            data: "Task updated and demoted."
-          })
-          navigate(`/kanban/${appName}`)
-        }
+      const newState = "todo"
+      const response = await Axios.post("/task/editWithState", {
+        description,
+        notes,
+        taskId,
+        state,
+        newState
+      })
+      if (response.data === "Jwt") {
+        appDispatch({ type: "toast-failed", data: "Token invalid." })
+        appDispatch({ type: "logout" })
+        navigate("/")
+      } else if (response.data === "Inactive") {
+        navigate("/")
+        appDispatch({ type: "toast-failed", data: "Inactive." })
       } else {
         appDispatch({
-          type: "toast-failed",
-          data: "Enter notes to update task."
+          type: "toast-success",
+          data: "Task updated and demoted."
         })
+        navigate(`/kanban/${appName}`)
       }
     } catch (err) {
       console.log(err)
@@ -179,16 +168,50 @@ function DoingTask(props) {
           </label>
           {permitted ? (
             <>
-              <TextField multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={6} defaultValue={props.notes} placeholder="No existing notes" />
+              <TextField
+                multiline
+                InputProps={{ readOnly: true }}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                style={{
+                  width: isFocused ? "250%" : 400,
+                  transition: "width 0.5s"
+                }}
+                rows={isFocused ? 12 : 6}
+                defaultValue={props.notes}
+                placeholder="No existing notes"
+              />
               <div className="text-muted mt-4">
                 <label className="text-muted mb-1">
                   <h1>Additional Notes</h1>
                 </label>
-                <TextField style={{ width: 400 }} multiline rows={6} onChange={e => setNotes(e.target.value)} placeholder="Enter notes"></TextField>
+                <TextField
+                  multiline
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  style={{
+                    width: isFocused ? "250%" : 400,
+                    transition: "width 0.5s"
+                  }}
+                  rows={isFocused ? 12 : 6}
+                  onChange={e => setNotes(e.target.value)}
+                  placeholder="Enter notes"
+                ></TextField>
               </div>
             </>
           ) : (
-            <TextField multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={6} defaultValue={props.notes}></TextField>
+            <TextField
+              multiline
+              InputProps={{ readOnly: true }}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              style={{
+                width: isFocused ? "250%" : 400,
+                transition: "width 0.5s"
+              }}
+              rows={isFocused ? 12 : 6}
+              defaultValue={props.notes}
+            ></TextField>
           )}
         </div>
         <div className="flex justify-end">
