@@ -12,6 +12,16 @@ function DoneTask(props) {
   let { taskId } = useParams()
   const appName = taskId.split("_")[0]
 
+  const [isFocused, setIsFocused] = useState(false)
+
+  const handleFocus = () => {
+    setIsFocused(true)
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
+  }
+
   function handleCancel() {
     navigate(`/kanban/${appName}`)
   }
@@ -100,10 +110,18 @@ function DoneTask(props) {
               </label>
               <TextField
                 multiline
-                InputProps={{ readOnly: true }}
-                style={{ width: 400 }}
-                rows={6}
+                InputProps={{
+                  readOnly: true,
+                  rows: isFocused ? 12 : 6,
+                  transition: "width 0.5s",
+                }}
+                style={{
+                  width: isFocused ? "250%" : 400,
+                }}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 defaultValue={props.notes}
+                placeholder="No existing notes"
               />
             </div>
             <div className="flex justify-end">
@@ -160,11 +178,18 @@ function DoneTask(props) {
               </label>
               <TextField
                 multiline
-                readOnly
-                InputProps={{ readOnly: true }}
-                style={{ width: 400 }}
-                rows={6}
+                InputProps={{
+                  readOnly: true,
+                  rows: isFocused ? 12 : 6,
+                  transition: "width 0.5s",
+                }}
+                style={{
+                  width: isFocused ? "250%" : 400,
+                }}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 defaultValue={props.notes}
+                placeholder="No existing notes"
               />
             </div>
             <div className="flex justify-end">

@@ -8,6 +8,15 @@ function ClosedTask(props) {
   const navigate = useNavigate()
   let { taskId } = useParams()
   const appName = taskId.split("_")[0]
+  const [isFocused, setIsFocused] = useState(false)
+
+  const handleFocus = () => {
+    setIsFocused(true)
+  }
+
+  const handleBlur = () => {
+    setIsFocused(false)
+  }
 
   function handleCancel() {
     navigate(`/kanban/${appName}`)
@@ -30,7 +39,6 @@ function ClosedTask(props) {
             </label>{" "}
             <Autocomplete
               size="small"
-              disabled
               readOnly
               value={props.plan}
               options={props.plans}
@@ -46,7 +54,6 @@ function ClosedTask(props) {
             <TextField
               fullWidth
               multiline
-              disabled
               InputProps={{ readOnly: true }}
               style={{ width: 400 }}
               rows={7}
@@ -62,10 +69,16 @@ function ClosedTask(props) {
           </label>
           <TextField
             multiline
-            disabled
-            InputProps={{ readOnly: true }}
-            style={{ width: 400 }}
-            rows={6}
+            InputProps={{
+              readOnly: true,
+              rows: isFocused ? 12 : 6,
+              transition: "width 0.5s",
+            }}
+            style={{
+              width: isFocused ? "250%" : 400,
+            }}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             defaultValue={props.notes}
             placeholder="No existing notes"
           />
