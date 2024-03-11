@@ -3,7 +3,6 @@ Issues:
 - on run old/expired jwt is not auto deleted in some cases, need to do a check and delete
 
 - e.target.reset not working in createuserform and mydetails
-- implement refresh on form submit (my details, user mgmt)
 - implement re-render on form submit (same implementation as above?)
 - Edit details - field state is resetting properly after submit, but the field itself is not being cleared. Clicking save again directly after submitting will submit 2 blank fields even though the textfields are not empty
 - Admin create user: If no groups specified, there will always be a blank group

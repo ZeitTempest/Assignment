@@ -33,9 +33,7 @@ export const createApp = async (req, res) => {
 
     if (appName) {
       if (appName.length < 3 || appName.length > 20) {
-        return res
-          .status(500)
-          .send("App name must be between 3 - 20 characters.")
+        return res.status(500).send("App name must be between 3 - 20 characters.")
       }
       if (!AcronymMeetsConstraints) {
         return res.status(500).send("App name includes illegal characters.")
@@ -108,10 +106,7 @@ export const getApp = async (req, res, next) => {
   try {
     //ensure this is named correctly in frontend
     const appName = req.body.appName
-    const results = await sql.query(
-      "SELECT * FROM application WHERE App_Acronym = ? ",
-      appName
-    )
+    const results = await sql.query("SELECT * FROM application WHERE App_Acronym = ? ", appName)
     if (results.length > 0 && results[0].length > 0) {
       res.status(200).json(results[0])
     } else {
@@ -153,52 +148,28 @@ export const editApp = async (req, res) => {
 
     //the check is to query as long as value is not undefined (null is not undefined)
     if (description) {
-      sql.query(
-        "UPDATE application SET App_Description = ? WHERE App_Acronym = ? ",
-        [description, appName]
-      )
+      sql.query("UPDATE application SET App_Description = ? WHERE App_Acronym = ? ", [description, appName])
     }
     if (startDate || startDate === null) {
-      sql.query(
-        "UPDATE application SET App_startDate = ? WHERE App_Acronym = ? ",
-        [startDate, appName]
-      )
+      sql.query("UPDATE application SET App_startDate = ? WHERE App_Acronym = ? ", [startDate, appName])
     }
     if (endDate || endDate === null) {
-      sql.query(
-        "UPDATE application SET App_endDate = ? WHERE App_Acronym = ? ",
-        [endDate, appName]
-      )
+      sql.query("UPDATE application SET App_endDate = ? WHERE App_Acronym = ? ", [endDate, appName])
     }
     if (open || open === null) {
-      sql.query(
-        "UPDATE application SET App_permit_Open = ? WHERE App_Acronym = ? ",
-        [open, appName]
-      )
+      sql.query("UPDATE application SET App_permit_Open = ? WHERE App_Acronym = ? ", [open, appName])
     }
     if (todo || todo === null) {
-      sql.query(
-        "UPDATE application SET App_permit_todoList = ? WHERE App_Acronym = ? ",
-        [todo, appName]
-      )
+      sql.query("UPDATE application SET App_permit_todoList = ? WHERE App_Acronym = ? ", [todo, appName])
     }
     if (doing || doing === null) {
-      sql.query(
-        "UPDATE application SET App_permit_Doing = ? WHERE App_Acronym = ? ",
-        [doing, appName]
-      )
+      sql.query("UPDATE application SET App_permit_Doing = ? WHERE App_Acronym = ? ", [doing, appName])
     }
     if (done || done === null) {
-      sql.query(
-        "UPDATE application SET App_permit_Done = ? WHERE App_Acronym = ? ",
-        [done, appName]
-      )
+      sql.query("UPDATE application SET App_permit_Done = ? WHERE App_Acronym = ? ", [done, appName])
     }
     if (create || create === null) {
-      sql.query(
-        "UPDATE application SET App_permit_Create = ? WHERE App_Acronym = ? ",
-        [create, appName]
-      )
+      sql.query("UPDATE application SET App_permit_Create = ? WHERE App_Acronym = ? ", [create, appName])
     }
     return res.status(200).send("Successfully updated application.")
   } catch (err) {
@@ -212,26 +183,18 @@ export const getPermit = async (req, res) => {
   try {
     const { appName } = req.body
     //console.log(req.body)
-    const results = await sql.query(
-      "SELECT * FROM application WHERE App_Acronym = ? ",
-      [appName]
-    )
+    const results = await sql.query("SELECT * FROM application WHERE App_Acronym = ? ", [appName])
     res.json(results[0])
   } catch (err) {
     console.log(err)
   }
 }
 
-export const getDonePermit = async (req, res) => {
-  console.log(req.body)
-  const { appName } = req.body
-
+export const getDonePermit = async appName => {
   try {
-    const results = await sql.query(
-      "SELECT * FROM application WHERE App_Acronym = ? ",
-      [appName]
-    )
-    res.json(results[0].App_permit_Done)
+    const results = await sql.query("SELECT * FROM application WHERE App_Acronym = ? ", [appName])
+    const permit = results[0][0].App_permit_Done
+    return permit
   } catch (err) {
     console.log(err)
   }
