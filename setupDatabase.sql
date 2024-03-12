@@ -24,7 +24,7 @@ SELECT * FROM `accounts`;
 DROP TABLE IF EXISTS `groups`; -- remove this line after development, dangerous to mess with db
 
 CREATE TABLE IF NOT EXISTS `groups` (
-`groupname` varchar(255) PRIMARY KEY 
+`groupname` varchar(20) PRIMARY KEY 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `groups` (groupname) VALUES 
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `task` (
 `Task_createDate` date NOT NULL,
 `Task_state` ENUM ('open', 'todo', 'doing', 'done', 'closed') NOT NULL DEFAULT 'open',
 `Task_id` varchar(30) NOT NULL UNIQUE, -- created using App_Acronym + App_Rnumber
-`Task_plan` varchar(20)
+`Task_plan` varchar(255)
 );
 
 INSERT INTO task (Task_name, Task_description, Task_notes, Task_id, Task_plan, Task_app_Acronym, Task_creator, Task_owner, Task_createDate) VALUES 

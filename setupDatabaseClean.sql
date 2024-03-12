@@ -24,7 +24,7 @@ INSERT INTO `accounts` (`username`, `password`, `email`, `groups`) VALUES
 ('dev1', '$2a$10$WKJh0SPHRY3ez4MwOnbzx.1tclSySUumzvYgehO4Lgq5Ln1JKCfvi', 'dev1@company.com', 'developer');
 
 CREATE TABLE IF NOT EXISTS `groups` (
-`groupname` varchar(255) PRIMARY KEY 
+`groupname` varchar(20) PRIMARY KEY 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO `groups` (groupname) VALUES 
@@ -65,5 +65,5 @@ CREATE TABLE IF NOT EXISTS `task` (
 `Task_createDate` date NOT NULL,
 `Task_state` ENUM ('open', 'todo', 'doing', 'done', 'closed') NOT NULL DEFAULT 'open',
 `Task_id` varchar(30) NOT NULL UNIQUE, -- created using App_Acronym + App_Rnumber
-`Task_plan` varchar(20)
+`Task_plan` varchar(255)
 );

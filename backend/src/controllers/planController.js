@@ -27,7 +27,7 @@ export const getPlanNames = async (req, res, next) => {
     if (results.length > 0 && results[0].length > 0) {
       res.status(200).json(results[0])
     } else {
-      res.status(200).send("No plans found.")
+      res.status(500).send("No plans found.")
     }
   } catch (err) {
     res.status(500).send(err)
@@ -42,7 +42,7 @@ export const createPlan = async (req, res) => {
       return res.status(500).send("Plan name missing.")
     }
     //check plan name valid
-    const regex = "^[[a-zA-Z0-9_ ]+$"
+    const regex = "^[[a-zA-Z0-9 ]+$"
     if (planName.length > 255) {
       return res.status(500).send("Plan name must be 255 characters or less.")
     }

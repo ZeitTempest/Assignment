@@ -1,5 +1,3 @@
-//import { adminEditUser, editUserSelf, createUser } from "../models/userModel.js"
-//import { isAlphaNumeric, passwordCompliant, emailCompliant } from "../utils/utils.js"
 import bcrypt from "bcryptjs"
 
 import sql from "../config/query.js"
@@ -71,8 +69,8 @@ export const adminUpdateUser = async (req, res) => {
   }
 
   // admin cannot be deleted, check if admin
-  if (req.username === "admin" && (isActive === false || !groups.includes("admin"))) {
-    return res.status(500).json("Admin cannot be disabled or removed from the admin group")
+  if (req.byUser === "admin" && (isActive === false || !groups.split(",").includes("admin"))) {
+    return res.status(500).json("Admin cannot be disabled or removed from the admin group.")
   }
 
   var foundUser = null
@@ -111,6 +109,7 @@ export const adminUpdateUser = async (req, res) => {
   var updateUserQry = null
   if (!groups) updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`=NULL WHERE \`username\`='${username}';`
   else updateUserQry = `UPDATE \`accounts\` SET \`password\`='${password ? password : foundUsers[0].password}', \`email\`='${email ? email : foundUsers[0].email}', \`isActive\`='${isActive ? 1 : 0}', \`groups\`='${groups}' WHERE \`username\`='${username}';`
+
   try {
     const updatedUser = await sql.query(updateUserQry)
     if (updatedUser[0].affectedRows !== 1) {
@@ -173,10 +172,17 @@ export const adminCreateUser = async (req, res) => {
   //hash pw
   password = bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 
+  var createUserQry = ""
+
   // update user
   try {
-    const createUserQry = `
+    if (!groups) {
+      createUserQry = `
+    INSERT INTO accounts (\`username\`, \`password\`, \`email\`) values ('${username}', '${password}', '${email}');`
+    } else {
+      createUserQry = `
     INSERT INTO accounts (\`username\`, \`password\`, \`email\`, \`groups\`) values ('${username}', '${password}', '${email}', '${groups}');`
+    }
     //console.log(createUserQry)
     const createdUser = await sql.query(createUserQry)
 

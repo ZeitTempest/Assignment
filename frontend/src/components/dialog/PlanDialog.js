@@ -23,7 +23,7 @@ function PlanDialog() {
       if (!startDate || !setEndDate) {
         return appDispatch({
           type: "toast-failed",
-          data: "Start and end dates required.",
+          data: "Start and end dates required."
         })
       }
       if (startDate && endDate) {
@@ -32,7 +32,7 @@ function PlanDialog() {
             planName,
             startDate,
             endDate,
-            appName,
+            appName
           })
 
           if (response.data === "jwt_error") {
@@ -42,7 +42,7 @@ function PlanDialog() {
           } else if (response.status === 200) {
             appDispatch({
               type: "toast-success",
-              data: "Successfully created plan.",
+              data: "Successfully created plan."
             })
           }
         } catch (err) {
@@ -58,7 +58,7 @@ function PlanDialog() {
       const response = await Axios.post("/plans", { appName })
       setPlans(response.data)
     } catch (err) {
-      appDispatch({ type: "toast-failed", data: err.response.data })
+      console.log(err)
     }
   }
 

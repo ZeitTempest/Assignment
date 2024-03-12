@@ -37,7 +37,7 @@ function DoneTaskContent() {
         description,
         notes,
         taskId,
-        state,
+        state
       })
 
       if (response.data) {
@@ -57,7 +57,7 @@ function DoneTaskContent() {
         notes,
         taskId,
         state,
-        newState,
+        newState
       })
       if (response.data === "Jwt") {
         appDispatch({ type: "toast-failed", data: "Token invalid." })
@@ -69,7 +69,7 @@ function DoneTaskContent() {
       } else {
         appDispatch({
           type: "toast-success",
-          data: "Task updated and promoted.",
+          data: "Task updated and promoted."
         })
         navigate(`/kanban/${app}`)
       }
@@ -87,7 +87,7 @@ function DoneTaskContent() {
         plan,
         taskId,
         state,
-        newState,
+        newState
       })
       if (response.data === "Jwt") {
         appDispatch({ type: "toast-failed", data: "Token invalid." })
@@ -99,7 +99,7 @@ function DoneTaskContent() {
       } else {
         appDispatch({
           type: "toast-success",
-          data: "Task updated and demoted.",
+          data: "Task updated and demoted."
         })
         navigate(`/kanban/${app}`)
       }
@@ -127,7 +127,7 @@ function DoneTaskContent() {
       try {
         const response = await Axios.post("/plans/list", { appName })
         const list = []
-        response.data.forEach((plan) => {
+        response.data.forEach(plan => {
           list.push(plan.Plan_MVP_Name)
         })
         setPlans(list)
@@ -152,56 +152,23 @@ function DoneTaskContent() {
       <div className="rounded-lg shadow border bg-white border-gray-300 items-center flex w-auto h-auto mx-8 my-0">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-blue-900">
-            {action === "promote"
-              ? "Promoting"
-              : action === "demote"
-              ? "Demoting"
-              : "Editing"}{" "}
-            Task #{taskId}: {taskName}
+            {action === "promote" ? "Promoting" : action === "demote" ? "Demoting" : "Editing"} Task #{taskId}: {taskName}
           </h1>
           <div className="flex-col space-y">
-            Created by: {creator} <br></br> Created on:{" "}
-            {dayjs(createDate).format("DD-MM-YYYY")}
+            Created by: {creator} <br></br> Created on: {dayjs(createDate).format("DD-MM-YYYY")}
             <br></br>Owner: {owner}
             <br></br> State: {state}
             <div className="mt-4 form-group">
               <label className="text-muted mb-1">
                 <h1>Plan Name</h1>
               </label>{" "}
-              {action === "demote" ? (
-                <Autocomplete
-                  size="small"
-                  value={plan}
-                  options={plans}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="No plans" />
-                  )}
-                  onChange={handlePlanChange}
-                />
-              ) : (
-                <Autocomplete
-                  size="small"
-                  readOnly
-                  value={plan}
-                  options={plans}
-                  renderInput={(params) => (
-                    <TextField {...params} placeholder="No plans" />
-                  )}
-                />
-              )}
+              {action === "demote" ? <Autocomplete size="small" value={plan} options={plans} renderInput={params => <TextField {...params} placeholder="No plans" />} onChange={handlePlanChange} /> : <Autocomplete size="small" readOnly value={plan} options={plans} renderInput={params => <TextField {...params} placeholder="No plans" />} />}
             </div>
             <div className="form-group mt-4">
               <label className="text-muted mb-1">
                 <h1>Task Description</h1>
               </label>
-              <TextField
-                fullWidth
-                multiline
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={description}
-                onChange={(e) => setDescription(e.target.value)}
-              />
+              <TextField fullWidth multiline style={{ width: 400 }} rows={7} defaultValue={description} onChange={e => setDescription(e.target.value)} />
             </div>
           </div>
         </div>
@@ -215,10 +182,10 @@ function DoneTaskContent() {
               InputProps={{
                 readOnly: true,
                 rows: isFocused ? 12 : 6,
-                transition: "width 0.5s",
+                transition: "width 0.5s"
               }}
               style={{
-                width: isFocused ? "250%" : 400,
+                width: isFocused ? "250%" : 400
               }}
               onFocus={handleFocus}
               onBlur={handleBlur}
@@ -231,9 +198,9 @@ function DoneTaskContent() {
               </label>
               <TextField
                 style={{
-                  width: 400,
+                  width: 400
                 }}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={e => setNotes(e.target.value)}
                 placeholder="Enter notes"
               />
             </div>

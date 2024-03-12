@@ -24,10 +24,7 @@ export const getTask = async (req, res) => {
   //console.log(taskId)
   if (taskId) {
     try {
-      const results = await sql.query(
-        "SELECT * FROM task WHERE Task_id = ? ",
-        taskId
-      )
+      const results = await sql.query("SELECT * FROM task WHERE Task_id = ? ", taskId)
       //console.log(results[0][0])
       if (results[0].length > 0) {
         res.status(200).json(results[0][0])
@@ -45,10 +42,7 @@ export const getTasks = async (req, res) => {
   const { state, appName } = req.body
   if (state) {
     try {
-      const results = await sql.query(
-        "SELECT * from task WHERE Task_state = ? AND Task_app_Acronym = ? ",
-        [state, appName]
-      )
+      const results = await sql.query("SELECT * from task WHERE Task_state = ? AND Task_app_Acronym = ? ", [state, appName])
       //console.log(results[0])
       if (results[0].length > 0) {
         res.status(200).json(results[0])
@@ -68,8 +62,7 @@ export const createTask = async (req, res) => {
 
   //console.log("username: " + username)
 
-  if (!taskName)
-    return res.status(500).send("Failed to create task: missing task name")
+  if (!taskName) return res.status(500).send("Failed to create task: missing task name")
 
   const regex = "^[a-zA-Z0-9]+$"
   let error = false
@@ -89,8 +82,7 @@ export const createTask = async (req, res) => {
 
   try {
     //get App_Rnumber from the associated application
-    const rNumberQuery =
-      "SELECT App_Rnumber FROM application WHERE App_Acronym = ?"
+    const rNumberQuery = "SELECT App_Rnumber FROM application WHERE App_Acronym = ?"
 
     //const rNumber = (await sql.query(rNumberQuery, appName)[0]) + 1
 
@@ -112,9 +104,7 @@ export const createTask = async (req, res) => {
 
     //console.log(taskExists[0])
     if (taskExists[0].length > 0) {
-      return res
-        .status(500)
-        .send("The task you are attempting to create already exists.")
+      return res.status(500).send("The task you are attempting to create already exists.")
     }
 
     //double check this logic: where do the previous audit entries get appended?
@@ -123,6 +113,10 @@ export const createTask = async (req, res) => {
       const time = new Date()
       const state = "create"
       audit = `${username}, ${state}, ${time}: ${notes}`
+    } else {
+      const time = new Date()
+      const state = "create"
+      audit = `${username}, ${state}, ${time}: `
     }
     try {
       //prettier-ignore
@@ -133,10 +127,7 @@ export const createTask = async (req, res) => {
     }
 
     try {
-      sql.query(
-        "UPDATE application SET App_Rnumber = ? WHERE App_Acronym = ?;",
-        [rNumber, appName]
-      )
+      sql.query("UPDATE application SET App_Rnumber = ? WHERE App_Acronym = ?;", [rNumber, appName])
       res.status(200).send("Task created")
     } catch (err) {
       console.log(err)
@@ -156,10 +147,7 @@ export const editTask = async (req, res) => {
     const time = new Date()
 
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query(
-      "UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?",
-      [description, audit, username, taskId]
-    )
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, audit, username, taskId])
     res.status(200).send("Successfully edited task.")
   } catch (err) {
     return res.status(500).send(err)
@@ -177,10 +165,7 @@ export const editTaskWithPlan = async (req, res) => {
       return
     }
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query(
-      "UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?",
-      [description, plan, audit, username, taskId]
-    )
+    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ? WHERE task_id = ?", [description, plan, audit, username, taskId])
     res.status(200).send("Successfully edited task.")
   } catch (err) {
     return res.status(500).send(err)
@@ -193,10 +178,7 @@ export const editTaskWithState = async (req, res) => {
     const username = req.byUser
     const time = new Date()
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query(
-      "UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?",
-      [description, audit, username, newState, taskId]
-    )
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, audit, username, newState, taskId])
 
     res.status(200).send("Successfully edited and promoted task.")
   } catch (err) {
@@ -217,10 +199,7 @@ export const editTaskWithPlanState = async (req, res) => {
       return
     }
     const audit = `${username}, ${state}, ${time}: ${notes}`
-    sql.query(
-      "UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?",
-      [description, plan, audit, username, newState, taskId]
-    )
+    sql.query("UPDATE task SET Task_description = ?, Task_plan = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, plan, audit, username, newState, taskId])
     res.status(200).send("Successfully edited and promoted task.")
   } catch (err) {
     console.log(err)
@@ -235,10 +214,7 @@ export const promoteDoingTask = async (req, res) => {
     const time = new Date()
     const audit = `${username}, ${state}, ${time}: ${notes}`
 
-    sql.query(
-      "UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?",
-      [description, audit, username, newState, taskId]
-    )
+    sql.query("UPDATE task SET Task_description = ?, Task_notes = CONCAT_WS(CHAR(13), ?, Task_notes), Task_owner = ?, Task_state = ? WHERE task_id = ?", [description, audit, username, newState, taskId])
 
     sendEmail(appName, username)
     res.status(200).send("Successfully edited and promoted task to 'Done'.")
@@ -254,18 +230,15 @@ async function sendEmail(appName, username) {
     port: process.env.SMTP_PORT,
     auth: {
       user: process.env.SMTP_USERNAME,
-      pass: process.env.SMTP_PASSWORD,
-    },
+      pass: process.env.SMTP_PASSWORD
+    }
   })
   const group = await getDonePermit(appName)
 
   if (group) {
     var userMail = ""
     try {
-      userMail = await sql.query(
-        "SELECT email FROM accounts WHERE username = ? ",
-        [username]
-      )
+      userMail = await sql.query("SELECT email FROM accounts WHERE username = ? ", [username])
       console.log(userMail[0][0].email)
     } catch (err) {
       console.log(err)
@@ -279,17 +252,17 @@ async function sendEmail(appName, username) {
 
     const permitUsers = results[0]
     const emails = []
-    permitUsers.forEach((user) => {
+    permitUsers.forEach(user => {
       if (user.email && user.email.length > 0) {
         emails.push(user.email)
       }
     })
-    emails.forEach((email) => {
+    emails.forEach(email => {
       const content = {
         from: userMail[0][0].email,
         to: email,
         subject: "Approval of done task",
-        text: "Submitting task for approval.",
+        text: "Submitting task for approval."
       }
 
       transporter.sendMail(content, function (err, info) {

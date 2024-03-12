@@ -30,7 +30,7 @@ function TodoTask(props) {
         description,
         notes,
         taskId,
-        state,
+        state
       })
       if (response.data === "Jwt") {
         appDispatch({ type: "toast-failed", data: "Token invalid." })
@@ -56,7 +56,7 @@ function TodoTask(props) {
         notes,
         taskId,
         state,
-        newState,
+        newState
       })
       if (response.data === "Jwt") {
         appDispatch({ type: "toast-failed", data: "Token invalid." })
@@ -68,7 +68,7 @@ function TodoTask(props) {
       } else {
         appDispatch({
           type: "toast-success",
-          data: "Task updated and promoted.",
+          data: "Task updated and promoted."
         })
         navigate(`/kanban/${appName}`)
       }
@@ -88,7 +88,7 @@ function TodoTask(props) {
       if (groupname) {
         try {
           const res = await Axios.post("/verifyAccessGroup", {
-            groupname,
+            groupname
           })
           setPermitted(res.data.userIsInGroup)
         } catch (e) {
@@ -111,47 +111,20 @@ function TodoTask(props) {
           Task #{taskId}: {props.taskName}
         </h1>
         <div className="flex-col space-y">
-          Created by: {props.creator} <br></br> Created on:{" "}
-          {dayjs(props.createDate).format("DD-MM-YYYY")}
+          Created by: {props.creator} <br></br> Created on: {dayjs(props.createDate).format("DD-MM-YYYY")}
           <br></br>Owner: {props.owner}
           <br></br> State: {props.state}
           <div className="mt-4 form-group">
             <label className="text-muted mb-1">
               <h1>Plan Name</h1>
             </label>{" "}
-            <Autocomplete
-              size="small"
-              readOnly
-              value={props.plan}
-              options={props.plans}
-              renderInput={(params) => (
-                <TextField {...params} placeholder="No plans" />
-              )}
-            />
+            <Autocomplete size="small" readOnly value={props.plan} options={props.plans} renderInput={params => <TextField {...params} placeholder="No plans" />} />
           </div>
           <div className="form-group mt-4">
             <label className="text-muted mb-1">
               <h1>Task Description</h1>
             </label>
-            {permitted ? (
-              <TextField
-                fullWidth
-                multiline
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={props.description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></TextField>
-            ) : (
-              <TextField
-                fullWidth
-                multiline
-                InputProps={{ readOnly: true }}
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={props.description}
-              ></TextField>
-            )}
+            {permitted ? <TextField fullWidth multiline style={{ width: 400 }} rows={7} defaultValue={props.description} onChange={e => setDescription(e.target.value)}></TextField> : <TextField fullWidth multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={7} defaultValue={props.description}></TextField>}
           </div>
         </div>
       </div>
@@ -167,10 +140,10 @@ function TodoTask(props) {
                 InputProps={{
                   readOnly: true,
                   rows: isFocused ? 12 : 6,
-                  transition: "width 0.5s",
+                  transition: "width 0.5s"
                 }}
                 style={{
-                  width: isFocused ? "250%" : 400,
+                  width: isFocused ? "250%" : 400
                 }}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -183,9 +156,9 @@ function TodoTask(props) {
                 </label>
                 <TextField
                   style={{
-                    width: 400,
+                    width: 400
                   }}
-                  onChange={(e) => setNotes(e.target.value)}
+                  onChange={e => setNotes(e.target.value)}
                   placeholder="Enter notes"
                 />
               </div>
@@ -196,10 +169,10 @@ function TodoTask(props) {
               InputProps={{
                 readOnly: true,
                 rows: isFocused ? 12 : 6,
-                transition: "width 0.5s",
+                transition: "width 0.5s"
               }}
               style={{
-                width: isFocused ? "250%" : 400,
+                width: isFocused ? "250%" : 400
               }}
               onFocus={handleFocus}
               onBlur={handleBlur}

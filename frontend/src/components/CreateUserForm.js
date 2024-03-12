@@ -11,10 +11,12 @@ const CreateUserForm = props => {
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
-  const [groups, setGroups] = useState([])
+  const [groupsArray, setGroups] = useState([])
 
   async function handleCreateUser(e) {
     e.preventDefault()
+    const groups = groupsArray.length > 0 ? groupsArray?.join() : null
+    //console.log(groups)
     try {
       if (username && password) {
         await axios.post("/createUser", { username, password, email, groups })
@@ -44,7 +46,7 @@ const CreateUserForm = props => {
 
   function handleGroupChange(event, values) {
     setGroups(values)
-    console.log(groups)
+    // console.log(groupsArray)
   }
 
   return (
