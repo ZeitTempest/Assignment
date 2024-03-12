@@ -1,6 +1,9 @@
+settings: terminal.integrated.shell > enable
+terminal > integrated > tabs > description > ${task}${separator}${local}${separator}${cwdFolder}
+
 A3:
 
-Must justify why I'm using 
+Must justify why I'm using param / payload for each item
 
 Name
 Method - read up on why we use the http method
