@@ -28,7 +28,11 @@ function EditRow(props) {
   async function handleSave(e) {
     e.preventDefault()
     //console.log(groupsArray)
-    const groups = groupsArray.length > 0 ? groupsArray?.join() : null
+    var groups = null
+    if (groupsArray) {
+      groups = groupsArray.length > 0 ? groupsArray?.join() : null
+    }
+
     //console.log(groups)
     try {
       var response

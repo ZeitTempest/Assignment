@@ -69,13 +69,18 @@ export const adminUpdateUser = async (req, res) => {
   }
 
   // admin cannot be deleted, check if admin
-  if (req.byUser === "admin" && (isActive === false || !groups.split(",").includes("admin"))) {
-    return res.status(500).json("Admin cannot be disabled or removed from the admin group.")
+  if (username === "admin") {
+    if (!groups) {
+      return res.status(500).json("Admin cannot be disabled or removed from the admin group.")
+    }
+    if (isActive === false || !groups.split(",").includes("admin")) {
+      return res.status(500).json("Admin cannot be disabled or removed from the admin group.")
+    }
   }
 
   var foundUser = null
 
-  const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${req.byUser}';`
+  const getUserByIdQry = `SELECT * FROM \`accounts\` WHERE \`username\`='${username}';`
   try {
     const [foundUsers] = await sql.query(getUserByIdQry)
 
