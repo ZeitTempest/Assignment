@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Axios from "axios"
 import OpenTask from "./OpenTask"
@@ -6,9 +6,12 @@ import TodoTask from "./TodoTask"
 import DoingTask from "./DoingTask"
 import DoneTask from "./DoneTask"
 import ClosedTask from "./ClosedTask"
+import DispatchContext from "../../DispatchContext"
 
 function Task() {
   let { taskId } = useParams()
+  const appDispatch = useContext(DispatchContext)
+  const navigate = useNavigate()
   const [taskName, setTaskName] = useState()
   const [description, setDescription] = useState("")
   const [notes, setNotes] = useState()
@@ -37,14 +40,22 @@ function Task() {
       try {
         const response = await Axios.post("/plans/list", { appName })
         const list = []
-        response.data.forEach((plan) => {
-          list.push(plan.Plan_MVP_Name)
+        response.data.forEach(plan => {
+          list.push(plan.Plan_MVP_name)
         })
         setPlans(list)
       } catch (err) {
+        if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+          navigate("/")
+          appDispatch({ type: "logout" })
+        }
         console.log(err)
       }
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -58,81 +69,11 @@ function Task() {
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <div className="container md-5">
-            {state === "open" ? (
-              <OpenTask
-                description={description}
-                notes={notes}
-                plan={plan}
-                plans={plans}
-                taskName={taskName}
-                creator={creator}
-                createDate={createDate}
-                owner={owner}
-                state={state}
-              />
-            ) : (
-              ""
-            )}
-            {state === "todo" ? (
-              <TodoTask
-                description={description}
-                notes={notes}
-                plan={plan}
-                plans={plans}
-                taskName={taskName}
-                creator={creator}
-                createDate={createDate}
-                owner={owner}
-                state={state}
-              />
-            ) : (
-              ""
-            )}
-            {state === "doing" ? (
-              <DoingTask
-                description={description}
-                notes={notes}
-                plan={plan}
-                plans={plans}
-                taskName={taskName}
-                creator={creator}
-                createDate={createDate}
-                owner={owner}
-                state={state}
-              />
-            ) : (
-              ""
-            )}
-            {state === "done" ? (
-              <DoneTask
-                description={description}
-                notes={notes}
-                plan={plan}
-                plans={plans}
-                taskName={taskName}
-                creator={creator}
-                createDate={createDate}
-                owner={owner}
-                state={state}
-              />
-            ) : (
-              ""
-            )}
-            {state === "closed" ? (
-              <ClosedTask
-                description={description}
-                notes={notes}
-                plan={plan}
-                plans={plans}
-                taskName={taskName}
-                creator={creator}
-                createDate={createDate}
-                owner={owner}
-                state={state}
-              />
-            ) : (
-              ""
-            )}
+            {state === "open" ? <OpenTask description={description} notes={notes} plan={plan} plans={plans} taskName={taskName} creator={creator} createDate={createDate} owner={owner} state={state} /> : ""}
+            {state === "todo" ? <TodoTask description={description} notes={notes} plan={plan} plans={plans} taskName={taskName} creator={creator} createDate={createDate} owner={owner} state={state} /> : ""}
+            {state === "doing" ? <DoingTask description={description} notes={notes} plan={plan} plans={plans} taskName={taskName} creator={creator} createDate={createDate} owner={owner} state={state} /> : ""}
+            {state === "done" ? <DoneTask description={description} notes={notes} plan={plan} plans={plans} taskName={taskName} creator={creator} createDate={createDate} owner={owner} state={state} /> : ""}
+            {state === "closed" ? <ClosedTask description={description} notes={notes} plan={plan} plans={plans} taskName={taskName} creator={creator} createDate={createDate} owner={owner} state={state} /> : ""}
           </div>
         </div>
       </div>

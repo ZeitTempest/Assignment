@@ -1,6 +1,6 @@
 import React, { useState, useEffect /*, useContext*/ } from "react"
 import Axios from "axios"
-
+import { useNavigate } from "react-router-dom"
 import { useContext } from "react"
 import DispatchContext from "../DispatchContext"
 
@@ -13,6 +13,7 @@ const CreateGroupForm = () => {
     console.log("create group failed:", errorInfo)
   }
 
+  const navigate = useNavigate()
   const [groupname, setnewGroup] = useState("")
 
   async function handleSubmit(e) {
@@ -21,6 +22,7 @@ const CreateGroupForm = () => {
     try {
       if (groupname) {
         await Axios.post("/createGroup", { groupname })
+
         setnewGroup("")
         window.location.reload()
         appDispatch({
@@ -31,7 +33,10 @@ const CreateGroupForm = () => {
         appDispatch({ type: "toast-failed", data: "Field cannot be blank." })
       }
     } catch (err) {
-      appDispatch({ type: "toast-failed", data: err.response.data })
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      } else appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }
   return (

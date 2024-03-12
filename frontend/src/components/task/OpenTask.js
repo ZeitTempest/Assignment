@@ -38,18 +38,14 @@ function OpenTask(props) {
         taskId,
         state
       })
-      if (response.data === "Jwt") {
-        appDispatch({ type: "toast-failed", data: "Token invalid." })
-        appDispatch({ type: "logout" })
-        navigate("/")
-      } else if (response.data === "Inactive") {
-        navigate("/")
-        appDispatch({ type: "toast-failed", data: "Inactive." })
-      } else {
-        appDispatch({ type: "toast-success", data: "Task updated." })
-        navigate(`/kanban/${appName}`)
-      }
+
+      appDispatch({ type: "toast-success", data: "Task updated." })
+      navigate(`/kanban/${appName}`)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -65,21 +61,17 @@ function OpenTask(props) {
         state,
         newState
       })
-      if (response.data === "Jwt") {
-        appDispatch({ type: "toast-failed", data: "Token invalid." })
-        appDispatch({ type: "logout" })
-        navigate("/")
-      } else if (response.data === "Inactive") {
-        navigate("/")
-        appDispatch({ type: "toast-failed", data: "Inactive." })
-      } else {
-        appDispatch({
-          type: "toast-success",
-          data: "Task updated and promoted."
-        })
-        navigate(`/kanban/${appName}`)
-      }
+
+      appDispatch({
+        type: "toast-success",
+        data: "Task updated and promoted."
+      })
+      navigate(`/kanban/${appName}`)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -98,11 +90,19 @@ function OpenTask(props) {
         try {
           const res = await Axios.post("/verifyAccessGroup", { groupname })
           setPermitted(res.data.userIsInGroup)
-        } catch (e) {
-          console.log(e)
+        } catch (err) {
+          if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+            navigate("/")
+            appDispatch({ type: "logout" })
+          }
+          console.log(err)
         }
       }
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }

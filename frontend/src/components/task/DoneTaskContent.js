@@ -45,6 +45,10 @@ function DoneTaskContent() {
         navigate(`/kanban/${app}`)
       }
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -59,21 +63,17 @@ function DoneTaskContent() {
         state,
         newState
       })
-      if (response.data === "Jwt") {
-        appDispatch({ type: "toast-failed", data: "Token invalid." })
-        appDispatch({ type: "logout" })
-        navigate("/")
-      } else if (response.data === "Inactive") {
-        navigate("/")
-        appDispatch({ type: "toast-failed", data: "Inactive." })
-      } else {
-        appDispatch({
-          type: "toast-success",
-          data: "Task updated and promoted."
-        })
-        navigate(`/kanban/${app}`)
-      }
+
+      appDispatch({
+        type: "toast-success",
+        data: "Task updated and promoted."
+      })
+      navigate(`/kanban/${app}`)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -89,21 +89,17 @@ function DoneTaskContent() {
         state,
         newState
       })
-      if (response.data === "Jwt") {
-        appDispatch({ type: "toast-failed", data: "Token invalid." })
-        appDispatch({ type: "logout" })
-        navigate("/")
-      } else if (response.data === "Inactive") {
-        navigate("/")
-        appDispatch({ type: "toast-failed", data: "Inactive." })
-      } else {
-        appDispatch({
-          type: "toast-success",
-          data: "Task updated and demoted."
-        })
-        navigate(`/kanban/${app}`)
-      }
+
+      appDispatch({
+        type: "toast-success",
+        data: "Task updated and demoted."
+      })
+      navigate(`/kanban/${app}`)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -128,13 +124,21 @@ function DoneTaskContent() {
         const response = await Axios.post("/plans/list", { appName })
         const list = []
         response.data.forEach(plan => {
-          list.push(plan.Plan_MVP_Name)
+          list.push(plan.Plan_MVP_name)
         })
         setPlans(list)
       } catch (err) {
+        if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+          navigate("/")
+          appDispatch({ type: "logout" })
+        }
         console.log(err)
       }
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -168,7 +172,7 @@ function DoneTaskContent() {
               <label className="text-muted mb-1">
                 <h1>Task Description</h1>
               </label>
-              <TextField fullWidth multiline style={{ width: 400 }} rows={7} defaultValue={description} onChange={e => setDescription(e.target.value)} />
+              <TextField fullWidth InputProps={{ readOnly: true }} multiline style={{ width: 400 }} rows={7} defaultValue={description} />
             </div>
           </div>
         </div>

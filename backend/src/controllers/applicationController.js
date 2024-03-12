@@ -40,6 +40,19 @@ export const createApp = async (req, res) => {
       }
     } else return res.status(500).send("Missing app name.")
 
+    const checkAppQuery = `SELECT * FROM application WHERE App_Acronym = ? `
+
+    console.log("test")
+    try {
+      const AppExists = await sql.query(checkAppQuery, appName)
+
+      if (AppExists[0].length !== 0) {
+        return res.status(500).send("App name already exists.")
+      }
+    } catch (err) {
+      console.log(err)
+    }
+
     //dates validity check
     if (!startDate) res.status(500).send("Start date missing.")
     if (!endDate) res.status(500).send("End date missing.")
@@ -59,14 +72,6 @@ export const createApp = async (req, res) => {
       return res.status(500).send("Start date cannot be after end date.")
     }
 
-    const checkAppQuery = `SELECT * FROM application WHERE App_Acronym = ? `
-    const AppExists = await sql.query(checkAppQuery, appName)
-
-    //console.log(AppExists[0])
-
-    if (AppExists[0].length !== 0) {
-      return res.status(500).send("App name already exists.")
-    }
     //prettier-ignore
     sql.query("INSERT INTO application (App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Create, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", 
     [

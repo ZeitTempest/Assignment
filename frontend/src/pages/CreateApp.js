@@ -31,6 +31,10 @@ function CreateApp() {
       const response = await Axios.post("/verifyAccessGroup", { groupname })
       setIsPL(response.data.userIsInGroup)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -49,6 +53,10 @@ function CreateApp() {
         setGroupList(options)
       }
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -99,7 +107,7 @@ function CreateApp() {
     }
     if (!endDate) {
       console.log("3")
-      appDispatch({ type: "toast-failed", data: "End date cannot be empty.." })
+      appDispatch({ type: "toast-failed", data: "End date cannot be empty." })
       return
     }
 
@@ -112,7 +120,10 @@ function CreateApp() {
       navigate("/home")
     } catch (err) {
       console.log(err)
-      appDispatch({ type: "toast-failed", data: err.response.data })
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      } else appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }
 

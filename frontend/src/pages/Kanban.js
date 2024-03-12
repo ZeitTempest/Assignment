@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import StateContext from "../StateContext"
 import Axios from "axios"
 import Dialog from "@mui/material/Dialog"
@@ -13,9 +13,13 @@ import AddTaskDialog from "../components/dialog/AddTaskDialog"
 
 import Page from "../components/Page"
 import TaskBoard from "./TaskBoard"
+import DispatchContext from "../DispatchContext"
 
 function Kanban() {
   let { appName } = useParams()
+
+  const navigate = useNavigate()
+  const appDispatch = useContext(DispatchContext)
   const appState = useContext(StateContext)
   const [permitted, setPermitted] = useState(false)
   const [openPlan, setOpenPlan] = useState(false)
@@ -51,6 +55,10 @@ function Kanban() {
           console.log(res)
           setPermitted(res.data.userIsInGroup)
         } catch (err) {
+          if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+            navigate("/")
+            appDispatch({ type: "logout" })
+          }
           console.log(err)
         }
       }
@@ -66,10 +74,14 @@ function Kanban() {
       const list = []
 
       response.data.forEach(plan => {
-        response.status === 200 ? list.push(plan.Plan_MVP_Name) : list.push()
+        response.status === 200 ? list.push(plan.Plan_MVP_name) : list.push()
       })
       setPlans(list)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }

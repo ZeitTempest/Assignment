@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `application` (
 ) AUTO_INCREMENT=1;
 
 CREATE TABLE IF NOT EXISTS `plan` (
-`Plan_MVP_Name` varchar(255) NOT NULL,
+`Plan_MVP_name` varchar(255) NOT NULL,
 `Plan_startDate` date,
 `Plan_endDate` date,
 `Plan_app_Acronym` varchar(20) NOT NULL,

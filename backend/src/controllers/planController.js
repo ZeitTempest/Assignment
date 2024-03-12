@@ -23,7 +23,7 @@ export const getPlanNames = async (req, res, next) => {
   try {
     const appName = req.body.appName
 
-    const results = await sql.query("SELECT Plan_MVP_Name FROM plan WHERE Plan_app_Acronym = ? ", appName)
+    const results = await sql.query("SELECT Plan_MVP_name FROM plan WHERE Plan_app_Acronym = ? ", appName)
     if (results.length > 0 && results[0].length > 0) {
       res.status(200).json(results[0])
     } else {

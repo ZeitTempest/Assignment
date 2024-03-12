@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken"
 import { Checkgroup } from "../controllers/authController.js"
+import sql from "../config/query.js"
+
 const secret = process.env.JWTSECRET
 
 // export const checkJWT = async (req, res, next) => {
@@ -42,6 +44,30 @@ export const checkJWT = (req, res, next) => {
     })
   } else return res.status(401).send("jwt_error")
 }
+
+export const isAuthenticatedUser = async (req, res, next) => {
+  try {
+    const username = req.byUser
+
+    const results = await sql.query("SELECT * FROM accounts WHERE username = ?", username)
+
+    //console.log(results)
+    if (results[0][0].isActive === 1) {
+      next()
+    }
+    // if () {
+    //   next()
+    // }
+    //valid token and active user
+    else {
+      res.status(500).send("Inactive")
+      // res.send(false);
+    }
+  } catch (err) {
+    res.status(500).send("jwt_error")
+  }
+}
+
 export const checkAdmin = async (req, res, next) => {
   try {
     const username = req.byUser

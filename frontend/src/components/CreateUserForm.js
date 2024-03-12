@@ -1,13 +1,13 @@
 import axios from "axios"
 import { Autocomplete, Chip, TextField } from "@mui/material"
 import React, { useState } from "react"
-
+import { useNavigate } from "react-router-dom"
 import { useContext } from "react"
 import DispatchContext from "../DispatchContext"
 
 const CreateUserForm = props => {
   const appDispatch = useContext(DispatchContext)
-
+  const navigate = useNavigate()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState("")
@@ -40,7 +40,10 @@ const CreateUserForm = props => {
         //error Username and password mandatory!
       }
     } catch (err) {
-      appDispatch({ type: "toast-failed", data: err.response.data })
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      } else appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }
 

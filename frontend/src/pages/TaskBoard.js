@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react"
 
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import Table from "@mui/material/Table"
 import TableBody from "@mui/material/TableBody"
 import TableCell from "@mui/material/TableCell"
@@ -16,7 +16,6 @@ import DispatchContext from "../DispatchContext"
 import { logoutUser } from "../utils/auth"
 import Axios from "axios"
 import Cookies from "js-cookie"
-import { useNavigate } from "react-router-dom"
 //import DispatchContext from "../DispatchContext"
 
 function TaskBoard(props) {
@@ -26,6 +25,7 @@ function TaskBoard(props) {
   const [doneTasks, setDoneTasks] = useState([])
   const [closedTasks, setClosedTasks] = useState([])
   const appName = props.appName
+  const navigate = useNavigate()
 
   const appDispatch = useContext(DispatchContext)
 
@@ -52,6 +52,10 @@ function TaskBoard(props) {
           break
       }
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       //console.log(err)
     }
   }
@@ -77,13 +81,10 @@ function TaskBoard(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {openTasks.map((open) => (
+              {openTasks.map(open => (
                 <TableRow>
                   <TableCell align="center">
-                    <Card
-                      variant="outlined"
-                      style={{ backgroundColor: "#F85297" }}
-                    >
+                    <Card variant="outlined" style={{ backgroundColor: "#F85297" }}>
                       <CardContent>
                         <Tooltip title="View Task" arrow>
                           {" "}
@@ -113,13 +114,10 @@ function TaskBoard(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {todoTasks.map((todo) => (
+              {todoTasks.map(todo => (
                 <TableRow>
                   <TableCell align="center">
-                    <Card
-                      variant="outlined"
-                      style={{ backgroundColor: "#9F98F3" }}
-                    >
+                    <Card variant="outlined" style={{ backgroundColor: "#9F98F3" }}>
                       <CardContent>
                         <Tooltip title="View Task" arrow>
                           <Link to={`/${todo.Task_id}`}>
@@ -148,13 +146,10 @@ function TaskBoard(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {doingTasks.map((doing) => (
+              {doingTasks.map(doing => (
                 <TableRow>
                   <TableCell align="center">
-                    <Card
-                      variant="outlined"
-                      style={{ backgroundColor: "#ACBBF3" }}
-                    >
+                    <Card variant="outlined" style={{ backgroundColor: "#ACBBF3" }}>
                       <CardContent>
                         <Tooltip title="View Task" arrow>
                           <Link to={`/${doing.Task_id}`}>
@@ -183,13 +178,10 @@ function TaskBoard(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {doneTasks.map((done) => (
+              {doneTasks.map(done => (
                 <TableRow>
                   <TableCell align="center">
-                    <Card
-                      variant="outlined"
-                      style={{ backgroundColor: "#ADE3EC" }}
-                    >
+                    <Card variant="outlined" style={{ backgroundColor: "#ADE3EC" }}>
                       <CardContent>
                         <Tooltip title="View Task" arrow>
                           <Link to={`/${done.Task_id}`}>
@@ -218,13 +210,10 @@ function TaskBoard(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {closedTasks.map((closed) => (
+              {closedTasks.map(closed => (
                 <TableRow>
                   <TableCell align="center">
-                    <Card
-                      variant="outlined"
-                      style={{ backgroundColor: "#E6B6F1" }}
-                    >
+                    <Card variant="outlined" style={{ backgroundColor: "#E6B6F1" }}>
                       <CardContent>
                         <Tooltip title="View Task" arrow>
                           <Link to={`/${closed.Task_id}`}>

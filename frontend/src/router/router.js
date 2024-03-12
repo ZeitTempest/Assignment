@@ -1,13 +1,6 @@
 import "../App.css"
 import { React, useState, useEffect } from "react"
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Outlet,
-  Navigate,
-} from "react-router-dom"
-import { isLoggedIn } from "../utils/auth"
+import { BrowserRouter, Routes, Route, Outlet, Navigate } from "react-router-dom"
 import Header from "../components/Header"
 import Cookie from "js-cookie"
 
@@ -28,8 +21,7 @@ export default function BrowserRoutes() {
       <Header />
       <Routes>
         <Route element={<PrivateRoute />}>
-          <Route path="" element={<TMSPage />} />{" "}
-          {/* root redirect to login or tms */}
+          <Route path="" element={<TMSPage />} /> {/* root redirect to login or tms */}
           <Route path="/home" element={<TMSPage />} />
         </Route>
 

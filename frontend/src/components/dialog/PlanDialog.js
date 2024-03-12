@@ -28,25 +28,22 @@ function PlanDialog() {
       }
       if (startDate && endDate) {
         try {
-          const response = await Axios.post("/plans/create", {
+          await Axios.post("/plans/create", {
             planName,
             startDate,
             endDate,
             appName
           })
 
-          if (response.data === "jwt_error") {
-            appDispatch({ type: "toast-failed", data: "JWT error." })
-            appDispatch({ type: "logout" })
-            navigate("/")
-          } else if (response.status === 200) {
-            appDispatch({
-              type: "toast-success",
-              data: "Successfully created plan."
-            })
-          }
+          appDispatch({
+            type: "toast-success",
+            data: "Successfully created plan."
+          })
         } catch (err) {
-          appDispatch({ type: "toast-failed", data: err.response.data })
+          if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+            navigate("/")
+            appDispatch({ type: "logout" })
+          } else appDispatch({ type: "toast-failed", data: err.response.data })
         }
       }
     } else appDispatch({ type: "toast-failed", data: "Plan Name required." })
@@ -58,6 +55,10 @@ function PlanDialog() {
       const response = await Axios.post("/plans", { appName })
       setPlans(response.data)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -68,6 +69,10 @@ function PlanDialog() {
       const response = await Axios.post("/verifyAccessGroup", { groupname })
       setIsPM(response.data.userIsInGroup)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -145,7 +150,7 @@ function PlanDialog() {
               <tbody>
               {plans.map((plan) => {
                   return <ViewPlanRow 
-                  name={plan.Plan_MVP_Name}
+                  name={plan.Plan_MVP_name}
                   startDate={plan.Plan_startDate ? 
                     dayjs(plan.Plan_startDate).format("YYYY-MM-DD") : null} 
                   endDate={plan.Plan_endDate ?

@@ -56,7 +56,7 @@ INSERT INTO `application` (`App_Acronym`, `App_Description`, `App_Rnumber`, `App
 DROP TABLE IF EXISTS `plan`; -- remove this line after development
 
 CREATE TABLE IF NOT EXISTS `plan` (
-`Plan_MVP_Name` varchar(20) NOT NULL,
+`Plan_MVP_name` varchar(20) NOT NULL,
 `Plan_startDate` date,
 `Plan_endDate` date,
 `Plan_app_Acronym` varchar(20) NOT NULL,

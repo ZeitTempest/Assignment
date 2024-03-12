@@ -201,7 +201,7 @@ export const adminCreateUser = async (req, res) => {
     res.status(500).json(err)
   }
   // const token = jwt.sign({ username }, secret, { expiresIn: 60 * 60 })
-  // res.cookie("jwt", token, { maxAge: 3600000 })
+  // res.cookie("jwt_error", token, { maxAge: 3600000 })
 }
 
 export const updateUser = async (req, res) => {

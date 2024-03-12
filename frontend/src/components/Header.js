@@ -1,12 +1,15 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import HeaderLoggedIn from "./HeaderLoggedIn"
 import HeaderLoggedInAdmin from "./HeaderLoggedInAdmin"
 import StateContext from "../StateContext"
+import DispatchContext from "../DispatchContext"
 import axios from "axios"
+
 function Header() {
   const appState = useContext(StateContext)
-
+  const navigate = useNavigate()
+  const appDispatch = useContext(DispatchContext)
   const [isAdmin, setisAdmin] = useState(false)
   async function checkAdmin() {
     try {
@@ -15,6 +18,10 @@ function Header() {
       const res = await axios.post("/verifyAccessGroup", { groupname })
       setisAdmin(res.data.userIsInGroup) //if we get any data back, the check was successful
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }

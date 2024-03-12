@@ -38,7 +38,10 @@ function LoginPage() {
         Cookies.set("jwt", response.data.jwt)
         navigate("/")
       } catch (err) {
-        appDispatch({ type: "toast-failed", data: "Unsuccessful login." })
+        if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+          navigate("/")
+          appDispatch({ type: "logout" })
+        } else appDispatch({ type: "toast-failed", data: "Unsuccessful login." })
         return
       }
     //popup/etc for unexpected error

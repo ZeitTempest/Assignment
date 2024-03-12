@@ -1,4 +1,5 @@
 import { useState, useContext } from "react"
+import { useNavigate } from "react-router-dom"
 import { Switch } from "@mui/material"
 import Axios from "axios"
 import DispatchContext from "../DispatchContext"
@@ -10,7 +11,7 @@ function EditRow(props) {
   }
 
   const appDispatch = useContext(DispatchContext)
-
+  const navigate = useNavigate()
   const [password, setPassword] = useState("")
   const [email, setEmail] = useState(props.email)
   const [isActive, setIsActive] = useState(props.isActive === 1)
@@ -18,7 +19,7 @@ function EditRow(props) {
   const username = props.username
 
   function handleGroupChange(event, values) {
-    console.log(values)
+    //console.log(values)
     setGroups(values)
   }
 
@@ -53,7 +54,6 @@ function EditRow(props) {
           isActive
         })
       }
-
       if (response.status === 200) {
         window.location.reload()
         appDispatch({
@@ -65,6 +65,10 @@ function EditRow(props) {
       }
     } catch (err) {
       //console.log(err)
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       appDispatch({ type: "toast-failed", data: err.response.data })
 
       //IF JWT NO AUTH, LOGOUT

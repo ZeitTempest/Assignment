@@ -22,9 +22,9 @@ function MyDetails() {
         setcurrUsername(res.data.username)
         setcurrEmail(res.data.email)
       } catch (err) {
-        if (err.response && err.response.status === 401) {
-          console.error(err)
-          navigate("/logout")
+        if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+          navigate("/")
+          appDispatch({ type: "logout" })
         }
       }
     }
@@ -47,7 +47,7 @@ function MyDetails() {
         data: "Both fields cannot be empty."
       })
     try {
-      const response = await Axios.post("/updateUser", { email, password })
+      await Axios.post("/updateUser", { email, password })
 
       if (email)
         appDispatch({
@@ -65,10 +65,15 @@ function MyDetails() {
       //e.target.reset()
       window.location.reload()
     } catch (err) {
-      appDispatch({ type: "toast-failed", data: err.response.data })
-      if (err.code >= 400) {
-        appDispatch({ type: "logout" })
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
         navigate("/logout")
+        appDispatch({ type: "logout" })
+      } else {
+        appDispatch({ type: "toast-failed", data: err.response.data })
+        if (err.code >= 400) {
+          appDispatch({ type: "logout" })
+          navigate("/logout")
+        }
       }
     }
   }

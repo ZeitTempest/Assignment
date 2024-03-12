@@ -1,5 +1,5 @@
 import "./App.css"
-import React, { useEffect } from "react"
+import React, { useEffect, navigate } from "react"
 import ReactDOM from "react-dom"
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom"
 import Axios from "axios"
@@ -41,17 +41,17 @@ function App() {
         break
       case "toast-failed":
         switch (action.data) {
-          case "jwt":
+          case "jwt_error":
             toast.error("Invalid JWT.")
-            //logout
+            break
+          case "logout":
+            draft.loggedIn = false
             break
           case "Unauthorized":
             toast.error("You are not authorized to do this action.")
-            //logout
             break
           case "Inactive":
             toast.error("Your account is disabled.")
-            //logout
             break
           default:
             toast.error(action.data)

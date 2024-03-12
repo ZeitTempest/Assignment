@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import Axios from "axios"
 import DispatchContext from "../DispatchContext"
 
@@ -7,6 +7,8 @@ function EditPlanRow(props) {
   const [startDate, setStartDate] = useState(props.startDate)
   const [endDate, setEndDate] = useState(props.endDate)
   const appDispatch = useContext(DispatchContext)
+
+  const navigate = useNavigate()
   let { appName } = useParams()
   const planName = props.name
 
@@ -17,17 +19,21 @@ function EditPlanRow(props) {
         appName,
         startDate,
         endDate,
-        planName,
+        planName
       })
       appDispatch({
         type: "toast-success",
-        data: "Successfully updated plan.",
+        data: "Successfully updated plan."
       })
     } catch (err) {
-      appDispatch({
-        type: "toast-failed",
-        data: err.response.data,
-      })
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      } else
+        appDispatch({
+          type: "toast-failed",
+          data: err.response.data
+        })
       console.log(err)
     }
     props.setEdit(false)
@@ -46,7 +52,7 @@ function EditPlanRow(props) {
           <input
             type="date"
             defaultValue={props.startDate}
-            onChange={(newValue) => {
+            onChange={newValue => {
               setStartDate(newValue.target.value)
             }}
           />
@@ -55,22 +61,16 @@ function EditPlanRow(props) {
           <input
             type="date"
             defaultValue={props.endDate}
-            onChange={(newValue) => {
+            onChange={newValue => {
               setEndDate(newValue.target.value)
             }}
           />
         </td>
         <td class="px-6 py-4 bg-gray-300 text-gray-800">
-          <button
-            onClick={handleSave}
-            className="w-1/3 mx-2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:outline-none focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center"
-          >
+          <button onClick={handleSave} className="w-1/3 mx-2 self-auto text-white bg-teal-500 hover:bg-teal-700 focus:outline-none focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center">
             Save
           </button>
-          <button
-            onClick={handleCancel}
-            className="w-1/3 mx-2 self-auto text-white  bg-pink-500 hover:bg-pink-700 focus:outline-none focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center"
-          >
+          <button onClick={handleCancel} className="w-1/3 mx-2 self-auto text-white  bg-pink-500 hover:bg-pink-700 focus:outline-none focus:ring-blue-800 rounded-lg font-bold text-sm px-5 py-2.5 text-center">
             Cancel
           </button>
         </td>

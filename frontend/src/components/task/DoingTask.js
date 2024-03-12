@@ -28,24 +28,20 @@ function DoingTask(props) {
 
   async function handleSave() {
     try {
-      const response = await Axios.post("/task/edit", {
+      await Axios.post("/task/edit", {
         description,
         notes,
         taskId,
-        state,
+        state
       })
-      if (response.data === "Jwt") {
-        appDispatch({ type: "toast-failed", data: "Token invalid." })
-        appDispatch({ type: "logout" })
-        navigate("/")
-      } else if (response.data === "Inactive") {
-        navigate("/")
-        appDispatch({ type: "toast-failed", data: "Inactive." })
-      } else {
-        appDispatch({ type: "toast-success", data: "Task updated." })
-        navigate(`/kanban/${appName}`)
-      }
+
+      appDispatch({ type: "toast-success", data: "Task updated." })
+      navigate(`/kanban/${appName}`)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -53,30 +49,25 @@ function DoingTask(props) {
   async function handleSavePromote() {
     try {
       const newState = "done"
-      const response = await Axios.post("/task/promoteDoingTask", {
+      await Axios.post("/task/promoteDoingTask", {
         description,
         notes,
         taskId,
         state,
         plan,
         newState,
-        appName,
+        appName
       })
-      if (response.data === "Jwt") {
-        appDispatch({ type: "toast-failed", data: "Token invalid." })
-        appDispatch({ type: "logout" })
-        navigate("/")
-      } else if (response.data === "Inactive") {
-        navigate("/")
-        appDispatch({ type: "toast-failed", data: "Inactive." })
-      } else {
-        appDispatch({
-          type: "toast-success",
-          data: "Task updated and promoted.",
-        })
-        navigate(`/kanban/${appName}`)
-      }
+      appDispatch({
+        type: "toast-success",
+        data: "Task updated and promoted."
+      })
+      navigate(`/kanban/${appName}`)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -89,23 +80,19 @@ function DoingTask(props) {
         notes,
         taskId,
         state,
-        newState,
+        newState
       })
-      if (response.data === "Jwt") {
-        appDispatch({ type: "toast-failed", data: "Token invalid." })
-        appDispatch({ type: "logout" })
-        navigate("/")
-      } else if (response.data === "Inactive") {
-        navigate("/")
-        appDispatch({ type: "toast-failed", data: "Inactive." })
-      } else {
-        appDispatch({
-          type: "toast-success",
-          data: "Task updated and demoted.",
-        })
-        navigate(`/kanban/${appName}`)
-      }
+
+      appDispatch({
+        type: "toast-success",
+        data: "Task updated and demoted."
+      })
+      navigate(`/kanban/${appName}`)
     } catch (err) {
+      if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        navigate("/logout")
+        appDispatch({ type: "logout" })
+      }
       console.log(err)
     }
   }
@@ -121,11 +108,15 @@ function DoingTask(props) {
       if (groupname) {
         try {
           const res = await Axios.post("/verifyAccessGroup", {
-            groupname,
+            groupname
           })
           setPermitted(res.data.userIsInGroup)
-        } catch (e) {
-          console.log(e)
+        } catch (err) {
+          if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+            navigate("/")
+            appDispatch({ type: "logout" })
+          }
+          console.log(err)
         }
       }
     } catch (err) {
@@ -144,47 +135,20 @@ function DoingTask(props) {
           Task #{taskId}: {props.taskName}
         </h1>
         <div className="flex-col space-y">
-          Created by: {props.creator} <br></br> Created on:{" "}
-          {dayjs(props.createDate).format("DD-MM-YYYY")}
+          Created by: {props.creator} <br></br> Created on: {dayjs(props.createDate).format("DD-MM-YYYY")}
           <br></br>Owner: {props.owner}
           <br></br> State: {props.state}
           <div className="mt-4 form-group">
             <label className="text-muted mb-1">
               <h1>Plan Name</h1>
             </label>{" "}
-            <Autocomplete
-              size="small"
-              readOnly
-              value={props.plan}
-              options={props.plans}
-              renderInput={(params) => (
-                <TextField {...params} placeholder="No plans" />
-              )}
-            />
+            <Autocomplete size="small" readOnly value={props.plan} options={props.plans} renderInput={params => <TextField {...params} placeholder="No plans" />} />
           </div>
           <div className="form-group mt-4">
             <label className="text-muted mb-1">
               <h1>Task Description</h1>
             </label>
-            {permitted ? (
-              <TextField
-                fullWidth
-                multiline
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={props.description}
-                onChange={(e) => setDescription(e.target.value)}
-              ></TextField>
-            ) : (
-              <TextField
-                fullWidth
-                multiline
-                InputProps={{ readOnly: true }}
-                style={{ width: 400 }}
-                rows={7}
-                defaultValue={props.description}
-              ></TextField>
-            )}
+            {permitted ? <TextField InputProps={{ readOnly: true }} fullWidth multiline style={{ width: 400 }} rows={7} defaultValue={props.description}></TextField> : <TextField fullWidth multiline InputProps={{ readOnly: true }} style={{ width: 400 }} rows={7} defaultValue={props.description}></TextField>}
           </div>
         </div>
       </div>
@@ -200,10 +164,10 @@ function DoingTask(props) {
                 InputProps={{
                   readOnly: true,
                   rows: isFocused ? 12 : 6,
-                  transition: "width 0.5s",
+                  transition: "width 0.5s"
                 }}
                 style={{
-                  width: isFocused ? "250%" : 400,
+                  width: isFocused ? "250%" : 400
                 }}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
@@ -216,9 +180,9 @@ function DoingTask(props) {
                 </label>
                 <TextField
                   style={{
-                    width: 400,
+                    width: 400
                   }}
-                  onChange={(e) => setNotes(e.target.value)}
+                  onChange={e => setNotes(e.target.value)}
                   placeholder="Enter notes"
                 />
               </div>
@@ -229,10 +193,10 @@ function DoingTask(props) {
               InputProps={{
                 readOnly: true,
                 rows: isFocused ? 12 : 6,
-                transition: "width 0.5s",
+                transition: "width 0.5s"
               }}
               style={{
-                width: isFocused ? "250%" : 400,
+                width: isFocused ? "250%" : 400
               }}
               onFocus={handleFocus}
               onBlur={handleBlur}

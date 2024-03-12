@@ -67,6 +67,14 @@ export const createTask = async (req, res) => {
   const regex = "^[a-zA-Z0-9]+$"
   let error = false
 
+  const results = await sql.query("SELECT * from task WHERE Task_name = ? AND Task_app_Acronym = ? ", [taskName, appName])
+
+  console.log(taskName + " " + appName)
+  if (results[0].length > 0) {
+    //task in this app duplicate check
+    return res.status(500).send("A task with this name already exists for this application.")
+  }
+
   //task valid check
   if (taskName.length < 3 || taskName.length > 20) {
     return res.status(500).send("Task name must be between 3 - 20 characters.")
