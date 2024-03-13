@@ -66,8 +66,8 @@ function EditRow(props) {
     } catch (err) {
       //console.log(err)
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       appDispatch({ type: "toast-failed", data: err.response.data })
 

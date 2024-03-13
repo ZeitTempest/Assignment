@@ -38,11 +38,11 @@ function LoginPage() {
         Cookies.set("jwt", response.data.jwt)
         navigate("/")
       } catch (err) {
-        if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-          navigate("/")
-          appDispatch({ type: "logout" })
-        } else appDispatch({ type: "toast-failed", data: "Unsuccessful login." })
-        return
+        // if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
+        // appDispatch({ type: "logout" })
+        // navigate("/login")
+        // } else appDispatch({ type: "toast-failed", data: "Unsuccessful login." })
+        // return
       }
     //popup/etc for unexpected error
   }

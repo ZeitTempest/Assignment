@@ -39,8 +39,8 @@ function DoingTask(props) {
       navigate(`/kanban/${appName}`)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -65,8 +65,8 @@ function DoingTask(props) {
       navigate(`/kanban/${appName}`)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -90,8 +90,8 @@ function DoingTask(props) {
       navigate(`/kanban/${appName}`)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -113,8 +113,8 @@ function DoingTask(props) {
           setPermitted(res.data.userIsInGroup)
         } catch (err) {
           if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-            navigate("/")
             appDispatch({ type: "logout" })
+            navigate("/login")
           }
           console.log(err)
         }

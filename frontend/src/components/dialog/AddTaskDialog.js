@@ -54,8 +54,8 @@ function AddTaskDialog(props) {
         window.location.reload()
       } catch (err) {
         if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-          navigate("/")
           appDispatch({ type: "logout" })
+          navigate("/login")
         } else
           appDispatch({
             type: "toast-failed",

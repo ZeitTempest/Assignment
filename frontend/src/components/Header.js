@@ -19,8 +19,8 @@ function Header() {
       setisAdmin(res.data.userIsInGroup) //if we get any data back, the check was successful
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }

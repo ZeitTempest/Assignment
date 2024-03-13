@@ -34,8 +34,8 @@ const CreateGroupForm = () => {
       }
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       } else appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }

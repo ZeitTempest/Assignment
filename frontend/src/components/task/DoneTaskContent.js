@@ -46,8 +46,8 @@ function DoneTaskContent() {
       }
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -71,8 +71,8 @@ function DoneTaskContent() {
       navigate(`/kanban/${app}`)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -97,8 +97,8 @@ function DoneTaskContent() {
       navigate(`/kanban/${app}`)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -129,15 +129,15 @@ function DoneTaskContent() {
         setPlans(list)
       } catch (err) {
         if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-          navigate("/")
           appDispatch({ type: "logout" })
+          navigate("/login")
         }
         console.log(err)
       }
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }

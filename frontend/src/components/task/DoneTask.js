@@ -50,8 +50,8 @@ function DoneTask(props) {
           setPermitted(res.data.userIsInGroup)
         } catch (err) {
           if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-            navigate("/")
             appDispatch({ type: "logout" })
+            navigate("/login")
           }
           console.log(err)
         }

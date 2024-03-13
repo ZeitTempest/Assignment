@@ -56,8 +56,8 @@ function Kanban() {
           setPermitted(res.data.userIsInGroup)
         } catch (err) {
           if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-            navigate("/")
             appDispatch({ type: "logout" })
+            navigate("/login")
           }
           console.log(err)
         }
@@ -79,8 +79,8 @@ function Kanban() {
       setPlans(list)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }

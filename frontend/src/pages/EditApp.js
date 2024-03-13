@@ -34,8 +34,8 @@ function EditApp() {
       setIsPL(response.data.userIsInGroup)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -75,8 +75,8 @@ function EditApp() {
       }
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -97,8 +97,8 @@ function EditApp() {
       }
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -175,8 +175,8 @@ function EditApp() {
     } catch (err) {
       console.log(err)
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       } else appDispatch({ type: "toast-failed", data: err.response.data })
     }
   }

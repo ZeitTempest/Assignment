@@ -41,8 +41,8 @@ function PlanDialog() {
           })
         } catch (err) {
           if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-            navigate("/")
             appDispatch({ type: "logout" })
+            navigate("/login")
           } else appDispatch({ type: "toast-failed", data: err.response.data })
         }
       }
@@ -56,8 +56,8 @@ function PlanDialog() {
       setPlans(response.data)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
@@ -70,8 +70,8 @@ function PlanDialog() {
       setIsPM(response.data.userIsInGroup)
     } catch (err) {
       if (err.response.data === "Inactive" || err.response.data === "jwt_error") {
-        navigate("/logout")
         appDispatch({ type: "logout" })
+        navigate("/login")
       }
       console.log(err)
     }
