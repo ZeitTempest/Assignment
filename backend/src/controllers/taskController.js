@@ -241,31 +241,33 @@ async function sendEmail(appName, username) {
       pass: process.env.SMTP_PASSWORD
     }
   })
-  const group = await getDonePermit(appName)
+  const group = await getDonePermit(appName) //get the group with "done" permission from application matching appName
 
   if (group) {
     var userMail = ""
     try {
-      userMail = await sql.query("SELECT email FROM accounts WHERE username = ? ", [username])
+      userMail = await sql.query("SELECT email FROM accounts WHERE username = ? ", [username]) //get the user's email address from db
       console.log(userMail[0][0].email)
     } catch (err) {
       console.log(err)
     }
+
     var results = []
     try {
-      results = await getAllPermitDoneEmails(group)
+      results = await getAllPermitDoneEmails(group) //get all active accounts matching done permission group
     } catch (err) {
       console.log(err)
     }
 
     const permitUsers = results[0]
-    const emails = []
+    const emails = [] //get emails from the above acc list
     permitUsers.forEach(user => {
       if (user.email && user.email.length > 0) {
         emails.push(user.email)
       }
     })
     emails.forEach(email => {
+      //send emails
       const content = {
         from: userMail[0][0].email,
         to: email,

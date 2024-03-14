@@ -3,11 +3,16 @@ terminal > integrated > tabs > description > ${task}${separator}${local}${separa
 
 A3:
 
-Must justify why I'm using param / payload for each item
+We are using POST request for all 3 methods because:
+- We are sending sensitive data, such as login credentials, in the request. We cannot send this data in the url params
+as it is not secured
+- Some HTTP clients like AXIOS adhere strictly to HTTP protocols, which means no req body in GET method 
+- We want our API to be compatible with as many HTTP clients as possible
+- Thus, we use POST method to ensure that no matter the client, our data 
 
 Name
 Method - read up on why we use the http method
-Parameters - URL paremeters (or request body)
+Parameters - URL parameters (or request body)
 
 
 Issues:
